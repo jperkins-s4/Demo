@@ -151,12 +151,12 @@
         const Hero = () => (
             <section id="overview" className="hero-gradient min-h-screen flex items-center pt-20">
                 <div className="container mx-auto px-6 text-center text-white">
-                    {/* Added SkyTab Venue Logo Section with 'site/' prefix */}
+                    {/* Added SkyTab Venue Image (stv) - Centered above title */}
                     <div className="flex justify-center mb-8 animate-fade-in">
                         <img 
-                            src="site/skytab-venue-logo.png" 
+                            src="site/stv.png" 
                             alt="SkyTab Venue" 
-                            className="h-24 md:h-32 object-contain"
+                            className="h-32 md:h-40 object-contain" 
                             onError={(e) => {
                                 e.target.style.display = 'none';
                             }}
@@ -228,7 +228,6 @@
                     image: "site/kiosk.png", 
                     icon: "tablet"
                 }
-                // REMOVED: Peripherals section
             ];
 
             return (
@@ -239,25 +238,26 @@
                             <p className="text-xl text-slate-600">Reliable yet flexible platform for every service mode.</p>
                         </div>
 
-                        {/* Updated Grid: Changed lg:grid-cols-4 to lg:grid-cols-3 to center the 3 items */}
+                        {/* Updated Grid: lg:grid-cols-3 to center the 3 items */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {devices.map((device, idx) => (
                                 <div key={idx} className="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl transition-shadow flex flex-col group h-full">
-                                    <div className="h-80 overflow-hidden bg-slate-200 relative">
+                                    {/* Updated Height: Increased from h-80 to h-[500px] for much larger tiles */}
+                                    <div className="h-[500px] overflow-hidden bg-slate-200 relative">
                                         <img 
                                             src={device.image} 
                                             alt={device.category} 
-                                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                                         />
                                         <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors"></div>
                                     </div>
-                                    <div className="p-6 flex flex-col flex-grow text-center items-center">
-                                        <div className="w-10 h-10 -mt-11 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-4 relative z-10">
-                                            <i data-lucide={device.icon} className="w-5 h-5"></i>
+                                    <div className="p-8 flex flex-col flex-grow text-center items-center">
+                                        <div className="w-12 h-12 -mt-14 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-6 relative z-10">
+                                            <i data-lucide={device.icon} className="w-6 h-6"></i>
                                         </div>
-                                        <h3 className="text-lg font-bold text-slate-900 mb-1">{device.category}</h3>
-                                        <div className="text-blue-600 font-medium text-sm mb-3">{device.model}</div>
-                                        <p className="text-slate-600 text-sm leading-relaxed">{device.use}</p>
+                                        <h3 className="text-xl font-bold text-slate-900 mb-2">{device.category}</h3>
+                                        <div className="text-blue-600 font-medium text-base mb-4">{device.model}</div>
+                                        <p className="text-slate-600 text-base leading-relaxed">{device.use}</p>
                                     </div>
                                 </div>
                             ))}
