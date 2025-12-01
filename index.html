@@ -20,7 +20,7 @@
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+f
     <style>
         body { font-family: 'Inter', sans-stylesheet; }
         .hero-gradient {
@@ -88,10 +88,10 @@
                 // Updated nav className: Removed bg-transparent conditional, fixed to bg-black
                 <nav className={`fixed w-full z-50 transition-all duration-300 bg-black shadow-lg ${isScrolled ? 'py-2' : 'py-4'}`}>
                     <div className="container mx-auto px-6 flex justify-between items-center">
-                        {/* Logo Update: Uses the specific filename provided */}
+                        {/* Logo Update: Added 'site/' folder prefix to the path */}
                         <div className="flex items-center">
                             <img 
-                                src="./Shift4 Logo - RBG.png" 
+                                src="site/Shift4 Logo - RBG.png" 
                                 alt="Shift4 SkyTab Venue" 
                                 className="h-12 object-contain"
                                 onError={(e) => {
@@ -151,10 +151,10 @@
         const Hero = () => (
             <section id="overview" className="hero-gradient min-h-screen flex items-center pt-20">
                 <div className="container mx-auto px-6 text-center text-white">
-                    {/* Added SkyTab Venue Logo Section */}
+                    {/* Added SkyTab Venue Logo Section with 'site/' prefix */}
                     <div className="flex justify-center mb-8 animate-fade-in">
                         <img 
-                            src="./skytab-venue-logo.png" 
+                            src="site/skytab-venue-logo.png" 
                             alt="SkyTab Venue" 
                             className="h-24 md:h-32 object-contain"
                             onError={(e) => {
@@ -211,28 +211,28 @@
                     category: "Fixed POS Terminal",
                     model: "PAX L1400 & A3700",
                     use: "Concession stands, bars & premium locations.",
-                    image: "site/pos-terminal.png", // Replace with your image URL
+                    image: "site/fixed-pos.png", // UPDATED: Points to site folder
                     icon: "monitor"
                 },
                 {
                     category: "Handheld / Mobile",
                     model: "PAX A800",
                     use: "Line-busting, in-seat, hawking & premium service.",
-                    image: "https://images.unsplash.com/photo-1556742031-c6961e8560b0?auto=format&fit=crop&q=80&w=800", // Replace with your image URL
+                    image: "site/handheld.png", // UPDATED: Points to site folder
                     icon: "smartphone"
                 },
                 {
                     category: "Self-Service Kiosk",
                     model: "Elo Tablet + Olea Stand",
                     use: "Self-order in concessions & premium areas.",
-                    image: "https://images.unsplash.com/photo-1544247915-d91833501902?auto=format&fit=crop&q=80&w=800", // Replace with your image URL
+                    image: "site/kiosk.png", // UPDATED: Points to site folder
                     icon: "tablet"
                 },
                 {
                     category: "Peripherals",
                     model: "PAX A35",
                     use: "Standard PIN pad, Receipt printing, Badge scanning.",
-                    image: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=800", // Replace with your image URL
+                    image: "site/peripheral.png", // UPDATED: Points to site folder
                     icon: "printer"
                 }
             ];
@@ -248,7 +248,7 @@
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                             {devices.map((device, idx) => (
                                 <div key={idx} className="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl transition-shadow flex flex-col group h-full">
-                                    <div className="h-48 overflow-hidden bg-slate-200 relative">
+                                    <div className="h-80 overflow-hidden bg-slate-200 relative">
                                         <img 
                                             src={device.image} 
                                             alt={device.category} 
@@ -260,7 +260,7 @@
                                         <div className="w-10 h-10 -mt-11 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-4 relative z-10">
                                             <i data-lucide={device.icon} className="w-5 h-5"></i>
                                         </div>
-                                        <h3 className="text-lg font-bold text-slate-900 mb-1">{device.category}}</h3>
+                                        <h3 className="text-lg font-bold text-slate-900 mb-1">{device.category}</h3>
                                         <div className="text-blue-600 font-medium text-sm mb-3">{device.model}</div>
                                         <p className="text-slate-600 text-sm leading-relaxed">{device.use}</p>
                                     </div>
