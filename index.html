@@ -289,12 +289,42 @@
 
         const Software = () => {
             const apps = [
-                { title: "POS Web", desc: "Back-of-house content management, menus, prices, and taxes.", icon: "layout-grid" },
-                { title: "Orders", desc: "Search by order #, manage refunds, and send e-receipts.", icon: "shopping-cart" },
-                { title: "Reports", desc: "Financial analytics, scheduled delivery (Email/S3), and exports.", icon: "bar-chart-2" },
-                { title: "Loyalty", desc: "Customer rewards, multiple instances, and user auth via ticketing.", icon: "heart" },
-                { title: "Devices", desc: "View/assign configs, link printers, and monitor health.", icon: "monitor-smartphone" },
-                { title: "Access", desc: "User role management and permission controls.", icon: "shield-check" }
+                { 
+                    title: "Menu Manager", // Renamed from POS Web
+                    desc: "Back-of-house content management, menus, prices, and taxes.", 
+                    icon: "layout-grid",
+                    url: "https://training-menu.ordernext.com"
+                },
+                { 
+                    title: "Orders", 
+                    desc: "Search by order #, manage refunds, and send e-receipts.", 
+                    icon: "shopping-cart",
+                    url: "https://training-refund.ordernext.com"
+                },
+                { 
+                    title: "Reports", 
+                    desc: "Financial analytics, scheduled delivery (Email/S3), and exports.", 
+                    icon: "bar-chart-2",
+                    url: "https://training-datanow.ordernext.com"
+                },
+                { 
+                    title: "Loyalty", 
+                    desc: "Customer rewards, multiple instances, and user auth via ticketing.", 
+                    icon: "heart",
+                    url: "https://training-loyalty.ordernext.com"
+                },
+                { 
+                    title: "Devices", 
+                    desc: "View/assign configs, link printers, and monitor health.", 
+                    icon: "monitor-smartphone",
+                    url: "https://training-devices.ordernext.com"
+                },
+                { 
+                    title: "Access", 
+                    desc: "User role management and permission controls.", 
+                    icon: "shield-check",
+                    url: "https://training-access.ordernext.com"
+                }
             ];
 
             return (
@@ -311,13 +341,20 @@
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {apps.map((app, idx) => (
-                                <div key={idx} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow border-l-4 border-blue-500">
+                                <a 
+                                    href={app.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    key={idx} 
+                                    className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-blue-500 block hover:-translate-y-1 group"
+                                >
                                     <div className="flex items-center mb-4">
-                                        <i data-lucide={app.icon} className="w-6 h-6 text-blue-600 mr-3"></i>
-                                        <h3 className="text-xl font-bold text-slate-900">{app.title}</h3>
+                                        <i data-lucide={app.icon} className="w-6 h-6 text-blue-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                        <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{app.title}</h3>
+                                        <i data-lucide="external-link" className="w-4 h-4 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
                                     </div>
                                     <p className="text-slate-600 text-sm">{app.desc}</p>
-                                </div>
+                                </a>
                             ))}
                         </div>
                     </div>
