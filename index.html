@@ -448,8 +448,10 @@
             // Added min-h-screen and flex alignment
             <section id="wallet" className="min-h-screen flex flex-col justify-center py-24 bg-white relative overflow-hidden">
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+                
                 <div className="container mx-auto px-6 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center">
+                    {/* PRIMARY SECTION: Intro & Integrations */}
+                    <div className="flex flex-col md:flex-row items-center mb-32">
                         <div className="w-full md:w-1/2 pr-0 md:pr-16 mb-12 md:mb-0">
                             <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold tracking-wide uppercase mb-6">Mobile First</div>
                             <h2 className="text-4xl font-bold text-slate-900 mb-6">SkyTab Venue Wallet</h2>
@@ -492,6 +494,80 @@
                                 <div className="bg-slate-800 p-4 rounded-lg">
                                     <i data-lucide="percent" className="w-6 h-6 text-purple-400 mb-2"></i>
                                     <div className="font-semibold text-sm">Auto Discounts</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* SECONDARY SECTION: Highlights & Badge Image */}
+                    <div className="flex flex-col lg:flex-row items-center gap-16 border-t border-slate-100 pt-24">
+                        {/* Left: iPhone Image Placeholder */}
+                        <div className="w-full lg:w-1/3 flex justify-center">
+                             <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center">
+                                {/* Image Tag for Wallet Badge */}
+                                <img 
+                                    src="site/wallet-badge.png" 
+                                    alt="iPhone Wallet Badge" 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        // Fallback design if image is missing
+                                        e.target.style.display = 'none';
+                                        e.target.parentElement.innerHTML = '<div class="text-slate-400 text-center p-6 flex flex-col items-center"><i data-lucide="image" class="w-12 h-12 mb-2"></i><span class="text-sm font-semibold">Upload Image:</span><span class="text-xs">site/wallet-badge.png</span></div>';
+                                        if(window.lucide) window.lucide.createIcons();
+                                    }}
+                                />
+                             </div>
+                        </div>
+
+                        {/* Right: Highlights Grid */}
+                        <div className="w-full lg:w-2/3">
+                            <h3 className="text-3xl font-bold text-slate-900 mb-10">SkyTab Venue Wallet Highlights</h3>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                                {/* Feature 1 */}
+                                <div>
+                                    <div className="flex items-center mb-3">
+                                        <div className="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3"><i data-lucide="wallet" className="w-5 h-5"></i></div>
+                                        <h4 className="font-bold text-slate-900">Apple & Google Wallet Passes</h4>
+                                    </div>
+                                    <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom formatted passes for SkyTab Venue POS, kiosks, restaurants, 3rd party retail POS, and autonomous POS.</p>
+                                    <p className="text-xs text-slate-400">Initial support via QR codes, with NFC "tap to pay" planned.</p>
+                                </div>
+                                
+                                {/* Feature 2 */}
+                                <div>
+                                    <div className="flex items-center mb-3">
+                                        <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3"><i data-lucide="pen-tool" className="w-5 h-5"></i></div>
+                                        <h4 className="font-bold text-slate-900">Pass Builder</h4>
+                                    </div>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded wallet passes with logos, colors, and custom fields. Supports redemption across multiple POS environments.</p>
+                                </div>
+
+                                {/* Feature 3 */}
+                                <div>
+                                    <div className="flex items-center mb-3">
+                                        <div className="p-2 bg-green-100 text-green-600 rounded-lg mr-3"><i data-lucide="bell" className="w-5 h-5"></i></div>
+                                        <h4 className="font-bold text-slate-900">Push Notifications (Always On)</h4>
+                                    </div>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Wallet passes provide a new marketing channel with notifications enabled by default. Supports campaign messages and loyalty updates.</p>
+                                </div>
+
+                                {/* Feature 4 */}
+                                <div>
+                                    <div className="flex items-center mb-3">
+                                        <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3"><i data-lucide="zap" className="w-5 h-5"></i></div>
+                                        <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
+                                    </div>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically at checkout. Works across F&B, retail, and autonomous systems.</p>
+                                </div>
+
+                                {/* Feature 5 - Full Width */}
+                                <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                    <div className="flex items-center mb-3">
+                                        <div className="p-2 bg-red-100 text-red-600 rounded-lg mr-3"><i data-lucide="map-pin" className="w-5 h-5"></i></div>
+                                        <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
+                                    </div>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences or nearby loyalty locations. Enhances usability and enables sponsor/partner promotions with custom lock screen offers.</p>
                                 </div>
                             </div>
                         </div>
