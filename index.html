@@ -133,10 +133,11 @@
                                     <button 
                                         key={item.id}
                                         onClick={() => scrollToSection(item.id)}
-                                        className={`text-sm font-semibold transition-colors duration-300 ${
+                                        // UPDATED: Added hover:scale-110 to inactive items for interactivity
+                                        className={`text-sm font-semibold transition-all duration-300 ${
                                             isActive 
-                                            ? 'text-blue-500 scale-105' 
-                                            : 'text-slate-100 hover:text-blue-400'
+                                            ? 'text-blue-500 scale-110' 
+                                            : 'text-slate-100 hover:text-blue-400 hover:scale-110'
                                         }`}
                                     >
                                         {item.label}
@@ -310,14 +311,7 @@
                             </div>
                         </div>
 
-                        <div className="mt-12 text-center">
-                            <button 
-                                onClick={() => document.getElementById('software').scrollIntoView({behavior:'smooth'})} 
-                                className="bg-blue-600 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-700 transition-transform hover:scale-105 shadow-lg"
-                            >
-                                View Web Apps
-                            </button>
-                        </div>
+                        {/* REMOVED: View Web Apps button */}
                     </div>
                 </section>
             );
@@ -396,13 +390,12 @@
             return (
                 <section id="software" className="min-h-screen flex flex-col justify-center py-20 bg-slate-50">
                     <div className="container mx-auto px-6">
-                        <div className="flex flex-col md:flex-row items-center justify-between mb-12">
-                            <div>
-                                <h2 className="text-4xl font-bold text-slate-900 mb-2">Web Applications</h2>
-                                <p className="text-xl text-slate-600 max-w-2xl">
-                                    A centralized suite of tools for managing POS operations, reporting, and more.
-                                </p>
-                            </div>
+                        {/* HEADER UPDATE: Centered content matching Hardware section style */}
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold text-slate-900 mb-4">Web Applications</h2>
+                            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                                A centralized suite of tools for managing POS operations, reporting, and more.
+                            </p>
                         </div>
 
                         {/* Updated Grid: Switched to 3 columns to condense height and fit on one screen */}
