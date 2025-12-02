@@ -322,44 +322,76 @@
             const apps = [
                 { 
                     title: "Menu Manager",
-                    desc: "Back-of-house content management, menus, prices, and taxes.", 
+                    desc: "Back-of-house content management",
+                    details: [
+                        "Revenue Centers, Items, Categories, Modifier Groups, Sales Events",
+                        "Venue Settings, Merchant Config, Custom Tenders, POS Accounts",
+                        "Seat Manifest, Charges & Fees, Tax Groups"
+                    ],
                     icon: "layout-grid",
                     url: "https://training-menu.ordernext.com"
                 },
                 { 
                     title: "Orders", 
-                    desc: "Search by order #, manage refunds, and send e-receipts.", 
+                    desc: "Order Review & Management", 
+                    details: [
+                        "Search by order #, name, or last 4 digits",
+                        "View details, filter by date/status/revenue center",
+                        "Process refunds, send e-receipts"
+                    ],
                     icon: "shopping-cart",
                     url: "https://training-refund.ordernext.com"
                 },
                 { 
                     title: "Reports", 
-                    desc: "Financial analytics, scheduled delivery (Email/S3), and exports.", 
+                    desc: "Analytics & Exports", 
+                    details: [
+                        "Financial reports with filters",
+                        "Schedule delivery (Email, SFTP, S3, Slack)",
+                        "Export CSV, PDF, PNG"
+                    ],
                     icon: "bar-chart-2",
                     url: "https://training-datanow.ordernext.com"
                 },
                 { 
                     title: "Loyalty", 
-                    desc: "Customer rewards, multiple instances, and user auth via ticketing.", 
+                    desc: "Customer Rewards", 
+                    details: [
+                        "Multiple loyalty instances per org",
+                        "User auth via ticketing or SMS",
+                        "Search by email, ID, or name",
+                        "Award/deduct currency, assign affiliations & promotions",
+                        "View balance history"
+                    ],
                     icon: "heart",
                     url: "https://training-loyalty.ordernext.com"
                 },
                 { 
                     title: "Devices", 
-                    desc: "View/assign configs, link printers, and monitor health.", 
+                    desc: "Device Management", 
+                    details: [
+                        "View/assign device configs",
+                        "Link printers to devices",
+                        "Register devices & configure network printers"
+                    ],
                     icon: "monitor-smartphone",
                     url: "https://training-devices.ordernext.com"
                 },
                 { 
                     title: "Access", 
-                    desc: "User role management and permission controls.", 
+                    desc: "User & Role Management", 
+                    details: [
+                        "Create user accounts to access SkyTab Venue Web Apps",
+                        "Define First Name, Last Name, Email, and Phone for accounts",
+                        "Deactivate user accounts",
+                        "Define user roles for specific use cases and limited access"
+                    ],
                     icon: "shield-check",
                     url: "https://training-access.ordernext.com"
                 }
             ];
 
             return (
-                // Added min-h-screen and flex alignment
                 <section id="software" className="min-h-screen flex flex-col justify-center py-24 bg-slate-50">
                     <div className="container mx-auto px-6">
                         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-16">
@@ -371,21 +403,39 @@
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Updated Grid: Changed from md:grid-cols-3 to md:grid-cols-2 for LARGER tiles */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {apps.map((app, idx) => (
                                 <a 
                                     href={app.url} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     key={idx} 
-                                    className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-blue-500 block hover:-translate-y-1 group"
+                                    className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-blue-500 block hover:-translate-y-1 group overflow-hidden"
                                 >
-                                    <div className="flex items-center mb-4">
-                                        <i data-lucide={app.icon} className="w-6 h-6 text-blue-600 mr-3 group-hover:scale-110 transition-transform"></i>
-                                        <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{app.title}</h3>
-                                        <i data-lucide="external-link" className="w-4 h-4 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                    {/* Card Header */}
+                                    <div className="p-8 border-b border-slate-100">
+                                        <div className="flex items-center mb-2">
+                                            <i data-lucide={app.icon} className="w-8 h-8 text-blue-600 mr-4 group-hover:scale-110 transition-transform"></i>
+                                            <div>
+                                                <h3 className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{app.title}</h3>
+                                                <p className="text-slate-500 font-medium">{app.desc}</p>
+                                            </div>
+                                            <i data-lucide="external-link" className="w-5 h-5 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                        </div>
                                     </div>
-                                    <p className="text-slate-600 text-sm">{app.desc}</p>
+                                    
+                                    {/* Card Details Body */}
+                                    <div className="p-8 bg-slate-50 h-full">
+                                        <ul className="space-y-3">
+                                            {app.details.map((detail, dIdx) => (
+                                                <li key={dIdx} className="flex items-start text-slate-700 text-sm leading-relaxed">
+                                                    <span className="w-1.5 h-1.5 bg-blue-400 rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                                                    {detail}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </a>
                             ))}
                         </div>
