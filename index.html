@@ -291,7 +291,8 @@
                             ))}
                         </div>
 
-                        <div className="mt-16 bg-slate-900 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between">
+                        {/* UPDATED: Added interactive hover classes to Hybrid Architecture tile */}
+                        <div className="mt-16 bg-slate-900 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-default">
                             <div className="mb-6 md:mb-0 md:mr-8">
                                 <h3 className="text-2xl font-bold mb-2">Hybrid Architecture</h3>
                                 <p className="text-slate-300">
@@ -468,25 +469,27 @@
                                 ))}
                             </ul>
                         </div>
-                        <div className="w-full md:w-1/2 bg-slate-900 rounded-2xl p-8 text-white shadow-2xl">
+                        {/* UPDATED: Added interactive hover classes to Integration Support tile */}
+                        <div className="w-full md:w-1/2 bg-slate-900 rounded-2xl p-8 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-blue-900/50 cursor-default">
                             <div className="border-b border-slate-700 pb-6 mb-6">
                                 <h3 className="text-xl font-bold mb-2">Integration Support</h3>
                                 <p className="text-slate-400 text-sm">Works across SkyTab POS, kiosks, mobile ordering, retail POS, and autonomous checkout.</p>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-slate-800 p-4 rounded-lg">
+                                {/* UPDATED: Made individual tiles interactive */}
+                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
                                     <i data-lucide="ticket" className="w-6 h-6 text-blue-400 mb-2"></i>
                                     <div className="font-semibold text-sm">Ticketing SSO</div>
                                 </div>
-                                <div className="bg-slate-800 p-4 rounded-lg">
+                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
                                     <i data-lucide="coins" className="w-6 h-6 text-yellow-400 mb-2"></i>
                                     <div className="font-semibold text-sm">Virtual Currency</div>
                                 </div>
-                                <div className="bg-slate-800 p-4 rounded-lg">
+                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
                                     <i data-lucide="smartphone" className="w-6 h-6 text-green-400 mb-2"></i>
                                     <div className="font-semibold text-sm">Mobile Orders</div>
                                 </div>
-                                <div className="bg-slate-800 p-4 rounded-lg">
+                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
                                     <i data-lucide="percent" className="w-6 h-6 text-purple-400 mb-2"></i>
                                     <div className="font-semibold text-sm">Auto Discounts</div>
                                 </div>
@@ -498,7 +501,8 @@
                     <div className="flex flex-col lg:flex-row items-center gap-16 border-t border-slate-100 pt-24">
                         {/* Left: iPhone Image Placeholder */}
                         <div className="w-full lg:w-1/3 flex justify-center">
-                             <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center">
+                             {/* UPDATED: Added interactive hover classes to iPhone container */}
+                             <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 hover:shadow-2xl cursor-pointer">
                                 {/* Image Tag for Wallet Badge */}
                                 <img 
                                     src="site/wallet-badge.png" 
@@ -518,51 +522,52 @@
                         <div className="w-full lg:w-2/3">
                             <h3 className="text-3xl font-bold text-slate-900 mb-10">SkyTab Venue Wallet Highlights</h3>
                             
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                            {/* UPDATED: Changed from text list to Interactive Tile Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Feature 1 */}
-                                <div>
+                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
                                     <div className="flex items-center mb-3">
                                         <div className="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3"><i data-lucide="wallet" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Apple & Google Wallet Passes</h4>
+                                        <h4 className="font-bold text-slate-900">Apple & Google Wallet</h4>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom formatted passes for SkyTab Venue POS, kiosks, restaurants, 3rd party retail POS, and autonomous POS.</p>
-                                    <p className="text-xs text-slate-400">Initial support via QR codes, with NFC "tap to pay" planned.</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom passes for POS, kiosks, and 3rd party retail.</p>
+                                    <p className="text-xs text-slate-400">QR codes & NFC support.</p>
                                 </div>
                                 
                                 {/* Feature 2 */}
-                                <div>
+                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
                                     <div className="flex items-center mb-3">
                                         <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3"><i data-lucide="pen-tool" className="w-5 h-5"></i></div>
                                         <h4 className="font-bold text-slate-900">Pass Builder</h4>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded wallet passes with logos, colors, and custom fields. Supports redemption across multiple POS environments.</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded passes with logos, colors, and custom fields.</p>
                                 </div>
 
                                 {/* Feature 3 */}
-                                <div>
+                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
                                     <div className="flex items-center mb-3">
                                         <div className="p-2 bg-green-100 text-green-600 rounded-lg mr-3"><i data-lucide="bell" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Push Notifications (Always On)</h4>
+                                        <h4 className="font-bold text-slate-900">Push Notifications</h4>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Wallet passes provide a new marketing channel with notifications enabled by default. Supports campaign messages and loyalty updates.</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Marketing channel with always-on notifications for campaigns and loyalty.</p>
                                 </div>
 
                                 {/* Feature 4 */}
-                                <div>
+                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
                                     <div className="flex items-center mb-3">
                                         <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3"><i data-lucide="zap" className="w-5 h-5"></i></div>
                                         <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically at checkout. Works across F&B, retail, and autonomous systems.</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
                                 </div>
 
                                 {/* Feature 5 - Full Width */}
-                                <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                                <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
                                     <div className="flex items-center mb-3">
                                         <div className="p-2 bg-red-100 text-red-600 rounded-lg mr-3"><i data-lucide="map-pin" className="w-5 h-5"></i></div>
                                         <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences or nearby loyalty locations. Enhances usability and enables sponsor/partner promotions with custom lock screen offers.</p>
+                                    <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences. Enhances usability and enables sponsor promotions.</p>
                                 </div>
                             </div>
                         </div>
@@ -589,9 +594,12 @@
                             SkyTab Venue integrates seamlessly with a wide ecosystem of partners across ticketing, loyalty, payments, retail, and inventory.
                         </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+                        {/* UPDATED LAYOUT: Changed from Grid to Flex Wrap to Center the orphan items */}
+                        <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
                             {categories.map((cat, idx) => (
-                                <div key={idx} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+                                // Added width classes to maintain the grid-like look (w-full on mobile, ~30% on large screens)
+                                // UPDATED: Added interactive hover classes and text-center
+                                <div key={idx} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-default text-center">
                                     <h4 className="text-blue-600 font-bold mb-3 uppercase text-sm tracking-wider">{cat.name}</h4>
                                     <p className="text-slate-800 font-medium leading-relaxed">
                                         {cat.partners}
