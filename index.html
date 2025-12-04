@@ -8,14 +8,14 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React & ReactDOM (Pinned Versions for Stability) -->
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
     
     <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Lucide Icons (Pinned Version) -->
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@0.263.1"></script>
     
     <!-- Fonts -->
@@ -39,9 +39,9 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        const { useState, useEffect } = React;
 
-        // --- STATIC DATA (Moved outside components for performance) ---
+        // --- STATIC DATA ---
 
         const NAV_ITEMS = [
             { id: 'overview', label: 'Overview' },
@@ -51,27 +51,31 @@
             { id: 'integrations', label: 'Integrations' }
         ];
 
+        // UPDATED: Added URL properties to hardware devices
         const HARDWARE_DEVICES = [
             {
                 category: "Fixed POS Terminal",
                 model: "PAX L1400 & A3700",
                 use: "Concession stands, bars & premium locations.",
                 image: "site/fixed-pos.png", 
-                icon: "monitor"
+                icon: "monitor",
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumWorkstationDetail.pdf"
             },
             {
                 category: "Handheld / Mobile",
                 model: "PAX A800",
                 use: "Line-busting, in-seat, hawking & premium service.",
                 image: "site/handheld.png", 
-                icon: "smartphone"
+                icon: "smartphone",
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumHandheldSpecSheet.pdf"
             },
             {
                 category: "Self-Service Kiosk",
                 model: "Elo Tablet + Olea Stand",
                 use: "Self-order in concessions & premium areas.",
                 image: "site/kiosk.png", 
-                icon: "tablet"
+                icon: "tablet",
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_Stadium_SelfOrder_SpecSheet.pdf"
             }
         ];
 
@@ -154,8 +158,6 @@
 
         // --- COMPONENTS ---
 
-        // Simplified Icon Component
-        // Relies on global window.lucide.createIcons() running in the parent App component
         const Icon = ({ name, className = "" }) => {
             return <i data-lucide={name} className={className} style={{ width: 24, height: 24, display: 'inline-block' }}></i>;
         };
@@ -167,22 +169,17 @@
 
             useEffect(() => {
                 const handleScroll = () => {
-                    // Handle navbar background
                     setIsScrolled(window.scrollY > 20);
-
-                    // Handle active section highlighting
                     const sections = NAV_ITEMS.map(item => item.id);
-                    const scrollPosition = window.scrollY + 150; // Offset for navbar height + buffer
+                    const scrollPosition = window.scrollY + 150;
 
                     for (const section of sections) {
                         const element = document.getElementById(section);
-                        // Check if element exists and if scroll position is within its bounds
                         if (element && element.offsetTop <= scrollPosition && (element.offsetTop + element.offsetHeight) > scrollPosition) {
                             setActiveSection(section);
                         }
                     }
                 };
-
                 window.addEventListener('scroll', handleScroll);
                 return () => window.removeEventListener('scroll', handleScroll);
             }, []);
@@ -203,17 +200,13 @@
                                 src="site/Shift4 Logo - RBG.png" 
                                 alt="Shift4 SkyTab Venue" 
                                 className="h-12 object-contain"
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                    document.getElementById('fallback-logo-text').style.display = 'block';
-                                }}
+                                onError={(e) => { e.target.style.display = 'none'; document.getElementById('fallback-logo-text').style.display = 'block'; }}
                             />
                             <div id="fallback-logo-text" style={{display: 'none'}} className="text-2xl font-bold tracking-tighter text-white">
                                 SHIFT4 <span className="font-light">SkyTab Venue</span>
                             </div>
                         </div>
                         
-                        {/* Desktop Menu */}
                         <div className="hidden md:flex space-x-8">
                             {NAV_ITEMS.map((item) => {
                                 const isActive = activeSection === item.id;
@@ -222,9 +215,7 @@
                                         key={item.id}
                                         onClick={() => scrollToSection(item.id)}
                                         className={`text-sm font-semibold transition-all duration-300 ${
-                                            isActive 
-                                            ? 'text-blue-500 scale-110' 
-                                            : 'text-slate-100 hover:text-blue-400 hover:scale-110'
+                                            isActive ? 'text-blue-500 scale-110' : 'text-slate-100 hover:text-blue-400 hover:scale-110'
                                         }`}
                                     >
                                         {item.label}
@@ -233,7 +224,6 @@
                             })}
                         </div>
 
-                        {/* Mobile Menu Button */}
                         <button 
                             className="md:hidden text-white focus:outline-none"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -244,7 +234,6 @@
                         </button>
                     </div>
 
-                    {/* Mobile Menu */}
                     {isMobileMenuOpen && (
                         <div className="md:hidden bg-black shadow-xl absolute w-full left-0 top-full p-4 flex flex-col space-y-4 border-t border-gray-800">
                             {NAV_ITEMS.map((item) => {
@@ -275,9 +264,7 @@
                             src="site/stv.png" 
                             alt="SkyTab Venue" 
                             className="h-64 md:h-96 object-contain" 
-                            onError={(e) => {
-                                e.target.style.display = 'none';
-                            }}
+                            onError={(e) => { e.target.style.display = 'none'; }}
                         />
                     </div>
 
@@ -331,7 +318,14 @@
 
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {HARDWARE_DEVICES.map((device, idx) => (
-                                <div key={idx} className="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl transition-shadow flex flex-col group h-full">
+                                // UPDATED: Changed from div to <a> tag to make clickable
+                                <a 
+                                    key={idx}
+                                    href={device.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col group h-full hover:-translate-y-1 cursor-pointer"
+                                >
                                     <div className="h-[500px] overflow-hidden bg-slate-200 relative">
                                         <img 
                                             src={device.image} 
@@ -341,18 +335,24 @@
                                         <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors"></div>
                                     </div>
                                     <div className="p-8 flex flex-col flex-grow text-center items-center">
-                                        <div className="w-12 h-12 -mt-14 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-6 relative z-10">
+                                        <div className="w-12 h-12 -mt-14 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-6 relative z-10 group-hover:scale-110 transition-transform">
                                             <i data-lucide={device.icon} className="w-6 h-6"></i>
                                         </div>
-                                        <h3 className="text-xl font-bold text-slate-900 mb-2">{device.category}</h3>
+                                        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{device.category}</h3>
                                         <div className="text-blue-600 font-medium text-base mb-4">{device.model}</div>
                                         <p className="text-slate-600 text-base leading-relaxed">{device.use}</p>
+                                        
+                                        {/* Added small link indicator */}
+                                        <div className="mt-4 text-xs font-bold text-blue-500 uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                            View Specs <i data-lucide="external-link" className="w-3 h-3 ml-1"></i>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             ))}
                         </div>
 
-                        <div className="mt-16 bg-slate-900 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-default">
+                        {/* Interactive Hybrid Architecture Banner */}
+                        <div className="mt-16 bg-slate-900 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-pointer">
                             <div className="mb-6 md:mb-0 md:mr-8">
                                 <h3 className="text-2xl font-bold mb-2">Hybrid Architecture</h3>
                                 <p className="text-slate-300">
@@ -425,125 +425,127 @@
             );
         };
 
-        const Wallet = () => (
-            <section id="wallet" className="min-h-screen flex flex-col justify-center py-24 bg-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
-                
-                <div className="container mx-auto px-6 relative z-10">
-                    <div className="flex flex-col md:flex-row items-center mb-32">
-                        <div className="w-full md:w-1/2 pr-0 md:pr-16 mb-12 md:mb-0">
-                            <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold tracking-wide uppercase mb-6">Mobile First</div>
-                            <h2 className="text-4xl font-bold text-slate-900 mb-6">SkyTab Venue Wallet</h2>
-                            <p className="text-lg text-slate-600 mb-8">
-                                A seamless way for fans to access discounts, stored value, loyalty rewards, and mobile ordering—without needing additional accounts.
-                            </p>
-                            
-                            <ul className="space-y-4">
-                                {[
-                                    "Log in with Ticketmaster, SeatGeek, or AXS credentials.",
-                                    "Secure QR-based payments & Card-on-file.",
-                                    "Apple & Google Wallet Pass support.",
-                                    "Geofence lock screen notifications."
-                                ].map((item, i) => (
-                                    <li key={i} className="flex items-start">
-                                        <i data-lucide="check-circle" className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"></i>
-                                        <span className="text-slate-700">{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div className="w-full md:w-1/2 bg-slate-900 rounded-2xl p-8 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-blue-900/50 cursor-default">
-                            <div className="border-b border-slate-700 pb-6 mb-6">
-                                <h3 className="text-xl font-bold mb-2">Integration Support</h3>
-                                <p className="text-slate-400 text-sm">Works across SkyTab POS, kiosks, mobile ordering, retail POS, and autonomous checkout.</p>
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
-                                    <i data-lucide="ticket" className="w-6 h-6 text-blue-400 mb-2"></i>
-                                    <div className="font-semibold text-sm">Ticketing SSO</div>
-                                </div>
-                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
-                                    <i data-lucide="coins" className="w-6 h-6 text-yellow-400 mb-2"></i>
-                                    <div className="font-semibold text-sm">Virtual Currency</div>
-                                </div>
-                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
-                                    <i data-lucide="smartphone" className="w-6 h-6 text-green-400 mb-2"></i>
-                                    <div className="font-semibold text-sm">Mobile Orders</div>
-                                </div>
-                                <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-default">
-                                    <i data-lucide="percent" className="w-6 h-6 text-purple-400 mb-2"></i>
-                                    <div className="font-semibold text-sm">Auto Discounts</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col lg:flex-row items-center gap-16 border-t border-slate-100 pt-24">
-                        <div className="w-full lg:w-1/3 flex justify-center">
-                             <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 hover:shadow-2xl cursor-pointer">
-                                <img 
-                                    src="site/wallet-badge.png" 
-                                    alt="iPhone Wallet Badge" 
-                                    className="w-full h-full object-cover"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.parentElement.innerHTML = '<div class="text-slate-400 text-center p-6 flex flex-col items-center"><i data-lucide="image" class="w-12 h-12 mb-2"></i><span class="text-sm font-semibold">Upload Image:</span><span class="text-xs">site/wallet-badge.png</span></div>';
-                                        if(window.lucide) window.lucide.createIcons();
-                                    }}
-                                />
-                             </div>
-                        </div>
-
-                        <div className="w-full lg:w-2/3">
-                            <h3 className="text-3xl font-bold text-slate-900 mb-10">SkyTab Venue Wallet Highlights</h3>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
-                                    <div className="flex items-center mb-3">
-                                        <div className="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3"><i data-lucide="wallet" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Apple & Google Wallet</h4>
-                                    </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom passes for POS, kiosks, and 3rd party retail.</p>
-                                    <p className="text-xs text-slate-400">QR codes & NFC support.</p>
-                                </div>
+        const Wallet = () => {
+            // Re-introduced checkmarks and icons logic specifically for this component
+            return (
+                <section id="wallet" className="min-h-screen flex flex-col justify-center py-24 bg-white relative overflow-hidden">
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+                    
+                    <div className="container mx-auto px-6 relative z-10">
+                        <div className="flex flex-col md:flex-row items-center mb-32">
+                            <div className="w-full md:w-1/2 pr-0 md:pr-16 mb-12 md:mb-0">
+                                <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold tracking-wide uppercase mb-6">Mobile First</div>
+                                <h2 className="text-4xl font-bold text-slate-900 mb-6">SkyTab Venue Wallet</h2>
+                                <p className="text-lg text-slate-600 mb-8">
+                                    A seamless way for fans to access discounts, stored value, loyalty rewards, and mobile ordering—without needing additional accounts.
+                                </p>
                                 
-                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
-                                    <div className="flex items-center mb-3">
-                                        <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3"><i data-lucide="pen-tool" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Pass Builder</h4>
-                                    </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded passes with logos, colors, and custom fields.</p>
+                                <ul className="space-y-4">
+                                    {[
+                                        "Log in with Ticketmaster, SeatGeek, or AXS credentials.",
+                                        "Secure QR-based payments & Card-on-file.",
+                                        "Apple & Google Wallet Pass support.",
+                                        "Geofence lock screen notifications."
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-start">
+                                            {/* RESTORED: Green Check Marks */}
+                                            <i data-lucide="check-circle" className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"></i>
+                                            <span className="text-slate-700">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            
+                            {/* RESTORED: Integration Support Icons */}
+                            <div className="w-full md:w-1/2 bg-slate-900 rounded-2xl p-8 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.02] hover:shadow-blue-900/50 cursor-default">
+                                <div className="border-b border-slate-700 pb-6 mb-6">
+                                    <h3 className="text-xl font-bold mb-2">Integration Support</h3>
+                                    <p className="text-slate-400 text-sm">Works across SkyTab POS, kiosks, mobile ordering, retail POS, and autonomous checkout.</p>
                                 </div>
-
-                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
-                                    <div className="flex items-center mb-3">
-                                        <div className="p-2 bg-green-100 text-green-600 rounded-lg mr-3"><i data-lucide="bell" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Push Notifications</h4>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-pointer">
+                                        <i data-lucide="ticket" className="w-6 h-6 text-blue-400 mb-2"></i>
+                                        <div className="font-semibold text-sm">Ticketing SSO</div>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Marketing channel with always-on notifications for campaigns and loyalty.</p>
+                                    <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-pointer">
+                                        <i data-lucide="coins" className="w-6 h-6 text-yellow-400 mb-2"></i>
+                                        <div className="font-semibold text-sm">Virtual Currency</div>
+                                    </div>
+                                    <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-pointer">
+                                        <i data-lucide="smartphone" className="w-6 h-6 text-green-400 mb-2"></i>
+                                        <div className="font-semibold text-sm">Mobile Orders</div>
+                                    </div>
+                                    <div className="bg-slate-800 p-4 rounded-lg transform transition-all duration-300 hover:scale-105 hover:bg-slate-700 hover:shadow-lg cursor-pointer">
+                                        <i data-lucide="percent" className="w-6 h-6 text-purple-400 mb-2"></i>
+                                        <div className="font-semibold text-sm">Auto Discounts</div>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
-                                    <div className="flex items-center mb-3">
-                                        <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3"><i data-lucide="zap" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
-                                    </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
-                                </div>
+                        <div className="flex flex-col lg:flex-row items-center gap-16 border-t border-slate-100 pt-24">
+                            <div className="w-full lg:w-1/3 flex justify-center">
+                                 <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 hover:shadow-2xl cursor-pointer">
+                                    <img 
+                                        src="site/wallet-badge.png" 
+                                        alt="iPhone Wallet Badge" 
+                                        className="w-full h-full object-cover"
+                                        onError={(e) => { e.target.style.display = 'none'; }}
+                                    />
+                                 </div>
+                            </div>
 
-                                <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-default">
-                                    <div className="flex items-center mb-3">
-                                        <div className="p-2 bg-red-100 text-red-600 rounded-lg mr-3"><i data-lucide="map-pin" className="w-5 h-5"></i></div>
-                                        <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
+                            <div className="w-full lg:w-2/3">
+                                <h3 className="text-3xl font-bold text-slate-900 mb-10">SkyTab Venue Wallet Highlights</h3>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer group">
+                                        <div className="flex items-center mb-3">
+                                            <div className="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i data-lucide="wallet" className="w-5 h-5"></i></div>
+                                            <h4 className="font-bold text-slate-900">Apple & Google Wallet</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom passes for POS, kiosks, and 3rd party retail.</p>
+                                        <p className="text-xs text-slate-400">QR codes & NFC support.</p>
                                     </div>
-                                    <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences. Enhances usability and enables sponsor promotions.</p>
+                                    
+                                    <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer group">
+                                        <div className="flex items-center mb-3">
+                                            <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i data-lucide="pen-tool" className="w-5 h-5"></i></div>
+                                            <h4 className="font-bold text-slate-900">Pass Builder</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded passes with logos, colors, and custom fields.</p>
+                                    </div>
+
+                                    <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer group">
+                                        <div className="flex items-center mb-3">
+                                            <div className="p-2 bg-green-100 text-green-600 rounded-lg mr-3 group-hover:bg-green-600 group-hover:text-white transition-colors"><i data-lucide="bell" className="w-5 h-5"></i></div>
+                                            <h4 className="font-bold text-slate-900">Push Notifications</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Marketing channel with always-on notifications for campaigns and loyalty.</p>
+                                    </div>
+
+                                    <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer group">
+                                        <div className="flex items-center mb-3">
+                                            <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i data-lucide="zap" className="w-5 h-5"></i></div>
+                                            <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
+                                    </div>
+
+                                    <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border border-slate-100 cursor-pointer group">
+                                        <div className="flex items-center mb-3">
+                                            <div className="p-2 bg-red-100 text-red-600 rounded-lg mr-3 group-hover:bg-red-600 group-hover:text-white transition-colors"><i data-lucide="map-pin" className="w-5 h-5"></i></div>
+                                            <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences. Enhances usability and enables sponsor promotions.</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        );
+                </section>
+            );
+        };
 
         const Integrations = () => {
             return (
@@ -556,8 +558,8 @@
 
                         <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
                             {INTEGRATION_CATEGORIES.map((cat, idx) => (
-                                <div key={idx} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-default text-center">
-                                    <h4 className="text-blue-600 font-bold mb-3 uppercase text-sm tracking-wider">{cat.name}</h4>
+                                <div key={idx} className="bg-white p-6 rounded-lg shadow-sm border border-slate-200 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-default text-center group">
+                                    <h4 className="text-blue-600 font-bold mb-3 uppercase text-sm tracking-wider group-hover:scale-105 transition-transform">{cat.name}</h4>
                                     <p className="text-slate-800 font-medium leading-relaxed">
                                         {cat.partners}
                                     </p>
@@ -565,7 +567,7 @@
                             ))}
                         </div>
 
-                        <div className="mt-16 bg-blue-50 border border-blue-100 rounded-xl p-8 max-w-4xl mx-auto text-left flex flex-col md:flex-row items-start gap-6">
+                        <div className="mt-16 bg-blue-50 border border-blue-100 rounded-xl p-8 max-w-4xl mx-auto text-left flex flex-col md:flex-row items-start gap-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                             <div className="bg-blue-600 text-white p-3 rounded-lg flex-shrink-0">
                                 <i data-lucide="arrow-left-right" className="w-6 h-6"></i>
                             </div>
@@ -591,10 +593,7 @@
                                 src="site/Shift4 Logo - RBG.png" 
                                 alt="Shift4 SkyTab Venue" 
                                 className="h-10 object-contain"
-                                onError={(e) => {
-                                    e.target.style.display = 'none';
-                                    document.getElementById('fallback-footer-text').style.display = 'block';
-                                }}
+                                onError={(e) => { e.target.style.display = 'none'; document.getElementById('fallback-footer-text').style.display = 'block'; }}
                             />
                             <div id="fallback-footer-text" style={{display: 'none'}} className="text-2xl font-bold text-white tracking-tighter mb-2">
                                 SHIFT4 <span className="font-light">SkyTab Venue</span>
@@ -611,7 +610,6 @@
 
         const App = () => {
             useEffect(() => {
-                // Initialize Lucide icons after render
                 if (window.lucide) {
                     window.lucide.createIcons();
                 }
