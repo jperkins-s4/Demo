@@ -8,14 +8,14 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React & ReactDOM -->
+    <!-- React & ReactDOM (Pinned Versions for Stability) -->
     <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
     
     <!-- Babel -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <!-- Lucide Icons -->
+    <!-- Lucide Icons (Pinned Version) -->
     <script src="https://unpkg.com/lucide@0.263.1"></script>
     
     <!-- Fonts -->
@@ -56,6 +56,7 @@
         const { useState, useEffect } = React;
 
         // --- STATIC DATA ---
+        // Extracted for better organization and performance
 
         const NAV_ITEMS = [
             { id: 'overview', label: 'Overview' },
@@ -171,6 +172,8 @@
 
         // --- COMPONENTS ---
 
+        // Helper to render icons reliably. Uses Lucide if available, 
+        // otherwise renders nothing (preventing errors before script loads)
         const Icon = ({ name, className = "" }) => {
             return <i data-lucide={name} className={className} style={{ width: 24, height: 24, display: 'inline-block' }}></i>;
         };
@@ -458,7 +461,7 @@
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-start">
                                             <div className="text-green-500 mr-3 mt-1 flex-shrink-0">
-                                                <Icon name="check-circle" className="w-5 h-5" />
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                             </div>
                                             <span className="text-slate-700">{item}</span>
                                         </li>
@@ -466,14 +469,14 @@
                                 </ul>
                             </div>
                             
-                            {/* UPDATED: Compact & Centered Integration Support Tile */}
+                            {/* Compact Integration Support Tile */}
                             <div className="w-full md:w-1/2 relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.01] hover:shadow-blue-900/40 cursor-default border border-slate-700 overflow-hidden group">
                                 <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none"></div>
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
 
                                 <div className="relative z-10 border-b border-slate-700/50 pb-4 mb-4 flex flex-col items-center text-center">
                                     <div className="mb-3">
-                                        <Icon name="network" className="w-8 h-8 text-blue-400" />
+                                        <svg className="w-8 h-8 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg>
                                     </div>
                                     <h3 className="text-2xl font-bold mb-1 tracking-tight">Integration Support</h3>
                                     <p className="text-slate-400 text-sm">Seamless connection across all touchpoints.</p>
@@ -482,32 +485,37 @@
                                 <div className="relative z-10 grid grid-cols-2 gap-3">
                                     <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
                                         <div className="mb-2 transition-transform group-hover/item:scale-110">
-                                            {/* Minimal Icon - Blue */}
-                                            <Icon name="ticket" className="w-6 h-6 text-blue-400" />
+                                            {/* UPDATED ICON: Badge Check for Ticketing SSO */}
+                                            <svg className="w-6 h-6 text-blue-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.78 4.78 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.78 4 4 0 0 1 0-6.74Z"></path>
+                                                <path d="m9 12 2 2 4-4"></path>
+                                            </svg>
                                         </div>
                                         <div className="font-semibold text-xs text-slate-200">Ticketing SSO</div>
                                     </div>
 
                                     <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-yellow-500/30 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
                                         <div className="mb-2 transition-transform group-hover/item:scale-110">
-                                            {/* Minimal Icon - Yellow */}
-                                            <Icon name="coins" className="w-6 h-6 text-yellow-400" />
+                                            {/* UPDATED ICON: Coin (Circle Dollar) for Virtual Currency */}
+                                            <svg className="w-6 h-6 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+                                                <path d="M12 18V6"></path>
+                                            </svg>
                                         </div>
                                         <div className="font-semibold text-xs text-slate-200">Virtual Currency</div>
                                     </div>
 
                                     <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-green-500/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
                                         <div className="mb-2 transition-transform group-hover/item:scale-110">
-                                            {/* Minimal Icon - Green */}
-                                            <Icon name="smartphone" className="w-6 h-6 text-green-400" />
+                                            <svg className="w-6 h-6 text-green-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
                                         </div>
                                         <div className="font-semibold text-xs text-slate-200">Mobile Orders</div>
                                     </div>
 
                                     <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
                                         <div className="mb-2 transition-transform group-hover/item:scale-110">
-                                            {/* Minimal Icon - Purple */}
-                                            <Icon name="percent" className="w-6 h-6 text-purple-400" />
+                                            <svg className="w-6 h-6 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
                                         </div>
                                         <div className="font-semibold text-xs text-slate-200">Auto Discounts</div>
                                     </div>
@@ -515,6 +523,7 @@
                             </div>
                         </div>
 
+                        {/* Highlights Section with iPhone */}
                         <div className="flex flex-col lg:flex-row items-center gap-16 border-t border-slate-100 pt-24">
                             <div className="w-full lg:w-1/3 flex justify-center">
                                  <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 hover:shadow-2xl cursor-pointer">
@@ -534,18 +543,20 @@
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-blue-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            {/* Minimal Icon - Blue */}
-                                            <div className="mr-3 text-blue-500 group-hover:text-blue-600 transition-colors"><Icon name="wallet" className="w-6 h-6" /></div>
+                                            <div className="mr-3 text-blue-600 group-hover:text-blue-700 transition-colors">
+                                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path></svg>
+                                            </div>
                                             <h4 className="font-bold text-slate-900">Apple & Google Wallet</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom passes for POS, kiosks, and 3rd party retail.</p>
-                                        <p className="text-xs text-slate-400">QR codes & NFC support.</p>
+                                        <p className="text-xs text-slate-400">Initial support via QR codes; NFC "tap to pay" planned with hardware adoption.</p>
                                     </div>
                                     
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-purple-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            {/* Minimal Icon - Purple */}
-                                            <div className="mr-3 text-purple-500 group-hover:text-purple-600 transition-colors"><Icon name="pen-tool" className="w-6 h-6" /></div>
+                                            <div className="mr-3 text-purple-600 group-hover:text-purple-700 transition-colors">
+                                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"></path><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="m2 2 7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+                                            </div>
                                             <h4 className="font-bold text-slate-900">Pass Builder</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded passes with logos, colors, and custom fields.</p>
@@ -553,8 +564,9 @@
 
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-green-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            {/* Minimal Icon - Green */}
-                                            <div className="mr-3 text-green-500 group-hover:text-green-600 transition-colors"><Icon name="bell" className="w-6 h-6" /></div>
+                                            <div className="mr-3 text-green-600 group-hover:text-green-700 transition-colors">
+                                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+                                            </div>
                                             <h4 className="font-bold text-slate-900">Push Notifications</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Marketing channel with always-on notifications for campaigns and loyalty.</p>
@@ -562,8 +574,9 @@
 
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-orange-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            {/* Minimal Icon - Orange */}
-                                            <div className="mr-3 text-orange-500 group-hover:text-orange-600 transition-colors"><Icon name="zap" className="w-6 h-6" /></div>
+                                            <div className="mr-3 text-orange-600 group-hover:text-orange-700 transition-colors">
+                                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                            </div>
                                             <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
@@ -571,8 +584,9 @@
 
                                     <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-red-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            {/* Minimal Icon - Red */}
-                                            <div className="mr-3 text-red-500 group-hover:text-red-600 transition-colors"><Icon name="map-pin" className="w-6 h-6" /></div>
+                                            <div className="mr-3 text-red-600 group-hover:text-red-700 transition-colors">
+                                                <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                            </div>
                                             <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences. Enhances usability and enables sponsor promotions.</p>
