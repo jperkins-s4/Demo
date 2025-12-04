@@ -33,7 +33,7 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* New Animation for iPhone Glare */
+        /* iPhone Glare Animation */
         .glass-glare {
             background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.1) 50%, transparent 54%);
             background-size: 200% 200%;
@@ -348,14 +348,14 @@
                                     </div>
                                     <div className="p-8 flex flex-col flex-grow text-center items-center">
                                         <div className="w-12 h-12 -mt-14 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-6 relative z-10 group-hover:scale-110 transition-transform">
-                                            <i data-lucide={device.icon} className="w-6 h-6"></i>
+                                            <Icon name={device.icon} className="w-6 h-6" />
                                         </div>
                                         <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">{device.category}</h3>
                                         <div className="text-blue-600 font-medium text-base mb-4">{device.model}</div>
                                         <p className="text-slate-600 text-base leading-relaxed">{device.use}</p>
                                         
                                         <div className="mt-4 text-xs font-bold text-blue-500 uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
-                                            View Specs <i data-lucide="external-link" className="w-3 h-3 ml-1"></i>
+                                            View Specs <Icon name="external-link" className="w-3 h-3 ml-1" />
                                         </div>
                                     </div>
                                 </a>
@@ -408,11 +408,11 @@
                                 >
                                     <div className="p-6 border-b border-slate-100">
                                         <div className="flex items-center mb-1">
-                                            <i data-lucide={app.icon} className="w-6 h-6 text-blue-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                            <Icon name={app.icon} className="w-6 h-6 text-blue-600 mr-3 group-hover:scale-110 transition-transform" />
                                             <div>
                                                 <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{app.title}</h3>
                                             </div>
-                                            <i data-lucide="external-link" className="w-4 h-4 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                            <Icon name="external-link" className="w-4 h-4 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                                         </div>
                                         <p className="text-slate-500 text-xs font-medium pl-9">{app.desc}</p>
                                     </div>
@@ -449,7 +449,7 @@
                                     A seamless way for fans to access discounts, stored value, loyalty rewards, and mobile ordering—without needing additional accounts.
                                 </p>
                                 
-                                <ul className="space-y-4">
+                                <ul className="space-y-4 list-none">
                                     {[
                                         "Log in with Ticketmaster, SeatGeek, or AXS credentials.",
                                         "Secure QR-based payments & Card-on-file.",
@@ -457,58 +457,59 @@
                                         "Geofence lock screen notifications."
                                     ].map((item, i) => (
                                         <li key={i} className="flex items-start">
-                                            {/* CHECKMARK: Confirmed Green Check Circle for specific items */}
-                                            <i data-lucide="check-circle" className="w-5 h-5 text-green-500 mr-3 mt-1 flex-shrink-0"></i>
+                                            <div className="text-green-500 mr-3 mt-1 flex-shrink-0">
+                                                <Icon name="check-circle" className="w-5 h-5" />
+                                            </div>
                                             <span className="text-slate-700">{item}</span>
                                         </li>
                                     ))}
                                 </ul>
                             </div>
                             
-                            {/* UPDATED: Professional Integration Support Tile */}
-                            <div className="w-full md:w-1/2 relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-8 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.01] hover:shadow-blue-900/40 cursor-default border border-slate-700 overflow-hidden group">
-                                {/* Grid Background Effect */}
+                            {/* UPDATED: Compact & Centered Integration Support Tile */}
+                            <div className="w-full md:w-1/2 relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.01] hover:shadow-blue-900/40 cursor-default border border-slate-700 overflow-hidden group">
                                 <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none"></div>
                                 <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
 
-                                <div className="relative z-10 border-b border-slate-700/50 pb-6 mb-8 flex items-center justify-between">
-                                    <div>
-                                        <h3 className="text-2xl font-bold mb-1 tracking-tight">Integration Support</h3>
-                                        <p className="text-slate-400 text-sm">Seamless connection across all touchpoints.</p>
+                                <div className="relative z-10 border-b border-slate-700/50 pb-4 mb-4 flex flex-col items-center text-center">
+                                    <div className="mb-3">
+                                        <Icon name="network" className="w-8 h-8 text-blue-400" />
                                     </div>
-                                    <div className="p-3 bg-white/5 rounded-full border border-white/10">
-                                        <i data-lucide="network" className="w-6 h-6 text-blue-400"></i>
-                                    </div>
+                                    <h3 className="text-2xl font-bold mb-1 tracking-tight">Integration Support</h3>
+                                    <p className="text-slate-400 text-sm">Seamless connection across all touchpoints.</p>
                                 </div>
 
-                                <div className="relative z-10 grid grid-cols-2 gap-4">
-                                    {/* Glassmorphism Tiles with Distinct Borders */}
-                                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
-                                        <div className="mb-3 p-3 bg-blue-500/20 rounded-full group-hover/item:bg-blue-500/30 transition-colors">
-                                            <i data-lucide="ticket" className="w-6 h-6 text-blue-300"></i>
+                                <div className="relative z-10 grid grid-cols-2 gap-3">
+                                    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
+                                        <div className="mb-2 transition-transform group-hover/item:scale-110">
+                                            {/* Minimal Icon - Blue */}
+                                            <Icon name="ticket" className="w-6 h-6 text-blue-400" />
                                         </div>
-                                        <div className="font-semibold text-sm text-slate-200">Ticketing SSO</div>
+                                        <div className="font-semibold text-xs text-slate-200">Ticketing SSO</div>
                                     </div>
 
-                                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-yellow-500/30 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
-                                        <div className="mb-3 p-3 bg-yellow-500/20 rounded-full group-hover/item:bg-yellow-500/30 transition-colors">
-                                            <i data-lucide="coins" className="w-6 h-6 text-yellow-300"></i>
+                                    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-yellow-500/30 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
+                                        <div className="mb-2 transition-transform group-hover/item:scale-110">
+                                            {/* Minimal Icon - Yellow */}
+                                            <Icon name="coins" className="w-6 h-6 text-yellow-400" />
                                         </div>
-                                        <div className="font-semibold text-sm text-slate-200">Virtual Currency</div>
+                                        <div className="font-semibold text-xs text-slate-200">Virtual Currency</div>
                                     </div>
 
-                                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-green-500/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
-                                        <div className="mb-3 p-3 bg-green-500/20 rounded-full group-hover/item:bg-green-500/30 transition-colors">
-                                            <i data-lucide="smartphone" className="w-6 h-6 text-green-300"></i>
+                                    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-green-500/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
+                                        <div className="mb-2 transition-transform group-hover/item:scale-110">
+                                            {/* Minimal Icon - Green */}
+                                            <Icon name="smartphone" className="w-6 h-6 text-green-400" />
                                         </div>
-                                        <div className="font-semibold text-sm text-slate-200">Mobile Orders</div>
+                                        <div className="font-semibold text-xs text-slate-200">Mobile Orders</div>
                                     </div>
 
-                                    <div className="bg-white/5 backdrop-blur-md p-5 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
-                                        <div className="mb-3 p-3 bg-purple-500/20 rounded-full group-hover/item:bg-purple-500/30 transition-colors">
-                                            <i data-lucide="percent" className="w-6 h-6 text-purple-300"></i>
+                                    <div className="bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item">
+                                        <div className="mb-2 transition-transform group-hover/item:scale-110">
+                                            {/* Minimal Icon - Purple */}
+                                            <Icon name="percent" className="w-6 h-6 text-purple-400" />
                                         </div>
-                                        <div className="font-semibold text-sm text-slate-200">Auto Discounts</div>
+                                        <div className="font-semibold text-xs text-slate-200">Auto Discounts</div>
                                     </div>
                                 </div>
                             </div>
@@ -533,7 +534,8 @@
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-blue-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            <div className="p-2 bg-blue-100 text-blue-600 rounded-lg mr-3 group-hover:bg-blue-600 group-hover:text-white transition-colors"><i data-lucide="wallet" className="w-5 h-5"></i></div>
+                                            {/* Minimal Icon - Blue */}
+                                            <div className="mr-3 text-blue-500 group-hover:text-blue-600 transition-colors"><Icon name="wallet" className="w-6 h-6" /></div>
                                             <h4 className="font-bold text-slate-900">Apple & Google Wallet</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom passes for POS, kiosks, and 3rd party retail.</p>
@@ -542,7 +544,8 @@
                                     
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-purple-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            <div className="p-2 bg-purple-100 text-purple-600 rounded-lg mr-3 group-hover:bg-purple-600 group-hover:text-white transition-colors"><i data-lucide="pen-tool" className="w-5 h-5"></i></div>
+                                            {/* Minimal Icon - Purple */}
+                                            <div className="mr-3 text-purple-500 group-hover:text-purple-600 transition-colors"><Icon name="pen-tool" className="w-6 h-6" /></div>
                                             <h4 className="font-bold text-slate-900">Pass Builder</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded passes with logos, colors, and custom fields.</p>
@@ -550,7 +553,8 @@
 
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-green-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            <div className="p-2 bg-green-100 text-green-600 rounded-lg mr-3 group-hover:bg-green-600 group-hover:text-white transition-colors"><i data-lucide="bell" className="w-5 h-5"></i></div>
+                                            {/* Minimal Icon - Green */}
+                                            <div className="mr-3 text-green-500 group-hover:text-green-600 transition-colors"><Icon name="bell" className="w-6 h-6" /></div>
                                             <h4 className="font-bold text-slate-900">Push Notifications</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Marketing channel with always-on notifications for campaigns and loyalty.</p>
@@ -558,7 +562,8 @@
 
                                     <div className="bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-orange-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            <div className="p-2 bg-orange-100 text-orange-600 rounded-lg mr-3 group-hover:bg-orange-600 group-hover:text-white transition-colors"><i data-lucide="zap" className="w-5 h-5"></i></div>
+                                            {/* Minimal Icon - Orange */}
+                                            <div className="mr-3 text-orange-500 group-hover:text-orange-600 transition-colors"><Icon name="zap" className="w-6 h-6" /></div>
                                             <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
@@ -566,7 +571,8 @@
 
                                     <div className="md:col-span-2 bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-red-500 transition-all duration-300 border border-slate-100 cursor-pointer group">
                                         <div className="flex items-center mb-3">
-                                            <div className="p-2 bg-red-100 text-red-600 rounded-lg mr-3 group-hover:bg-red-600 group-hover:text-white transition-colors"><i data-lucide="map-pin" className="w-5 h-5"></i></div>
+                                            {/* Minimal Icon - Red */}
+                                            <div className="mr-3 text-red-500 group-hover:text-red-600 transition-colors"><Icon name="map-pin" className="w-6 h-6" /></div>
                                             <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
                                         </div>
                                         <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences. Enhances usability and enables sponsor promotions.</p>
@@ -601,7 +607,7 @@
 
                         <div className="mt-16 bg-blue-50 border border-blue-100 rounded-xl p-8 max-w-4xl mx-auto text-left flex flex-col md:flex-row items-start gap-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
                             <div className="bg-blue-600 text-white p-3 rounded-lg flex-shrink-0">
-                                <i data-lucide="arrow-left-right" className="w-6 h-6"></i>
+                                <Icon name="arrow-left-right" className="w-6 h-6" />
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-slate-900 mb-2">Spotlight: YellowDog Integration</h3>
