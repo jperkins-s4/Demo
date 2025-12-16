@@ -62,133 +62,17 @@
             { id: 'integrations', label: 'Integrations' }
         ];
 
-        // UPDATED ORDER: Handheld -> Fixed POS -> Kiosk
-        const HARDWARE_DEVICES = [
-            {
-                category: "Handheld / Mobile",
-                model: "PAX A800",
-                use: "Line-busting, in-seat, hawking & premium service.",
-                image: "site/handheld.png", 
-                IconComponent: ({ className }) => (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-                ),
-                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumHandheldSpecSheet.pdf"
-            },
-            {
-                category: "Fixed POS Terminal",
-                model: "PAX L1400 & A3700",
-                use: "Concession stands, bars & premium locations.",
-                image: "site/fixed-pos.png", 
-                IconComponent: ({ className }) => (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                ),
-                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumWorkstationDetail.pdf"
-            },
-            {
-                category: "Self-Service Kiosk",
-                model: "Elo Tablet + Olea Stand",
-                use: "Self-order in concessions & premium areas.",
-                image: "site/kiosk.png", 
-                IconComponent: ({ className }) => (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                        <rect x="6" y="2" width="12" height="16" rx="2"></rect>
-                        <path d="M12 18v4"></path>
-                        <path d="M8 22h8"></path>
-                    </svg>
-                ),
-                url: "https://s3.amazonaws.com/shift4-payments-files/S4_Stadium_SelfOrder_SpecSheet.pdf"
-            }
-        ];
-
-        const WEB_APPS = [
-            { 
-                title: "Menu Manager",
-                desc: "Back-of-house content management",
-                details: [
-                    "Revenue Centers, Items, Modifiers",
-                    "Venue Settings, Merchant Config",
-                    "Seat Manifest, Charges & Fees"
-                ],
-                IconComponent: ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>),
-                url: "https://training-menu.ordernext.com"
-            },
-            { 
-                title: "Orders", 
-                desc: "Order Review & Management", 
-                details: [
-                    "Search by order #, name, or last 4",
-                    "View details, filter by date/status",
-                    "Process refunds, send e-receipts"
-                ],
-                IconComponent: ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>),
-                url: "https://training-refund.ordernext.com"
-            },
-            { 
-                title: "Reports", 
-                desc: "Analytics & Exports", 
-                details: [
-                    "Financial reports with filters",
-                    "Schedule delivery (Email, SFTP, S3)",
-                    "Export CSV, PDF, PNG"
-                ],
-                IconComponent: ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>),
-                url: "https://training-datanow.ordernext.com"
-            },
-            { 
-                title: "Loyalty", 
-                desc: "Customer Rewards", 
-                details: [
-                    "User auth via ticketing or SMS",
-                    "Award/deduct currency, promotions",
-                    "View balance history"
-                ],
-                IconComponent: ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>),
-                url: "https://training-loyalty.ordernext.com"
-            },
-            { 
-                title: "Devices", 
-                desc: "Device Management", 
-                details: [
-                    "View/assign device configs",
-                    "Link printers to devices",
-                    "Configure network printers"
-                ],
-                IconComponent: ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8"></path><path d="M10 19v-3.96 3.15"></path><path d="M7 19h5"></path><rect x="16" y="12" width="6" height="10" rx="2"></rect></svg>),
-                url: "https://training-devices.ordernext.com"
-            },
-            { 
-                title: "Access", 
-                desc: "User & Role Management", 
-                details: [
-                    "Manage user accounts & roles",
-                    "Define Name, Email, Phone",
-                    "Deactivate user accounts"
-                ],
-                IconComponent: ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>),
-                url: "https://training-access.ordernext.com"
-            }
-        ];
-
-        const INTEGRATION_CATEGORIES = [
-            { name: "Ticketing", partners: "Ticketmaster, SeatGeek, AXS, Tickets.com" },
-            { name: "Loyalty & Stored Value", partners: "GiveX, Fortress, Lava, FanMaker, Venuetize" },
-            { name: "POS Loyalty", partners: "Tapin2, Mashgin, Zippin, Amazon Just Walk Out" },
-            { name: "Inventory", partners: "YellowDog, BirchStreet Systems" },
-            { name: "Digital Menu Boards", partners: "Triple Play, AmpThink, Spectrio, Ping" }
-        ];
-
-        // --- COMPONENTS ---
-
-        const Icon = ({ name, className = "" }) => {
-            return <i data-lucide={name} className={className} style={{ width: 24, height: 24, display: 'inline-block' }}></i>;
-        };
-
+        // --- SVG ICON COMPONENTS ---
+        
         const Icons = {
             ArrowLeftRight: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>
             ),
             BadgeCheck: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.78 4.78 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.78 4 4 0 0 1 0-6.74Z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            ),
+            BarChart: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
             ),
             Bell: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
@@ -205,8 +89,27 @@
             Fingerprint: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 6"></path><path d="M5 12a7 7 0 0 1 14 0"></path><path d="M8 12a4 4 0 0 1 8 0"></path><path d="M12 12v6"></path><path d="M12 22v-2"></path></svg>
             ),
+            Heart: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            ),
+            Kiosk: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                    <rect x="6" y="2" width="12" height="16" rx="2"></rect>
+                    <path d="M12 18v4"></path>
+                    <path d="M8 22h8"></path>
+                </svg>
+            ),
+            LayoutGrid: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            ),
             MapPin: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            ),
+            Monitor: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            ),
+            MonitorSmartphone: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8"></path><path d="M10 19v-3.96 3.15"></path><path d="M7 19h5"></path><rect x="16" y="12" width="6" height="10" rx="2"></rect></svg>
             ),
             Network: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg>
@@ -217,6 +120,12 @@
             Percent: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
             ),
+            ShieldCheck: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            ),
+            ShoppingCart: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            ),
             Smartphone: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
             ),
@@ -226,6 +135,118 @@
             Zap: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
             ),
+        };
+
+        const HARDWARE_DEVICES = [
+            {
+                category: "Handheld / Mobile",
+                model: "PAX A800",
+                use: "Line-busting, in-seat, hawking & premium service.",
+                image: "site/handheld.png", 
+                IconComponent: Icons.Smartphone,
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumHandheldSpecSheet.pdf"
+            },
+            {
+                category: "Fixed POS Terminal",
+                model: "PAX L1400 & A3700",
+                use: "Concession stands, bars & premium locations.",
+                image: "site/fixed-pos.png",
+                // ADDED: Back Image
+                imageBack: "site/fixed-pos-back.jpg",
+                IconComponent: Icons.Monitor,
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumWorkstationDetail.pdf"
+            },
+            {
+                category: "Self-Service Kiosk",
+                model: "Elo Tablet + Olea Stand",
+                use: "Self-order in concessions & premium areas.",
+                image: "site/kiosk.png", 
+                IconComponent: Icons.Kiosk,
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_Stadium_SelfOrder_SpecSheet.pdf"
+            }
+        ];
+
+        const WEB_APPS = [
+            { 
+                title: "Menu Manager",
+                desc: "Back-of-house content management",
+                details: [
+                    "Revenue Centers, Items, Modifiers",
+                    "Venue Settings, Merchant Config",
+                    "Seat Manifest, Charges & Fees"
+                ],
+                IconComponent: Icons.LayoutGrid,
+                url: "https://training-menu.ordernext.com"
+            },
+            { 
+                title: "Orders", 
+                desc: "Order Review & Management", 
+                details: [
+                    "Search by order #, name, or last 4",
+                    "View details, filter by date/status",
+                    "Process refunds, send e-receipts"
+                ],
+                IconComponent: Icons.ShoppingCart,
+                url: "https://training-refund.ordernext.com"
+            },
+            { 
+                title: "Reports", 
+                desc: "Analytics & Exports", 
+                details: [
+                    "Financial reports with filters",
+                    "Schedule delivery (Email, SFTP, S3)",
+                    "Export CSV, PDF, PNG"
+                ],
+                IconComponent: Icons.BarChart,
+                url: "https://training-datanow.ordernext.com"
+            },
+            { 
+                title: "Loyalty", 
+                desc: "Customer Rewards", 
+                details: [
+                    "User auth via ticketing or SMS",
+                    "Award/deduct currency, promotions",
+                    "View balance history"
+                ],
+                IconComponent: Icons.Heart,
+                url: "https://training-loyalty.ordernext.com"
+            },
+            { 
+                title: "Devices", 
+                desc: "Device Management", 
+                details: [
+                    "View/assign device configs",
+                    "Link printers to devices",
+                    "Configure network printers"
+                ],
+                IconComponent: Icons.MonitorSmartphone,
+                url: "https://training-devices.ordernext.com"
+            },
+            { 
+                title: "Access", 
+                desc: "User & Role Management", 
+                details: [
+                    "Manage user accounts & roles",
+                    "Define Name, Email, Phone",
+                    "Deactivate user accounts"
+                ],
+                IconComponent: Icons.ShieldCheck,
+                url: "https://training-access.ordernext.com"
+            }
+        ];
+
+        const INTEGRATION_CATEGORIES = [
+            { name: "Ticketing", partners: "Ticketmaster, SeatGeek, AXS, Tickets.com" },
+            { name: "Loyalty & Stored Value", partners: "GiveX, Fortress, Lava, FanMaker, Venuetize" },
+            { name: "POS Loyalty", partners: "Tapin2, Mashgin, Zippin, Amazon Just Walk Out" },
+            { name: "Inventory", partners: "YellowDog, BirchStreet Systems" },
+            { name: "Digital Menu Boards", partners: "Triple Play, AmpThink, Spectrio, Ping" }
+        ];
+
+        // --- COMPONENTS ---
+
+        const Icon = ({ name, className = "" }) => {
+            return <i data-lucide={name} className={className} style={{ width: 24, height: 24, display: 'inline-block' }}></i>;
         };
 
         const Navigation = () => {
@@ -392,12 +413,35 @@
                                     className="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col group h-full hover:-translate-y-1 cursor-pointer"
                                 >
                                     <div className="h-[500px] overflow-hidden bg-slate-200 relative">
-                                        <img 
-                                            src={device.image} 
-                                            alt={device.category} 
-                                            className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500 p-4"
-                                        />
-                                        <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors"></div>
+                                        {device.imageBack ? (
+                                            <div className="h-full flex flex-col">
+                                                <div className="h-1/2 w-full p-4 relative border-b border-slate-100/50">
+                                                    <img 
+                                                        src={device.image} 
+                                                        alt={`${device.category} Front`} 
+                                                        className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                </div>
+                                                <div className="h-1/2 w-full p-4 relative">
+                                                    <img 
+                                                        src={device.imageBack} 
+                                                        alt={`${device.category} Back`} 
+                                                        className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500"
+                                                    />
+                                                </div>
+                                                {/* Consistent overlay */}
+                                                <div className="absolute inset-0 bg-blue-900/5 group-hover:bg-transparent transition-colors pointer-events-none"></div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <img 
+                                                    src={device.image} 
+                                                    alt={device.category} 
+                                                    className="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500 p-4"
+                                                />
+                                                <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors"></div>
+                                            </>
+                                        )}
                                     </div>
                                     <div className="p-8 flex flex-col flex-grow text-center items-center">
                                         <div className="w-12 h-12 -mt-14 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-6 relative z-10 group-hover:scale-110 transition-transform">
