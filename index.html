@@ -53,6 +53,26 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
         .grid-pattern {
             background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
             background-size: 20px 20px;
@@ -959,14 +979,14 @@
 
         // Reusable Badge component for integration partners
         const Badge = ({ children, className = '' }) => (
-            <span className={`px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300 ${className}`}>
+            <span className={`px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300 hover:bg-white/10 hover:border-shift4-sky-blue/40 transition-all duration-200 cursor-pointer ${className}`}>
                 {children}
             </span>
         );
 
         // Reusable small badge for compact lists
         const SmallBadge = ({ children, className = '' }) => (
-            <span className={`px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300 ${className}`}>
+            <span className={`px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300 hover:bg-white/10 hover:border-shift4-sky-blue/40 transition-all duration-200 cursor-pointer ${className}`}>
                 {children}
             </span>
         );
@@ -1064,22 +1084,22 @@
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
-                                <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                                    <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-100" tabIndex="0">
+                                    <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                         <Icons.Zap className="w-6 h-6 text-shift4-sky-blue" />
                                     </div>
                                     <h3 className="text-white font-bold mb-2">Frictionless Payments</h3>
                                     <p className="text-slate-400 text-sm">QR-based transactions with card-on-file and stored value</p>
                                 </div>
-                                <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                                    <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-200" tabIndex="0">
+                                    <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                         <Icons.Heart className="w-6 h-6 text-shift4-sky-blue" />
                                     </div>
                                     <h3 className="text-white font-bold mb-2">Loyalty Integration</h3>
                                     <p className="text-slate-400 text-sm">Automatic rewards, discounts, and member benefits</p>
                                 </div>
-                                <div className="p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                                    <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-300" tabIndex="0">
+                                    <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                                         <Icons.Link className="w-6 h-6 text-shift4-sky-blue" />
                                     </div>
                                     <h3 className="text-white font-bold mb-2">Ticketing Synced</h3>
@@ -1286,9 +1306,9 @@
 
                             <div className="max-w-5xl mx-auto space-y-8">
                                 {/* Subsection 1: Seamless Integration */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-100" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                             <Icons.Check className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
                                         <h3 className="text-xl font-bold text-white">Seamless Integration</h3>
@@ -1300,9 +1320,9 @@
                                 </div>
 
                                 {/* Subsection 2: Access Options */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-200" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                             <Icons.MonitorSmartphone className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
                                         <h3 className="text-xl font-bold text-white">Access Options</h3>
@@ -1314,9 +1334,9 @@
                                 </div>
 
                                 {/* Subsection 3: App Partners */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-300" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                             <Icons.Network className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
                                         <h3 className="text-xl font-bold text-white">App Partners</h3>
@@ -1332,9 +1352,9 @@
                                 </div>
 
                                 {/* Subsection 4: Ticketing Authentication */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-400" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                             <Icons.Lock className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
                                         <h3 className="text-xl font-bold text-white">Ticketing Authentication</h3>
@@ -1423,7 +1443,7 @@
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-100" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                                             <Icons.Activity className="w-6 h-6 text-shift4-sky-blue" />
@@ -1432,7 +1452,7 @@
                                     </div>
                                     <p className="text-slate-300 text-sm">Track sales, transactions, and peak times with live dashboards and instant updates.</p>
                                 </div>
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-200" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                                             <Icons.Heart className="w-6 h-6 text-shift4-sky-blue" />
@@ -1441,7 +1461,7 @@
                                     </div>
                                     <p className="text-slate-300 text-sm">Monitor member activity, redemption rates, and engagement across all touchpoints.</p>
                                 </div>
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-300" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                                             <Icons.MapPin className="w-6 h-6 text-shift4-sky-blue" />
@@ -1450,7 +1470,7 @@
                                     </div>
                                     <p className="text-slate-300 text-sm">Location heatmaps, best-selling items, and zone-level insights for optimization.</p>
                                 </div>
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-400" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                                             <Icons.FileText className="w-6 h-6 text-shift4-sky-blue" />
@@ -1459,7 +1479,7 @@
                                     </div>
                                     <p className="text-slate-300 text-sm">Scheduled exports, automated delivery, and customizable report templates.</p>
                                 </div>
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-500" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                                             <Icons.TrendingUp className="w-6 h-6 text-shift4-sky-blue" />
@@ -1468,7 +1488,7 @@
                                     </div>
                                     <p className="text-slate-300 text-sm">Forecast trends, inventory planning, and demand predictions powered by AI.</p>
                                 </div>
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-600" tabIndex="0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
                                             <Icons.Grid className="w-6 h-6 text-shift4-sky-blue" />
