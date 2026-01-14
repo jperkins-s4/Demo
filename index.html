@@ -8,7 +8,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React & ReactDOM (Pinned Versions for Stability) -->
+    <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
     
@@ -30,20 +30,1102 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* iPhone Glare Animation */
-        .glass-glare {
-            background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.1) 50%, transparent 54%);
-            background-size: 200% 200%;
-            animation: shine 6s infinite;
-        }
-        @keyframes shine {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
         .grid-pattern {
             background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-        /* New Dash Pattern for DataNow */
-        .dash-pattern {
-            background-image: linear-gradient(0deg, transparent 24%, rgba(255, 255, 255, .05) 25%, rgba(255, 255, 255, .05) 26%, transparent 27%, transparent 74%, rgba(255, 255, 255, .05) 75%, rgba(255,
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- 1. ICONS DEFINITION (Must be first) ---
+        const Icons = {
+            ArrowLeft: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            ),
+            ArrowLeftRight: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>
+            ),
+            BadgeCheck: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.78 4.78 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.78 4 4 0 0 1 0-6.74Z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            ),
+            BarChart: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+            ),
+            Bell: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+            ),
+            Check: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 6 9 17 4 12"></polyline></svg>
+            ),
+            CheckCircle: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            ),
+            CircleDollarSign: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 18V6"></path></svg>
+            ),
+            CreditCard: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            ),
+            ExternalLink: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            ),
+            Fingerprint: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 6"></path><path d="M5 12a7 7 0 0 1 14 0"></path><path d="M8 12a4 4 0 0 1 8 0"></path><path d="M12 12v6"></path><path d="M12 22v-2"></path></svg>
+            ),
+            Heart: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            ),
+            Kiosk: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                    <rect x="6" y="2" width="12" height="16" rx="2"></rect>
+                    <path d="M12 18v4"></path>
+                    <path d="M8 22h8"></path>
+                </svg>
+            ),
+            LayoutGrid: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            ),
+            MapPin: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            ),
+            Menu: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
+            ),
+            Monitor: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            ),
+            MonitorSmartphone: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 8V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8"></path><path d="M10 19v-3.96 3.15"></path><path d="M7 19h5"></path><rect x="16" y="12" width="6" height="10" rx="2"></rect></svg>
+            ),
+            Network: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="16" y="16" width="6" height="6" rx="1"></rect><rect x="2" y="16" width="6" height="6" rx="1"></rect><rect x="9" y="2" width="6" height="6" rx="1"></rect><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"></path><path d="M12 12V8"></path></svg>
+            ),
+            PenTool: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 19 7-7 3 3-7 7-3-3z"></path><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="m2 2 7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+            ),
+            Percent: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+            ),
+            ShieldCheck: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+            ),
+            ShoppingCart: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            ),
+            Smartphone: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            ),
+            Tablet: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            ),
+            Wallet: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path></svg>
+            ),
+            WifiOff: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="2" y1="2" x2="22" y2="22"></line><path d="M8.5 8.5A10 10 0 0 1 20 6"></path><path d="M12 12a4.96 4.96 0 0 1 1.5.25"></path><path d="M16 16a5 5 0 0 1-1.5.25"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
+            ),
+            XCircle: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            ),
+            Zap: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            ),
+        };
+
+        // --- 2. DATA ARRAYS (Using Icons) ---
+
+        const NAV_ITEMS = [
+            { id: 'overview', label: 'Overview' },
+            { id: 'hardware', label: 'Hardware' },
+            { id: 'software', label: 'Web Apps' },
+            { id: 'wallet', label: 'Wallet' },
+            { id: 'integrations', label: 'Integrations' }
+        ];
+
+        const HARDWARE_DEVICES = [
+            {
+                category: "Handheld / Mobile",
+                model: "PAX A800",
+                use: "Line-busting, in-seat, hawking & premium service.",
+                image: "site/handheld.png", 
+                IconComponent: Icons.Smartphone,
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumHandheldSpecSheet.pdf"
+            },
+            {
+                category: "Fixed POS Terminal",
+                model: "PAX L1400 & A3700",
+                use: "Concession stands, bars & premium locations.",
+                image: "site/fixed-pos.png",
+                imageBack: "site/fixed-pos-back.jpg",
+                IconComponent: Icons.Monitor,
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumWorkstationDetail.pdf"
+            },
+            {
+                category: "Self-Service Kiosk",
+                model: "Elo Tablet + Olea Stand",
+                use: "Self-order in concessions & premium areas.",
+                image: "site/kiosk.png", 
+                IconComponent: Icons.Kiosk,
+                url: "https://s3.amazonaws.com/shift4-payments-files/S4_Stadium_SelfOrder_SpecSheet.pdf"
+            }
+        ];
+
+        const WEB_APPS = [
+            { 
+                title: "Menu Manager",
+                desc: "Back-of-house content management",
+                details: [
+                    "Revenue Centers, Items, Modifiers",
+                    "Venue Settings, Merchant Config",
+                    "Seat Manifest, Charges & Fees"
+                ],
+                IconComponent: Icons.LayoutGrid,
+                url: "https://training-menu.ordernext.com"
+            },
+            { 
+                title: "Orders", 
+                desc: "Order Review & Management", 
+                details: [
+                    "Search by order #, name, or last 4",
+                    "View details, filter by date/status",
+                    "Process refunds, send e-receipts"
+                ],
+                IconComponent: Icons.ShoppingCart,
+                url: "https://training-refund.ordernext.com"
+            },
+            { 
+                title: "Reports", 
+                desc: "Analytics & Exports", 
+                details: [
+                    "Financial reports with filters",
+                    "Schedule delivery (Email, SFTP, S3)",
+                    "Export CSV, PDF, PNG"
+                ],
+                IconComponent: Icons.BarChart,
+                url: "https://training-datanow.ordernext.com"
+            },
+            { 
+                title: "Loyalty", 
+                desc: "Customer Rewards", 
+                details: [
+                    "User auth via ticketing or SMS",
+                    "Award/deduct currency, promotions",
+                    "View balance history"
+                ],
+                IconComponent: Icons.Heart,
+                url: "https://training-loyalty.ordernext.com"
+            },
+            { 
+                title: "Devices", 
+                desc: "Device Management", 
+                details: [
+                    "View/assign device configs",
+                    "Link printers to devices",
+                    "Configure network printers"
+                ],
+                IconComponent: Icons.MonitorSmartphone,
+                url: "https://training-devices.ordernext.com"
+            },
+            { 
+                title: "Access", 
+                desc: "User & Role Management", 
+                details: [
+                    "Manage user accounts & roles",
+                    "Define Name, Email, Phone",
+                    "Deactivate user accounts"
+                ],
+                IconComponent: Icons.ShieldCheck,
+                url: "https://training-access.ordernext.com"
+            }
+        ];
+
+        const INTEGRATION_CATEGORIES = [
+            { name: "Ticketing", partners: "Ticketmaster, SeatGeek, AXS, Tickets.com" },
+            { name: "Loyalty & Stored Value", partners: "GiveX, Fortress, Lava, FanMaker, Venuetize" },
+            { name: "POS Loyalty", partners: "Tapin2, Mashgin, Zippin, Amazon Just Walk Out" },
+            { name: "Inventory", partners: "YellowDog, BirchStreet Systems" },
+            { name: "Digital Menu Boards", partners: "Triple Play, AmpThink, Spectrio, Ping" }
+        ];
+
+        // --- COMPONENTS ---
+
+        // Helper component removed as we are using direct SVG icons from Icons object
+
+        const Navigation = ({ interactionsActive, currentView, setView }) => {
+            const [isScrolled, setIsScrolled] = useState(false);
+            const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const [isExtraMenuOpen, setIsExtraMenuOpen] = useState(false);
+            const [activeSection, setActiveSection] = useState('overview');
+
+            useEffect(() => {
+                const handleScroll = () => {
+                    setIsScrolled(window.scrollY > 20);
+                    if (currentView === 'home') {
+                        const sections = NAV_ITEMS.map(item => item.id);
+                        const scrollPosition = window.scrollY + 150;
+
+                        for (const section of sections) {
+                            const element = document.getElementById(section);
+                            if (element && element.offsetTop <= scrollPosition && (element.offsetTop + element.offsetHeight) > scrollPosition) {
+                                setActiveSection(section);
+                            }
+                        }
+                    }
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, [currentView]);
+
+            const handleNavClick = (id) => {
+                if (currentView !== 'home') {
+                    setView('home');
+                    setTimeout(() => {
+                        const element = document.getElementById(id);
+                        if (element) element.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                } else {
+                    const element = document.getElementById(id);
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                }
+            };
+
+            return (
+                <nav className={`fixed w-full z-50 transition-all duration-300 bg-black shadow-lg ${isScrolled ? 'py-2' : 'py-4'}`}>
+                    <div className="container mx-auto px-6 flex justify-between items-center relative">
+                        <div className="flex items-center cursor-pointer" onClick={() => handleNavClick('overview')}>
+                            <img 
+                                src="site/Shift4 Logo - RBG.png" 
+                                alt="Shift4 SkyTab Venue" 
+                                className="h-12 object-contain"
+                                onError={(e) => { e.target.style.display = 'none'; document.getElementById('fallback-logo-text').style.display = 'block'; }}
+                            />
+                            <div id="fallback-logo-text" style={{display: 'none'}} className="text-2xl font-bold tracking-tighter text-white">
+                                SHIFT4 <span className="font-light">SkyTab Venue</span>
+                            </div>
+                        </div>
+                        
+                        <div className="hidden md:flex space-x-8 items-center">
+                            {NAV_ITEMS.map((item) => {
+                                const isActive = activeSection === item.id && currentView === 'home';
+                                return (
+                                    <button 
+                                        key={item.id}
+                                        onClick={() => handleNavClick(item.id)}
+                                        className={`text-sm font-semibold transition-all duration-300 ${
+                                            isActive 
+                                            ? 'text-blue-500 scale-110' 
+                                            : `text-slate-100 hover:text-blue-400 hover:scale-110 ${interactionsActive ? 'text-blue-400 scale-110' : ''}`
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </button>
+                                );
+                            })}
+                            
+                            {/* Desktop Hamburger Menu */}
+                            <div className="relative ml-4">
+                                <button 
+                                    onClick={() => setIsExtraMenuOpen(!isExtraMenuOpen)}
+                                    className="text-slate-100 hover:text-blue-400 focus:outline-none transition-colors"
+                                >
+                                    <Icons.Menu className="w-6 h-6" />
+                                </button>
+                                
+                                {isExtraMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 border border-slate-100">
+                                        <button 
+                                            onClick={() => {
+                                                setView('wallet-page');
+                                                setIsExtraMenuOpen(false);
+                                                window.scrollTo(0, 0);
+                                            }}
+                                            className="block w-full text-left px-4 py-2 text-slate-800 hover:bg-slate-100 hover:text-blue-600 transition-colors font-medium text-sm"
+                                        >
+                                            Wallet Page
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Mobile Menu Button (Hamburger) */}
+                        <div className="md:hidden flex items-center">
+                            <button 
+                                className="text-white focus:outline-none"
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            >
+                                <Icons.Menu className="w-6 h-6" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {isMobileMenuOpen && (
+                        <div className="md:hidden bg-black shadow-xl absolute w-full left-0 top-full p-4 flex flex-col space-y-4 border-t border-gray-800">
+                            {NAV_ITEMS.map((item) => {
+                                const isActive = activeSection === item.id;
+                                return (
+                                    <button 
+                                        key={item.id}
+                                        onClick={() => { handleNavClick(item.id); setIsMobileMenuOpen(false); }}
+                                        className={`text-left font-medium p-2 rounded ${
+                                            isActive ? 'text-blue-500 bg-slate-900' : 'text-slate-100 hover:bg-slate-800'
+                                        }`}
+                                    >
+                                        {item.label}
+                                    </button>
+                                );
+                            })}
+                            {/* Add Wallet Page link to mobile menu as well */}
+                            <button 
+                                onClick={() => {
+                                    setView('wallet-page');
+                                    setIsMobileMenuOpen(false);
+                                    window.scrollTo(0, 0);
+                                }}
+                                className="text-left font-medium p-2 rounded text-slate-100 hover:bg-slate-800 border-t border-slate-800 mt-2"
+                            >
+                                Wallet Page
+                            </button>
+                        </div>
+                    )}
+                </nav>
+            );
+        };
+
+        const Hero = ({ interactionsActive }) => (
+            <section id="overview" className="hero-gradient min-h-screen flex items-start pt-48 pb-12">
+                <div className="container mx-auto px-6 text-center text-white">
+                    <div className="flex justify-center mb-24 animate-fade-in">
+                        <img 
+                            src="site/stv.png" 
+                            alt="SkyTab Venue" 
+                            className="h-64 md:h-96 object-contain" 
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                    </div>
+
+                    <h1 className="text-3xl md:text-5xl font-bold mb-3 animate-fade-in tracking-tight">
+                        Built for Performance at Scale
+                    </h1>
+                    <p className="text-lg md:text-xl mb-6 max-w-3xl mx-auto text-blue-100 animate-fade-in" style={{animationDelay: '0.2s'}}>
+                        The venue-grade point-of-sale platform designed for stadiums, arenas, festivals, and large entertainment properties.
+                    </p>
+                    
+                    <div className="flex flex-col md:flex-row justify-center gap-4 animate-fade-in" style={{animationDelay: '0.4s'}}>
+                        <button onClick={() => document.getElementById('hardware').scrollIntoView({behavior:'smooth'})} className={`bg-white text-blue-900 px-8 py-4 rounded-full font-bold hover:bg-blue-50 transition-transform hover:scale-105 shadow-lg ${interactionsActive ? 'bg-blue-50 scale-105' : ''}`}>
+                            Explore Hardware
+                        </button>
+                    </div>
+
+                    <div className="mt-10 grid grid-cols-1 md:grid-cols-4 gap-6 text-center max-w-6xl mx-auto">
+                        <div className={`bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 hover:border-white/50 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl cursor-pointer ${interactionsActive ? 'bg-white/20 border-white/50 -translate-y-2 shadow-2xl' : ''}`}>
+                            <div className="text-blue-300 mb-2 font-bold uppercase text-xs tracking-wider">Performance</div>
+                            <h3 className="text-lg font-semibold mb-2">High Concurrency</h3>
+                            <p className="text-sm text-blue-100">Optimized for burst traffic and high-volume transactions with minimal latency.</p>
+                        </div>
+                        <div className={`bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 hover:border-white/50 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl cursor-pointer ${interactionsActive ? 'bg-white/20 border-white/50 -translate-y-2 shadow-2xl' : ''}`}>
+                            <div className="text-blue-300 mb-2 font-bold uppercase text-xs tracking-wider">Simplicity</div>
+                            <h3 className="text-lg font-semibold mb-2">Intuitive Interface</h3>
+                            <p className="text-sm text-blue-100">User-friendly design reduces onboarding time and makes staff training effortless.</p>
+                        </div>
+                        <div className={`bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 hover:border-white/50 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl cursor-pointer ${interactionsActive ? 'bg-white/20 border-white/50 -translate-y-2 shadow-2xl' : ''}`}>
+                            <div className="text-blue-300 mb-2 font-bold uppercase text-xs tracking-wider">Payments</div>
+                            <h3 className="text-lg font-semibold mb-2">End-to-End</h3>
+                            <p className="text-sm text-blue-100">EMV, NFC, Tokenization, and full support for digital wallets.</p>
+                        </div>
+                        <div className={`bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 hover:border-white/50 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl cursor-pointer ${interactionsActive ? 'bg-white/20 border-white/50 -translate-y-2 shadow-2xl' : ''}`}>
+                            <div className="text-blue-300 mb-2 font-bold uppercase text-xs tracking-wider">Architecture</div>
+                            <h3 className="text-lg font-semibold mb-2">Cloud Resilient</h3>
+                            <p className="text-sm text-blue-100">APK stability on devices combined with rapid web-based updates.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+
+        const Hardware = ({ interactionsActive }) => {
+            return (
+                <section id="hardware" className="min-h-screen flex flex-col justify-center py-24 bg-white">
+                    <div className="container mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold text-slate-900 mb-4">Purpose-Built Hardware</h2>
+                            <p className="text-xl text-slate-600">Reliable yet flexible platform for every service mode.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {HARDWARE_DEVICES.map((device, idx) => (
+                                <a 
+                                    key={idx}
+                                    href={device.url}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className={`bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col group h-full hover:-translate-y-1 cursor-pointer ${interactionsActive ? 'shadow-xl -translate-y-1' : ''}`}
+                                >
+                                    <div className="h-[500px] overflow-hidden bg-slate-200 relative">
+                                        {device.imageBack ? (
+                                            <div className="h-full flex flex-col">
+                                                <div className="h-1/2 w-full p-4 relative border-b border-slate-100/50">
+                                                    <img 
+                                                        src={device.image} 
+                                                        alt={`${device.category} Front`} 
+                                                        className={`w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500 ${interactionsActive ? 'scale-105' : ''}`}
+                                                    />
+                                                </div>
+                                                <div className="h-1/2 w-full p-4 relative">
+                                                    <img 
+                                                        src={device.imageBack} 
+                                                        alt={`${device.category} Back`} 
+                                                        className={`w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500 ${interactionsActive ? 'scale-105' : ''}`}
+                                                    />
+                                                </div>
+                                                {/* Consistent overlay */}
+                                                <div className={`absolute inset-0 bg-blue-900/5 group-hover:bg-transparent transition-colors pointer-events-none ${interactionsActive ? 'bg-transparent' : ''}`}></div>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <img 
+                                                    src={device.image} 
+                                                    alt={device.category} 
+                                                    className={`w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-500 p-4 ${interactionsActive ? 'scale-105' : ''}`}
+                                                />
+                                                <div className={`absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-colors ${interactionsActive ? 'bg-transparent' : ''}`}></div>
+                                            </>
+                                        )}
+                                    </div>
+                                    <div className="p-8 flex flex-col flex-grow text-center items-center">
+                                        <div className={`w-12 h-12 -mt-14 bg-white rounded-full flex items-center justify-center text-blue-600 shadow-lg mb-6 relative z-10 group-hover:scale-110 transition-transform ${interactionsActive ? 'scale-110' : ''}`}>
+                                            <device.IconComponent className="w-6 h-6" />
+                                        </div>
+                                        <h3 className={`text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors ${interactionsActive ? 'text-blue-600' : ''}`}>{device.category}</h3>
+                                        <div className="text-blue-600 font-medium text-base mb-4">{device.model}</div>
+                                        <p className="text-slate-600 text-base leading-relaxed">{device.use}</p>
+                                        
+                                        <div className={`mt-4 text-xs font-bold text-blue-500 uppercase tracking-wide opacity-0 group-hover:opacity-100 transition-opacity flex items-center ${interactionsActive ? 'opacity-100' : ''}`}>
+                                            View Specs <Icons.ExternalLink className="w-3 h-3 ml-1" />
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+
+                        <div className={`mt-16 bg-slate-900 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl cursor-pointer ${interactionsActive ? 'scale-[1.02] shadow-2xl' : ''}`}>
+                            <div className="mb-6 md:mb-0 md:mr-8">
+                                <h3 className="text-2xl font-bold mb-2">Hybrid Architecture</h3>
+                                <p className="text-slate-300">
+                                    SkyTab Venue combines dedicated hardware with a cloud-connected Web POS. 
+                                    APK releases ensure device stability while Web releases provide instant feature updates.
+                                </p>
+                            </div>
+                            <div className="flex space-x-4">
+                                <div className="text-center px-4 border-r border-slate-700">
+                                    <div className="font-bold text-2xl text-blue-400">APK</div>
+                                    <div className="text-xs text-slate-400 mt-1">Device Level Updates</div>
+                                </div>
+                                <div className="text-center px-4">
+                                    <div className="font-bold text-2xl text-green-400">Web</div>
+                                    <div className="text-xs text-slate-400 mt-1">Instant Features</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Software = ({ interactionsActive }) => {
+            return (
+                <section id="software" className="min-h-screen flex flex-col justify-center py-20 bg-slate-50">
+                    <div className="container mx-auto px-6">
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl font-bold text-slate-900 mb-4">Web Applications</h2>
+                            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                                A centralized suite of tools for managing POS operations, reporting, and more.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {WEB_APPS.map((app, idx) => (
+                                <a 
+                                    href={app.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    key={idx} 
+                                    className={`bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-l-4 border-blue-500 block hover:-translate-y-1 group overflow-hidden ${interactionsActive ? 'shadow-lg -translate-y-1' : ''}`}
+                                >
+                                    <div className="p-6 border-b border-slate-100">
+                                        <div className="flex items-center mb-1">
+                                            <div className="flex items-center flex-grow">
+                                                <app.IconComponent className={`w-5 h-5 text-blue-600 mr-2 group-hover:scale-110 transition-transform ${interactionsActive ? 'scale-110' : ''}`} />
+                                                <h3 className={`text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors ${interactionsActive ? 'text-blue-600' : ''}`}>{app.title}</h3>
+                                            </div>
+                                            <Icons.ExternalLink className={`w-4 h-4 text-slate-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity ${interactionsActive ? 'opacity-100' : ''}`} />
+                                        </div>
+                                        <p className="text-slate-500 text-xs font-medium pl-7">{app.desc}</p>
+                                    </div>
+                                    
+                                    <div className="p-6 bg-slate-50 h-full">
+                                        <ul className="space-y-2">
+                                            {app.details.map((detail, dIdx) => (
+                                                <li key={dIdx} className="flex items-start text-slate-700 text-xs leading-relaxed">
+                                                    <span className="w-1 h-1 bg-blue-400 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
+                                                    {detail}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Wallet = ({ interactionsActive }) => {
+            return (
+                <section id="wallet" className="min-h-screen flex flex-col justify-center py-24 bg-white relative overflow-hidden">
+                    <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-50 rounded-full blur-3xl opacity-50"></div>
+                    
+                    <div className="container mx-auto px-6 relative z-10">
+                        <div className="flex flex-col md:flex-row items-center mb-32">
+                            <div className="w-full md:w-1/2 pr-0 md:pr-16 mb-12 md:mb-0">
+                                <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold tracking-wide uppercase mb-6 shadow-sm">Mobile First</div>
+                                <h2 className="text-4xl font-bold text-slate-900 mb-6">SkyTab Venue Wallet</h2>
+                                <p className="text-lg text-slate-600 mb-8">
+                                    A seamless way for fans to access discounts, stored value, loyalty rewards, and mobile ordering—without needing additional accounts.
+                                </p>
+                                
+                                <ul className="space-y-4 list-none">
+                                    {[
+                                        "Log in with Ticketmaster, SeatGeek, or AXS credentials.",
+                                        "Secure QR-based payments & Card-on-file.",
+                                        "Apple & Google Wallet Pass support.",
+                                        "Geofence lock screen notifications."
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-start">
+                                            <div className="text-green-500 mr-3 mt-1 flex-shrink-0">
+                                                <Icons.CheckCircle className="w-5 h-5" />
+                                            </div>
+                                            <span className="text-slate-700">{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            
+                            {/* Compact Integration Support Tile */}
+                            <div className={`w-full md:w-1/2 relative bg-gradient-to-br from-slate-900 to-slate-800 rounded-3xl p-6 text-white shadow-2xl transform transition-all duration-300 hover:scale-[1.01] hover:shadow-blue-900/40 cursor-default border border-slate-700 overflow-hidden group ${interactionsActive ? 'scale-[1.01] shadow-blue-900/40' : ''}`}>
+                                <div className="absolute inset-0 grid-pattern opacity-20 pointer-events-none"></div>
+                                <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-600 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
+
+                                <div className="relative z-10 border-b border-slate-700/50 pb-4 mb-4 flex flex-col items-center text-center">
+                                    <div className="mb-3">
+                                        <Icons.Network className="w-8 h-8 text-blue-400" />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-1 tracking-tight">Integration Support</h3>
+                                    <p className="text-slate-400 text-sm">Seamless connection across all touchpoints.</p>
+                                </div>
+
+                                <div className="relative z-10 grid grid-cols-2 gap-3">
+                                    <div className={`bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item ${interactionsActive ? 'bg-white/10 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.2)] -translate-y-1' : ''}`}>
+                                        <div className={`mb-2 transition-transform group-hover/item:scale-110 ${interactionsActive ? 'scale-110' : ''}`}>
+                                            <Icons.BadgeCheck className="w-6 h-6 text-blue-300" />
+                                        </div>
+                                        <div className="font-semibold text-xs text-slate-200">Ticketing SSO</div>
+                                    </div>
+
+                                    <div className={`bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-yellow-500/30 hover:shadow-[0_0_15px_rgba(234,179,8,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item ${interactionsActive ? 'bg-white/10 border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.2)] -translate-y-1' : ''}`}>
+                                        <div className={`mb-2 transition-transform group-hover/item:scale-110 ${interactionsActive ? 'scale-110' : ''}`}>
+                                            <Icons.CircleDollarSign className="w-6 h-6 text-yellow-300" />
+                                        </div>
+                                        <div className="font-semibold text-xs text-slate-200">Virtual Currency</div>
+                                    </div>
+
+                                    <div className={`bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-green-500/30 hover:shadow-[0_0_15px_rgba(34,197,94,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item ${interactionsActive ? 'bg-white/10 border-green-500/30 shadow-[0_0_15px_rgba(34,197,94,0.2)] -translate-y-1' : ''}`}>
+                                        <div className={`mb-2 transition-transform group-hover/item:scale-110 ${interactionsActive ? 'scale-110' : ''}`}>
+                                            <Icons.Smartphone className="w-6 h-6 text-green-300" />
+                                        </div>
+                                        <div className="font-semibold text-xs text-slate-200">Mobile Orders</div>
+                                    </div>
+
+                                    <div className={`bg-white/5 backdrop-blur-md p-4 rounded-xl border border-white/10 transform transition-all duration-300 hover:bg-white/10 hover:border-purple-500/30 hover:shadow-[0_0_15px_rgba(168,85,247,0.2)] hover:-translate-y-1 cursor-pointer flex flex-col items-center text-center group/item ${interactionsActive ? 'bg-white/10 border-purple-500/30 shadow-[0_0_15px_rgba(168,85,247,0.2)] -translate-y-1' : ''}`}>
+                                        <div className={`mb-2 transition-transform group-hover/item:scale-110 ${interactionsActive ? 'scale-110' : ''}`}>
+                                            <Icons.Percent className="w-6 h-6 text-purple-300" />
+                                        </div>
+                                        <div className="font-semibold text-xs text-slate-200">Auto Discounts</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Highlights Section with iPhone */}
+                        <div className="flex flex-col lg:flex-row items-center gap-16 border-t border-slate-100 pt-24">
+                            <div className="w-full lg:w-1/3 flex justify-center">
+                                 <div className={`relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden flex items-center justify-center transform transition-all duration-500 hover:scale-105 hover:-translate-y-4 hover:shadow-2xl cursor-pointer ${interactionsActive ? 'scale-105 -translate-y-4 shadow-2xl' : ''}`}>
+                                    <img 
+                                        src="site/wallet-badge.png" 
+                                        alt="iPhone Wallet Badge" 
+                                        className="w-full h-full object-cover relative z-10"
+                                        onError={(e) => { e.target.style.display = 'none'; }}
+                                    />
+                                    {/* Removed Glass Glare Div as requested */}
+                                 </div>
+                            </div>
+
+                            <div className="w-full lg:w-2/3">
+                                <h3 className="text-3xl font-bold text-slate-900 mb-10">SkyTab Venue Wallet Highlights</h3>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className={`bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-blue-500 transition-all duration-300 border border-slate-100 cursor-pointer group ${interactionsActive ? 'shadow-lg -translate-y-1 border-blue-500' : ''}`}>
+                                        <div className="flex items-center mb-3">
+                                            <div className={`mr-3 text-blue-600 group-hover:text-blue-700 transition-colors ${interactionsActive ? 'text-blue-700' : ''}`}>
+                                                <Icons.Wallet className="w-6 h-6" />
+                                            </div>
+                                            <h4 className="font-bold text-slate-900">Apple & Google Wallet</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed mb-2">Custom passes for POS, kiosks, and 3rd party retail.</p>
+                                        <p className="text-xs text-slate-400">Initial support via QR codes; NFC "tap to pay" planned with hardware adoption.</p>
+                                    </div>
+                                    
+                                    <div className={`bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-purple-500 transition-all duration-300 border border-slate-100 cursor-pointer group ${interactionsActive ? 'shadow-lg -translate-y-1 border-purple-500' : ''}`}>
+                                        <div className="flex items-center mb-3">
+                                            <div className={`mr-3 text-purple-600 group-hover:text-purple-700 transition-colors ${interactionsActive ? 'text-purple-700' : ''}`}>
+                                                <Icons.PenTool className="w-6 h-6" />
+                                            </div>
+                                            <h4 className="font-bold text-slate-900">Pass Builder</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Easy creation of branded passes with logos, colors, and custom fields.</p>
+                                    </div>
+
+                                    <div className={`bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-green-500 transition-all duration-300 border border-slate-100 cursor-pointer group ${interactionsActive ? 'shadow-lg -translate-y-1 border-green-500' : ''}`}>
+                                        <div className="flex items-center mb-3">
+                                            <div className={`mr-3 text-green-600 group-hover:text-green-700 transition-colors ${interactionsActive ? 'text-green-700' : ''}`}>
+                                                <Icons.Bell className="w-6 h-6" />
+                                            </div>
+                                            <h4 className="font-bold text-slate-900">Push Notifications</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Marketing channel with always-on notifications for campaigns and loyalty.</p>
+                                    </div>
+
+                                    <div className={`bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-orange-500 transition-all duration-300 border border-slate-100 cursor-pointer group ${interactionsActive ? 'shadow-lg -translate-y-1 border-orange-500' : ''}`}>
+                                        <div className="flex items-center mb-3">
+                                            <div className={`mr-3 text-orange-600 group-hover:text-orange-700 transition-colors ${interactionsActive ? 'text-orange-700' : ''}`}>
+                                                <Icons.Zap className="w-6 h-6" />
+                                            </div>
+                                            <h4 className="font-bold text-slate-900">Frictionless Payments</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
+                                    </div>
+
+                                    <div className={`md:col-span-2 bg-slate-50 p-6 rounded-xl hover:shadow-lg hover:-translate-y-1 hover:border-red-500 transition-all duration-300 border border-slate-100 cursor-pointer group ${interactionsActive ? 'shadow-lg -translate-y-1 border-red-500' : ''}`}>
+                                        <div className="flex items-center mb-3">
+                                            <div className={`mr-3 text-red-600 group-hover:text-red-700 transition-colors ${interactionsActive ? 'text-red-700' : ''}`}>
+                                                <Icons.MapPin className="w-6 h-6" />
+                                            </div>
+                                            <h4 className="font-bold text-slate-900">Geofence Lock Screen</h4>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">Passes appear on lock screen when users enter venue geofences. Enhances usability and enables sponsor promotions.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Integrations = ({ interactionsActive }) => {
+            return (
+                <section id="integrations" className="min-h-screen flex flex-col justify-center py-24 bg-slate-50">
+                    <div className="container mx-auto px-6 text-center">
+                        <h2 className="text-4xl font-bold text-slate-900 mb-6">Connected Ecosystem</h2>
+                        <p className="text-xl text-slate-600 mb-16 max-w-3xl mx-auto">
+                            SkyTab Venue integrates seamlessly with a wide ecosystem of partners across ticketing, loyalty, payments, retail, and inventory.
+                        </p>
+
+                        <div className="flex flex-wrap justify-center gap-6 max-w-7xl mx-auto">
+                            {INTEGRATION_CATEGORIES.map((cat, idx) => (
+                                <div key={idx} className={`bg-white p-6 rounded-lg shadow-sm border border-slate-200 w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-default text-center group ${interactionsActive ? 'shadow-lg -translate-y-1' : ''}`}>
+                                    <h4 className={`text-blue-600 font-bold mb-3 uppercase text-sm tracking-wider group-hover:scale-105 transition-transform ${interactionsActive ? 'scale-105' : ''}`}>{cat.name}</h4>
+                                    <p className="text-slate-800 font-medium leading-relaxed">
+                                        {cat.partners}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className={`mt-16 bg-blue-50 border border-blue-100 rounded-xl p-8 max-w-4xl mx-auto text-left flex flex-col md:flex-row items-start gap-6 transform transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${interactionsActive ? 'shadow-lg -translate-y-1' : ''}`}>
+                            <div className="bg-blue-600 text-white p-3 rounded-lg flex-shrink-0">
+                                <Icons.ArrowLeftRight className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-slate-900 mb-2">Spotlight: YellowDog Integration</h3>
+                                <p className="text-slate-600 text-sm leading-relaxed mb-4">
+                                    Comprehensive inventory management support. In a two-way configuration, YellowDog acts as the system of record, pushing item and catalog data directly into SkyTab Venue POS.
+                                </p>
+                                <span className="text-xs font-semibold text-blue-700 bg-blue-100 px-2 py-1 rounded">2-Way Sync Available</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const Footer = () => (
+            <footer className="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+                <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+                    <div className="mb-4 md:mb-0">
+                        <div className="mb-4">
+                            <img 
+                                src="site/Shift4 Logo - RBG.png" 
+                                alt="Shift4 SkyTab Venue" 
+                                className="h-10 object-contain"
+                                onError={(e) => { e.target.style.display = 'none'; document.getElementById('fallback-footer-text').style.display = 'block'; }}
+                            />
+                            <div id="fallback-footer-text" style={{display: 'none'}} className="text-2xl font-bold text-white tracking-tighter mb-2">
+                                SHIFT4 <span className="font-light">SkyTab Venue</span>
+                            </div>
+                        </div>
+                        <p className="text-sm">Powering the world's most complex venues.</p>
+                    </div>
+                    <div className="text-sm">
+                        &copy; {new Date().getFullYear()} Shift4. All rights reserved.
+                    </div>
+                </div>
+            </footer>
+        );
+
+        // --- NEW REFRACTORED WALLET PAGE ---
+        const WalletPage = ({ onBack }) => {
+            // UPDATED: Shift4 Brand Colors (Slate & Blue)
+            const colors = {
+                bgDark: "bg-slate-950",      // Main background
+                bgCard: "bg-slate-900",      // Card background
+                textWhite: "text-white",
+                textGrey: "text-slate-400",
+                brandBlue: "text-blue-500",  // Shift4 Blue text
+                bgBrandBlue: "bg-blue-600",  // Primary CTA Button
+                borderBlue: "border-blue-500/30",
+                shadowBlue: "shadow-blue-500/20"
+            };
+
+            return (
+                <div className={`min-h-screen ${colors.bgDark} font-sans selection:bg-blue-500 selection:text-white`}>
+                    
+                    {/* A. Navbar */}
+                    <nav className={`fixed top-0 w-full z-50 backdrop-blur-md bg-slate-950/80 border-b border-white/10`}>
+                        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
+                            <div className="flex items-center cursor-pointer" onClick={onBack}>
+                                <div className="text-2xl font-bold tracking-tighter text-white mr-2">
+                                    SkyTab <span className="font-light">Venue</span>
+                                </div>
+                                <span className="text-xs text-slate-400 border-l border-slate-600 pl-3 ml-3 uppercase tracking-widest hidden sm:inline-block">Wallet & Access</span>
+                            </div>
+                            
+                            <div className="hidden md:flex space-x-8">
+                                <button onClick={() => document.getElementById('wallet-hero').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Wallet</button>
+                                <button onClick={() => document.getElementById('loyalty-app').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Loyalty App</button>
+                                <button onClick={() => document.getElementById('datanow').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Insights</button>
+                            </div>
+
+                            <div className="flex items-center space-x-4">
+                                <button onClick={onBack} className="text-sm font-medium text-slate-400 hover:text-white transition-colors flex items-center">
+                                    <Icons.ArrowLeft className="w-4 h-4 mr-2" /> Back
+                                </button>
+                                {/* Removed Book a Demo Button */}
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* B. Hero Section */}
+                    <section id="wallet-hero" className="relative pt-32 pb-20 overflow-hidden">
+                        {/* Updated Gradient to Blue */}
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-blue-600/20 rounded-full blur-[120px] pointer-events-none"></div>
+                        
+                        <div className="container mx-auto px-6 relative z-10 text-center">
+                            <div className="inline-block mb-4 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-sm font-medium tracking-wide">
+                                <span className="mr-2">✨</span> Mobile-First Fan Experience
+                            </div>
+                            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-tight">
+                                SkyTab Venue <br />
+                                {/* Updated Text Gradient to Blue/White */}
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-white">Wallet</span>
+                            </h1>
+                            <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+                                A mobile-first payment and loyalty solution that integrates directly with ticketing platforms and POS systems. It acts as a digital hub for payments, rewards, and stored value.
+                            </p>
+                            
+                            {/* Removed Get the Wallet Demo Button Container */}
+
+                            <div className="relative mx-auto w-[300px] md:w-[380px] h-[600px] md:h-[700px] bg-slate-900 rounded-[3rem] border-[8px] border-slate-800 shadow-2xl flex items-center justify-center overflow-hidden mb-12 transform hover:scale-[1.02] transition-transform duration-700">
+                                 <img src="site/wallet-badge.png" alt="Shift4 Wallet Pass" className="w-full h-full object-cover" />
+                                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none"></div>
+                            </div>
+
+                            <p className="text-sm text-slate-500 uppercase tracking-widest mb-6">Trusted by top venues</p>
+                            <div className="flex justify-center gap-8 opacity-40 grayscale flex-wrap">
+                                 <div className="h-8 w-24 bg-white/10 rounded"></div>
+                                 <div className="h-8 w-24 bg-white/10 rounded"></div>
+                                 <div className="h-8 w-24 bg-white/10 rounded"></div>
+                                 <div className="h-8 w-24 bg-white/10 rounded"></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* C. Wallet Capabilities Grid */}
+                    <section className={`py-16 ${colors.bgCard}`}>
+                        <div className="container mx-auto px-6">
+                            <div className="mb-12 text-center">
+                                <h2 className="text-3xl font-bold text-white">Wallet Capabilities</h2>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                {/* Card 1: Identity & Payments */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                                        <Icons.Fingerprint className="w-5 h-5 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-2">Identity & Payments</h3>
+                                    <ul className="text-slate-400 text-sm space-y-2">
+                                        <li>• Secure QR-based payments</li>
+                                        <li>• Card-on-file with BIN discounts</li>
+                                        <li>• Member level display</li>
+                                    </ul>
+                                </div>
+                                {/* Card 2: Stored Value */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                                        <Icons.CircleDollarSign className="w-5 h-5 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-2">Stored Value</h3>
+                                    <ul className="text-slate-400 text-sm space-y-2">
+                                        <li>• Virtual currency mgmt</li>
+                                        <li>• "Shift4 Bucks" support</li>
+                                        <li>• Balance transfers</li>
+                                    </ul>
+                                </div>
+                                {/* Card 3: Mobile Orders */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                                        <Icons.Smartphone className="w-5 h-5 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-2">Mobile Orders</h3>
+                                    <ul className="text-slate-400 text-sm space-y-2">
+                                        <li>• F&B pickup or delivery</li>
+                                        <li>• Order status tracking</li>
+                                        <li>• Digital receipts</li>
+                                    </ul>
+                                </div>
+                                {/* Card 4: Discounts & Loyalty */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-4">
+                                        <Icons.Percent className="w-5 h-5 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-lg font-bold text-white mb-2">Discounts & Loyalty</h3>
+                                    <ul className="text-slate-400 text-sm space-y-2">
+                                        <li>• Auto-apply ticket discounts</li>
+                                        <li>• Real-time currency awards</li>
+                                        <li>• SKU-level promotions</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* D. Feature Highlights (Repurposed) */}
+                    <section className="py-24 bg-slate-950 relative">
+                        <div className="container mx-auto px-6">
+                            <div className="mb-16 text-center">
+                                <span className={`text-blue-500 font-bold tracking-widest uppercase text-sm mb-2 block`}>Experience</span>
+                                <h2 className="text-4xl md:text-5xl font-bold text-white">Wallet Highlights.</h2>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <Icons.Wallet className="w-6 h-6 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-3">Apple & Google Wallet</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Native passes for POS and Kiosks. Initial support via QR codes; NFC "tap to pay" planned with hardware adoption.</p>
+                                </div>
+                                <div className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <Icons.PenTool className="w-6 h-6 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-3">Pass Builder</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Easy creation of branded wallet passes with logos, colors, and custom fields.</p>
+                                </div>
+                                <div className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <Icons.MapPin className="w-6 h-6 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-3">Geofence Lock Screen</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Passes appear on lock screen when users enter venue geofences or nearby loyalty locations.</p>
+                                </div>
+                                <div className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <Icons.Bell className="w-6 h-6 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-3">Push Notifications</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Wallet passes provide a new marketing channel with notifications enabled by default.</p>
+                                </div>
+                                <div className="p-8 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group md:col-span-2">
+                                    <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                        <Icons.Zap className="w-6 h-6 text-blue-500" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-white mb-3">Frictionless Payments</h3>
+                                    <p className="text-slate-400 text-sm leading-relaxed">Discounts, stored value, and card-on-file applied automatically at checkout. Works across F&B POS, kiosks, mobile ordering, retail POS, and autonomous retail systems.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* E. Integrations Strip */}
+                    <section className="py-12 bg-slate-900 border-y border-white/5">
+                         <div className="container mx-auto px-6 text-center">
+                            <p className="text-slate-400 text-sm uppercase tracking-widest mb-6">Works seamlessly with</p>
+                            <div className="flex flex-wrap justify-center gap-4 text-white font-semibold">
+                                <span className="px-4 py-2 bg-white/5 rounded-full border border-white/10">Ticketmaster</span>
+                                <span className="px-4 py-2 bg-white/5 rounded-full border border-white/10">SeatGeek</span>
+                                <span className="px-4 py-2 bg-white/5 rounded-full border border-white/10">AXS</span>
+                                <span className="px-4 py-2 bg-white/5 rounded-full border border-white/10">Amazon Just Walk Out</span>
+                                <span className="px-4 py-2 bg-white/5 rounded-full border border-white/10">Mashgin</span>
+                                <span className="px-4 py-2 bg-white/5 rounded-full border border-white/10">Zippin</span>
+                            </div>
+                         </div>
+                    </section>
+
+                    {/* F. Loyalty App (Back of House) */}
+                    <section id="loyalty-app" className="py-24 bg-slate-950">
+                        <div className="container mx-auto px-6">
+                             <div className="flex flex-col md:flex-row items-center gap-12">
+                                 <div className="w-full md:w-1/2">
+                                     <span className={`text-blue-500 font-bold tracking-widest uppercase text-sm mb-2 block`}>Back of House</span>
+                                     <h2 className="text-4xl font-bold text-white mb-6">Loyalty & Badge Management.</h2>
+                                     <p className="text-slate-400 mb-8 leading-relaxed">
+                                         A powerful admin interface for managing your loyalty program, user base, and badge configurations from a single dashboard.
+                                     </p>
+                                     
+                                     <div className="space-y-6">
+                                         <div className="flex items-start">
+                                             <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center mr-4 mt-1">
+                                                 <span className="text-blue-500 font-bold text-sm">1</span>
+                                             </div>
+                                             <div>
+                                                 <h4 className="text-white font-bold mb-1">Multiple Loyalty Instances</h4>
+                                                 <p className="text-slate-500 text-sm">Manage separate programs per organization.</p>
+                                             </div>
+                                         </div>
+                                         <div className="flex items-start">
+                                             <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center mr-4 mt-1">
+                                                 <span className="text-blue-500 font-bold text-sm">2</span>
+                                             </div>
+                                             <div>
+                                                 <h4 className="text-white font-bold mb-1">User Authentication</h4>
+                                                 <p className="text-slate-500 text-sm">Verify users via ticketing integrations or SMS.</p>
+                                             </div>
+                                         </div>
+                                         <div className="flex items-start">
+                                             <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center mr-4 mt-1">
+                                                 <span className="text-blue-500 font-bold text-sm">3</span>
+                                             </div>
+                                             <div>
+                                                 <h4 className="text-white font-bold mb-1">Award & Deduct</h4>
+                                                 <p className="text-slate-500 text-sm">Manually adjust currency, assign affiliations, and view history.</p>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 <div className="w-full md:w-1/2 bg-slate-900 rounded-2xl p-8 border border-slate-800 shadow-2xl flex flex-col gap-4">
+                                     {/* Simple UI Mockup for Admin Panel */}
+                                     <div className="h-4 w-1/3 bg-slate-700 rounded mb-4"></div>
+                                     <div className="h-24 w-full bg-slate-800 rounded border border-slate-700 p-4">
+                                         <div className="h-3 w-1/4 bg-slate-600 rounded mb-2"></div>
+                                         <div className="h-2 w-1/2 bg-slate-700 rounded"></div>
+                                     </div>
+                                     <div className="h-24 w-full bg-slate-800 rounded border border-slate-700 p-4">
+                                         <div className="h-3 w-1/4 bg-slate-600 rounded mb-2"></div>
+                                         <div className="h-2 w-1/2 bg-slate-700 rounded"></div>
+                                     </div>
+                                     <div className="h-24 w-full bg-slate-800 rounded border border-slate-700 p-4">
+                                         <div className="h-3 w-1/4 bg-slate-600 rounded mb-2"></div>
+                                         <div className="h-2 w-1/2 bg-slate-700 rounded"></div>
+                                     </div>
+                                 </div>
+                             </div>
+                        </div>
+                    </section>
+
+                    {/* G. DataNow (Placeholder) */}
+                    <section id="datanow" className="py-24 bg-slate-900 border-t border-slate-800 text-center">
+                        <div className="container mx-auto px-6">
+                            <span className="inline-block px-3 py-1 rounded-full bg-blue-900/30 text-blue-400 text-xs font-bold uppercase tracking-widest mb-4">Coming Soon</span>
+                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Data Driven Insights</h2>
+                            <p className="text-slate-400 max-w-2xl mx-auto">
+                                Advanced analytics powered by DataNow to track spending, loyalty engagement, and venue performance in real-time.
+                            </p>
+                        </div>
+                    </section>
+
+                    {/* Footer - Reusing standard footer, just dark mode adjusted contextually by parent div */}
+                    <footer className="py-12 text-center border-t border-white/5">
+                        <div className="text-xs text-slate-500">
+                            &copy; 2025 Shift4. All rights reserved.
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [view, setView] = useState('home'); // 'home' or 'wallet-page'
+            const [interactionsActive, setInteractionsActive] = useState(false);
+
+            useEffect(() => {
+                // No need to initialize Lucide manually anymore
+            });
+
+            return (
+                <div className="antialiased">
+                    <Navigation interactionsActive={interactionsActive} currentView={view} setView={setView} />
+                    
+                    {/* Conditional Rendering */}
+                    {view === 'home' ? (
+                        <>
+                            <Hero interactionsActive={interactionsActive} />
+                            <Hardware interactionsActive={interactionsActive} />
+                            <Software interactionsActive={interactionsActive} />
+                            <Wallet interactionsActive={interactionsActive} />
+                            <Integrations interactionsActive={interactionsActive} />
+                        </>
+                    ) : (
+                        <WalletPage onBack={() => { setView('home'); window.scrollTo(0,0); }} />
+                    )}
+                    
+                    <Footer />
+
+                    {/* Toggle Button for Interactions (Only visible on Home view for now) */}
+                    {view === 'home' && (
+                        <button 
+                            onClick={() => setInteractionsActive(!interactionsActive)}
+                            className={`fixed bottom-6 right-6 z-50 px-4 py-2 rounded-full font-bold shadow-lg transition-all duration-300 ${
+                                interactionsActive 
+                                ? 'bg-blue-600 text-white ring-4 ring-blue-300' 
+                                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                            }`}
+                        >
+                            {interactionsActive ? 'Interactions On' : 'Toggle Interactions'}
+                        </button>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
