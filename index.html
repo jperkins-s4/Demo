@@ -962,11 +962,13 @@
                                     <span className="text-xs text-slate-400 border-l border-slate-600 pl-3 ml-3 uppercase tracking-widest hidden sm:inline-block">Wallet & Access</span>
                                 </div>
 
-                                <div className="hidden md:flex space-x-8">
+                                <div className="hidden md:flex space-x-4">
                                     <button onClick={() => document.getElementById('wallet-overview').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Overview</button>
-                                    <button onClick={() => document.getElementById('wallet-features').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Features</button>
-                                    <button onClick={() => document.getElementById('data-insights').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Insights</button>
+                                    <button onClick={() => document.getElementById('wallet-capabilities').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Wallet</button>
+                                    <button onClick={() => document.getElementById('passes-highlights').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Passes</button>
+                                    <button onClick={() => document.getElementById('integrations').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Integrations</button>
                                     <button onClick={() => document.getElementById('back-of-house').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Admin</button>
+                                    <button onClick={() => document.getElementById('data-insights').scrollIntoView({behavior: 'smooth'})} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">Insights</button>
                                 </div>
 
                                 <div className="flex items-center space-x-4">
@@ -1018,145 +1020,150 @@
                         </div>
                     </section>
 
-                    {/* SECTION 2: Features + iPhone + Integrations */}
-                    <section id="wallet-features" className="snap-start snap-always h-screen overflow-y-auto bg-shift4-midnight-blue/95">
+                    {/* SECTION 2: Wallet Capabilities */}
+                    <section id="wallet-capabilities" className="snap-start snap-always h-screen overflow-y-auto bg-shift4-midnight-blue/95">
                         <div className="container mx-auto px-6 py-20">
-                            {/* iPhone + Capabilities Layout */}
-                            <div className="flex flex-col lg:flex-row gap-12 items-center mb-16">
-                                {/* iPhone Mockup */}
-                                <div className="w-full lg:w-1/3 flex justify-center">
-                                    <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl flex items-center justify-center overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500 cursor-pointer">
-                                        <img src="site/wallet-badge.png" alt="Shift4 Wallet Pass" loading="lazy" className="w-full h-full object-cover" />
-                                    </div>
-                                </div>
+                            {/* Section Header */}
+                            <div className="text-center mb-12">
+                                <span className="text-shift4-sky-blue font-bold tracking-widest uppercase text-sm mb-2 block">Mobile Commerce</span>
+                                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Wallet Capabilities</h2>
+                                <p className="text-slate-300 max-w-3xl mx-auto text-lg">
+                                    A complete mobile commerce platform with payment processing, loyalty rewards, and fan engagement tools.
+                                </p>
+                            </div>
 
-                                {/* Wallet Capabilities Cards */}
-                                <div className="w-full lg:w-2/3">
-                                    <h2 className="text-3xl font-bold text-white mb-8 text-center lg:text-left">Wallet Capabilities</h2>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center flex-shrink-0">
-                                                    <Icons.Fingerprint className="w-5 h-5 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Identity & Payments</h3>
-                                            </div>
-                                            <ul className="text-slate-300 text-sm space-y-2">
-                                                <li>• Secure QR-based payments</li>
-                                                <li>• Card-on-file with BIN discounts</li>
-                                                <li>• Member level display</li>
-                                            </ul>
-                                        </div>
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center flex-shrink-0">
-                                                    <Icons.CircleDollarSign className="w-5 h-5 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Stored Value</h3>
-                                            </div>
-                                            <ul className="text-slate-300 text-sm space-y-2">
-                                                <li>• Virtual currency mgmt</li>
-                                                <li>• "Shift4 Bucks" support</li>
-                                                <li>• Balance transfers</li>
-                                            </ul>
-                                        </div>
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center flex-shrink-0">
-                                                    <Icons.Smartphone className="w-5 h-5 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Mobile Orders</h3>
-                                            </div>
-                                            <ul className="text-slate-300 text-sm space-y-2">
-                                                <li>• F&B pickup or delivery</li>
-                                                <li>• Order status tracking</li>
-                                                <li>• Digital receipts</li>
-                                            </ul>
-                                        </div>
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center flex-shrink-0">
-                                                    <Icons.Percent className="w-5 h-5 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Discounts & Loyalty</h3>
-                                            </div>
-                                            <ul className="text-slate-300 text-sm space-y-2">
-                                                <li>• Auto-apply ticket discounts</li>
-                                                <li>• Real-time currency awards</li>
-                                                <li>• SKU-level promotions</li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                            {/* iPhone Mockup Hero */}
+                            <div className="flex justify-center mb-12">
+                                <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl flex items-center justify-center overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500 cursor-pointer">
+                                    <img src="site/wallet-capabilities-hero.png" alt="Wallet Capabilities" loading="lazy" className="w-full h-full object-cover" />
                                 </div>
                             </div>
 
-                            {/* Feature Highlights */}
-                            <div className="mb-16">
-                                <div className="text-center mb-12">
-                                    <span className="text-shift4-sky-blue font-bold tracking-widest uppercase text-sm mb-2 block">Experience</span>
-                                    <h2 className="text-3xl md:text-4xl font-bold text-white">Wallet Highlights</h2>
+                            {/* 7 Capability Tiles Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {/* Tile 1: Identity & Payments */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.Fingerprint className="w-5 h-5 text-shift4-sky-blue" />
+                                        </div>
+                                        <h3 className="text-lg font-bold text-white">Identity & Payments</h3>
+                                    </div>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li>• Ticketing login (no new account required)</li>
+                                        <li>• Profile + member badge (name, email, tier level)</li>
+                                        <li>• Card on file + BIN-based discounts</li>
+                                        <li>• QR wallet payments</li>
+                                    </ul>
                                 </div>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                <Icons.Wallet className="w-6 h-6 text-shift4-sky-blue" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white">Apple & Google Wallet</h3>
+
+                                {/* Tile 2: Stored Value */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.CircleDollarSign className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
-                                        <p className="text-slate-300 text-sm leading-relaxed">Native passes for POS and Kiosks. QR codes with NFC "tap to pay" planned.</p>
+                                        <h3 className="text-lg font-bold text-white">Stored Value</h3>
                                     </div>
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                <Icons.PenTool className="w-6 h-6 text-shift4-sky-blue" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white">Pass Builder</h3>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li>• Custom virtual currency (e.g., Shift4 Bucks)</li>
+                                        <li>• Balance + credits/debits ledger</li>
+                                        <li>• Load gift cards (GiveX) + user-to-user transfers</li>
+                                        <li>• Expiring tranches (oldest-expiring spent first)</li>
+                                    </ul>
+                                </div>
+
+                                {/* Tile 3: Mobile Orders */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.Smartphone className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
-                                        <p className="text-slate-300 text-sm leading-relaxed">Easy creation of branded wallet passes with custom fields.</p>
+                                        <h3 className="text-lg font-bold text-white">Mobile Orders</h3>
                                     </div>
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                <Icons.MapPin className="w-6 h-6 text-shift4-sky-blue" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white">Geofence Lock Screen</h3>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li>• F&B pickup or delivery</li>
+                                        <li>• Real-time order status</li>
+                                        <li>• Digital receipts + order history</li>
+                                        <li>• One-click re-order</li>
+                                    </ul>
+                                </div>
+
+                                {/* Tile 4: Discounts & Loyalty */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.Percent className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
-                                        <p className="text-slate-300 text-sm leading-relaxed">Passes appear on lock screen when entering venue geofences.</p>
+                                        <h3 className="text-lg font-bold text-white">Discounts & Loyalty</h3>
                                     </div>
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                <Icons.Bell className="w-6 h-6 text-shift4-sky-blue" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white">Push Notifications</h3>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li>• Auto-discounts from ticketing attributes</li>
+                                        <li>• Member tier pricing (Silver/Gold/Platinum)</li>
+                                        <li>• Item/category/check promos + threshold-based offers</li>
+                                        <li>• Rules engine: date/time, usage limits, min cart value, stacking logic</li>
+                                    </ul>
+                                </div>
+
+                                {/* Tile 5: Loaded Tickets */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.CreditCard className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
-                                        <p className="text-slate-300 text-sm leading-relaxed">New marketing channel with notifications enabled by default.</p>
+                                        <h3 className="text-lg font-bold text-white">Loaded Tickets</h3>
                                     </div>
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                <Icons.Zap className="w-6 h-6 text-shift4-sky-blue" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white">Frictionless Payments</h3>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li>• Load tickets with currency or promotional discounts</li>
+                                        <li>• Auto-assign via ticketing attributes (follows ticket when forwarded)</li>
+                                        <li>• Configurable load window before event</li>
+                                        <li>• Redeem during event; unused balance expires 3am next day</li>
+                                    </ul>
+                                </div>
+
+                                {/* Tile 6: Promotions */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.BadgeCheck className="w-5 h-5 text-shift4-sky-blue" />
                                         </div>
-                                        <p className="text-slate-300 text-sm leading-relaxed">Discounts, stored value, and card-on-file applied automatically at checkout across all systems.</p>
+                                        <h3 className="text-lg font-bold text-white">Promotions</h3>
                                     </div>
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                <Icons.Lock className="w-6 h-6 text-shift4-sky-blue" />
-                                            </div>
-                                            <h3 className="text-lg font-bold text-white">Ticketing SSO</h3>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li>• Examples: $5 off $30, free item, tiered %, Amex BIN offer</li>
+                                        <li>• Controls: Menu/revenue center targeting, usage caps, max discounted items, stacking priority</li>
+                                    </ul>
+                                </div>
+
+                                {/* Tile 7: Payments & Acceptance (FEATURED) */}
+                                <div className="md:col-span-2 lg:col-span-3 p-8 rounded-2xl bg-shift4-sky-blue/10 border-2 border-shift4-sky-blue/40 hover:bg-shift4-sky-blue/15 transition-colors backdrop-blur-md shadow-lg shadow-shift4-sky-blue/20">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/30 flex items-center justify-center">
+                                            <Icons.Zap className="w-6 h-6 text-shift4-sky-blue" />
                                         </div>
-                                        <p className="text-slate-300 text-sm leading-relaxed mb-4">Single sign-on integration with major ticketing platforms.</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs">Ticketmaster</span>
-                                            <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs">SeatGeek</span>
-                                            <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs">AXS</span>
-                                            <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs">Amazon JWO</span>
-                                            <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs">Mashgin</span>
-                                            <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs">Zippin</span>
+                                        <h3 className="text-xl font-bold text-white">Payments & Acceptance</h3>
+                                        <span className="ml-auto px-3 py-1 bg-shift4-sky-blue/20 rounded-full text-xs font-bold text-white uppercase">Featured</span>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="text-sm font-bold text-shift4-sky-blue mb-2">Instant Processing</h4>
+                                            <ul className="text-slate-300 text-sm space-y-2">
+                                                <li>• Instant application of discounts + stored value + card on file</li>
+                                                <li>• Compatible with SkyTab Venue POS/kiosk/mobile ordering</li>
+                                                <li>• Compatible with SkyTab Restaurant POS</li>
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="text-sm font-bold text-shift4-sky-blue mb-2">System Integrations</h4>
+                                            <div className="flex flex-wrap gap-2 mb-3">
+                                                <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300">RetailCloud</span>
+                                                <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300">Retail Pro</span>
+                                                <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300">Fanatics</span>
+                                                <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300">NetSuite</span>
+                                                <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300">MyVenue</span>
+                                                <span className="px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300">Tapin2</span>
+                                            </div>
+                                            <p className="text-slate-400 text-xs">Currency can be disabled at retail locations</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1164,7 +1171,173 @@
                         </div>
                     </section>
 
-                    {/* SECTION 4: Back of House - Loyalty App & Badge Management */}
+                    {/* SECTION 3: Passes Highlights */}
+                    <section id="passes-highlights" className="snap-start snap-always h-screen overflow-y-auto bg-shift4-midnight-blue/95">
+                        <div className="container mx-auto px-6 py-20">
+                            {/* Section Header */}
+                            <div className="text-center mb-12">
+                                <span className="text-shift4-sky-blue font-bold tracking-widest uppercase text-sm mb-2 block">Pass Technology</span>
+                                <h2 className="text-3xl md:text-4xl font-bold text-white">Passes Highlights</h2>
+                            </div>
+
+                            {/* iPhone + Tiles Layout */}
+                            <div className="flex flex-col lg:flex-row items-center gap-12">
+                                {/* iPhone Mockup - Left Side */}
+                                <div className="w-full lg:w-1/3 flex justify-center">
+                                    <div className="relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl flex items-center justify-center overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500 cursor-pointer">
+                                        <img src="site/wallet-badge.png" alt="Wallet Badge Pass" loading="lazy" className="w-full h-full object-cover" />
+                                    </div>
+                                </div>
+
+                                {/* Highlight Tiles - Right Side */}
+                                <div className="w-full lg:w-2/3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {/* Tile 1: Apple & Google Wallet */}
+                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                                                    <Icons.Wallet className="w-6 h-6 text-shift4-sky-blue" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Apple & Google Wallet</h3>
+                                            </div>
+                                            <p className="text-slate-300 text-sm leading-relaxed">Native passes for POS and Kiosks. QR codes with NFC "tap to pay" planned.</p>
+                                        </div>
+
+                                        {/* Tile 2: Pass Builder */}
+                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                                                    <Icons.PenTool className="w-6 h-6 text-shift4-sky-blue" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Pass Builder</h3>
+                                            </div>
+                                            <p className="text-slate-300 text-sm leading-relaxed">Easy creation of branded wallet passes with custom fields.</p>
+                                        </div>
+
+                                        {/* Tile 3: Geofence Lock Screen */}
+                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                                                    <Icons.MapPin className="w-6 h-6 text-shift4-sky-blue" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Geofence Lock Screen</h3>
+                                            </div>
+                                            <p className="text-slate-300 text-sm leading-relaxed">Passes appear on lock screen when entering venue geofences.</p>
+                                        </div>
+
+                                        {/* Tile 4: Push Notifications */}
+                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                                                    <Icons.Bell className="w-6 h-6 text-shift4-sky-blue" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Push Notifications</h3>
+                                            </div>
+                                            <p className="text-slate-300 text-sm leading-relaxed">New marketing channel with notifications enabled by default.</p>
+                                        </div>
+
+                                        {/* Tile 5: Frictionless Payments - Spans 2 columns */}
+                                        <div className="md:col-span-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
+                                            <div className="flex items-center gap-3 mb-3">
+                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                                                    <Icons.Zap className="w-6 h-6 text-shift4-sky-blue" />
+                                                </div>
+                                                <h3 className="text-lg font-bold text-white">Frictionless Payments</h3>
+                                            </div>
+                                            <p className="text-slate-300 text-sm leading-relaxed">Discounts, stored value, and card-on-file applied automatically at checkout across all systems.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SECTION 4: Integrations */}
+                    <section id="integrations" className="snap-start snap-always h-screen flex items-center justify-center bg-shift4-midnight-blue relative overflow-hidden">
+                        <div className="container mx-auto px-6">
+                            <div className="text-center mb-12">
+                                <span className="text-shift4-sky-blue font-bold tracking-widest uppercase text-sm mb-2 block">Ecosystem</span>
+                                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Integrations</h2>
+                                <p className="text-slate-300 max-w-3xl mx-auto text-lg">
+                                    Deploy anywhere with flexible integration options and extensive partner ecosystem.
+                                </p>
+                            </div>
+
+                            <div className="max-w-5xl mx-auto space-y-8">
+                                {/* Subsection 1: Seamless Integration */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.Check className="w-5 h-5 text-shift4-sky-blue" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white">Seamless Integration</h3>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">
+                                            No Third-Party Dependencies
+                                        </span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">
+                                            No Added VenueNext License Fees
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Subsection 2: Access Options */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.MonitorSmartphone className="w-5 h-5 text-shift4-sky-blue" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white">Access Options</h3>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">
+                                            VenueNext Hosted Mobile Web
+                                        </span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">
+                                            VenueNext SDK for Native Apps
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Subsection 3: App Partners */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.Network className="w-5 h-5 text-shift4-sky-blue" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white">App Partners</h3>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Yinzcam</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Fanreach</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Raw Engineering</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">MLB Ballpark</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Sidearm Sports</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Additional Partners</span>
+                                    </div>
+                                </div>
+
+                                {/* Subsection 4: Ticketing Authentication */}
+                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center">
+                                            <Icons.Lock className="w-5 h-5 text-shift4-sky-blue" />
+                                        </div>
+                                        <h3 className="text-xl font-bold text-white">Ticketing Authentication</h3>
+                                    </div>
+                                    <div className="flex flex-wrap gap-2">
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Ticketmaster</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">SeatGeek</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">Tickets.com</span>
+                                        <span className="px-4 py-2 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-sm text-slate-300">AXS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SECTION 5: Back of House - Loyalty App & Badge Management */}
                     <section id="back-of-house" className="snap-start snap-always h-screen flex flex-col justify-between bg-shift4-midnight-blue">
                         <div className="container mx-auto px-6 flex-1 flex items-center">
                              <div className="flex flex-col md:flex-row items-center gap-12 w-full">
@@ -1225,7 +1398,7 @@
                         </div>
                     </section>
 
-                    {/* SECTION 3: Data Driven Insights */}
+                    {/* SECTION 6: Data Driven Insights */}
                     <section id="data-insights" className="snap-start snap-always h-screen flex items-center justify-center bg-shift4-midnight-blue relative overflow-hidden">
                         <div className="container mx-auto px-6">
                             <div className="text-center mb-12">
