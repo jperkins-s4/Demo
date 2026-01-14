@@ -65,6 +65,9 @@
         // --- SVG ICON COMPONENTS ---
         
         const Icons = {
+            ArrowLeft: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+            ),
             ArrowLeftRight: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M8 3 4 7l4 4"></path><path d="M4 7h16"></path><path d="m16 21 4-4-4-4"></path><path d="M20 17H4"></path></svg>
             ),
@@ -104,6 +107,9 @@
             ),
             MapPin: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            ),
+            Menu: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg>
             ),
             Monitor: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
@@ -154,7 +160,6 @@
                 model: "PAX L1400 & A3700",
                 use: "Concession stands, bars & premium locations.",
                 image: "site/fixed-pos.png",
-                // ADDED: Back Image
                 imageBack: "site/fixed-pos-back.jpg",
                 IconComponent: Icons.Monitor,
                 url: "https://s3.amazonaws.com/shift4-payments-files/S4_StadiumWorkstationDetail.pdf"
@@ -252,40 +257,48 @@
             return <i data-lucide={name} className={className} style={{ width: 24, height: 24, display: 'inline-block' }}></i>;
         };
 
-        const Navigation = ({ interactionsActive }) => {
+        const Navigation = ({ interactionsActive, currentView, setView }) => {
             const [isScrolled, setIsScrolled] = useState(false);
             const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+            const [isExtraMenuOpen, setIsExtraMenuOpen] = useState(false);
             const [activeSection, setActiveSection] = useState('overview');
 
             useEffect(() => {
                 const handleScroll = () => {
                     setIsScrolled(window.scrollY > 20);
-                    const sections = NAV_ITEMS.map(item => item.id);
-                    const scrollPosition = window.scrollY + 150;
+                    if (currentView === 'home') {
+                        const sections = NAV_ITEMS.map(item => item.id);
+                        const scrollPosition = window.scrollY + 150;
 
-                    for (const section of sections) {
-                        const element = document.getElementById(section);
-                        if (element && element.offsetTop <= scrollPosition && (element.offsetTop + element.offsetHeight) > scrollPosition) {
-                            setActiveSection(section);
+                        for (const section of sections) {
+                            const element = document.getElementById(section);
+                            if (element && element.offsetTop <= scrollPosition && (element.offsetTop + element.offsetHeight) > scrollPosition) {
+                                setActiveSection(section);
+                            }
                         }
                     }
                 };
                 window.addEventListener('scroll', handleScroll);
                 return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
+            }, [currentView]);
 
-            const scrollToSection = (id) => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                    setIsMobileMenuOpen(false);
+            const handleNavClick = (id) => {
+                if (currentView !== 'home') {
+                    setView('home');
+                    setTimeout(() => {
+                        const element = document.getElementById(id);
+                        if (element) element.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                } else {
+                    const element = document.getElementById(id);
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
                 }
             };
 
             return (
                 <nav className={`fixed w-full z-50 transition-all duration-300 bg-black shadow-lg ${isScrolled ? 'py-2' : 'py-4'}`}>
-                    <div className="container mx-auto px-6 flex justify-between items-center">
-                        <div className="flex items-center">
+                    <div className="container mx-auto px-6 flex justify-between items-center relative">
+                        <div className="flex items-center cursor-pointer" onClick={() => handleNavClick('overview')}>
                             <img 
                                 src="site/Shift4 Logo - RBG.png" 
                                 alt="Shift4 SkyTab Venue" 
@@ -297,13 +310,13 @@
                             </div>
                         </div>
                         
-                        <div className="hidden md:flex space-x-8">
+                        <div className="hidden md:flex space-x-8 items-center">
                             {NAV_ITEMS.map((item) => {
-                                const isActive = activeSection === item.id;
+                                const isActive = activeSection === item.id && currentView === 'home';
                                 return (
                                     <button 
                                         key={item.id}
-                                        onClick={() => scrollToSection(item.id)}
+                                        onClick={() => handleNavClick(item.id)}
                                         className={`text-sm font-semibold transition-all duration-300 ${
                                             isActive 
                                             ? 'text-blue-500 scale-110' 
@@ -314,16 +327,46 @@
                                     </button>
                                 );
                             })}
+                            
+                            {/* Desktop Hamburger Menu */}
+                            <div className="relative ml-4">
+                                <button 
+                                    onClick={() => setIsExtraMenuOpen(!isExtraMenuOpen)}
+                                    className="text-slate-100 hover:text-blue-400 focus:outline-none transition-colors"
+                                >
+                                    <Icons.Menu className="w-6 h-6" />
+                                </button>
+                                
+                                {isExtraMenuOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50 border border-slate-100">
+                                        <button 
+                                            onClick={() => {
+                                                setView('wallet-page');
+                                                setIsExtraMenuOpen(false);
+                                                window.scrollTo(0, 0);
+                                            }}
+                                            className="block w-full text-left px-4 py-2 text-slate-800 hover:bg-slate-100 hover:text-blue-600 transition-colors font-medium text-sm"
+                                        >
+                                            Wallet Page
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
-                        <button 
-                            className="md:hidden text-white focus:outline-none"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}></path>
-                            </svg>
-                        </button>
+                        {/* Mobile Menu Button (Hamburger) */}
+                        <div className="md:hidden flex items-center">
+                             {/* Note: In a real app, you might want to combine these menus or have distinct logic. 
+                                 Here we keep the existing mobile menu logic but ensure the new page link is available too if needed 
+                                 or just keep using the main nav logic for mobile. 
+                                 For simplicity, I'm just keeping the main mobile menu structure as per previous requests. */}
+                            <button 
+                                className="text-white focus:outline-none"
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            >
+                                <Icons.Menu className="w-6 h-6" />
+                            </button>
+                        </div>
                     </div>
 
                     {isMobileMenuOpen && (
@@ -333,7 +376,7 @@
                                 return (
                                     <button 
                                         key={item.id}
-                                        onClick={() => scrollToSection(item.id)}
+                                        onClick={() => { handleNavClick(item.id); setIsMobileMenuOpen(false); }}
                                         className={`text-left font-medium p-2 rounded ${
                                             isActive ? 'text-blue-500 bg-slate-900' : 'text-slate-100 hover:bg-slate-800'
                                         }`}
@@ -342,6 +385,17 @@
                                     </button>
                                 );
                             })}
+                            {/* Add Wallet Page link to mobile menu as well */}
+                            <button 
+                                onClick={() => {
+                                    setView('wallet-page');
+                                    setIsMobileMenuOpen(false);
+                                    window.scrollTo(0, 0);
+                                }}
+                                className="text-left font-medium p-2 rounded text-slate-100 hover:bg-slate-800 border-t border-slate-800 mt-2"
+                            >
+                                Wallet Page
+                            </button>
                         </div>
                     )}
                 </nav>
@@ -750,8 +804,28 @@
             </footer>
         );
 
+        // --- NEW CONTACT PAGE (Empty Placeholder as requested) ---
+        const WalletPage = ({ onBack }) => {
+            return (
+                <div className="pt-32 pb-24 min-h-screen bg-slate-50 text-slate-900 flex flex-col items-center">
+                    <div className="container mx-auto px-6 max-w-6xl">
+                        {/* Back Button */}
+                        <button onClick={onBack} className="mb-8 flex items-center text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                            <Icons.ArrowLeft className="w-5 h-5 mr-2" />
+                            Back to Home
+                        </button>
+
+                        <div className="text-center mt-20 animate-fade-in">
+                            <h1 className="text-5xl font-bold text-slate-900 mb-6">Wallet & Badge</h1>
+                            <p className="text-xl text-slate-600">Page content coming soon...</p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const App = () => {
-            // State for the "Show All Interactions" toggle
+            const [view, setView] = useState('home'); // 'home' or 'wallet-page'
             const [interactionsActive, setInteractionsActive] = useState(false);
 
             useEffect(() => {
@@ -760,25 +834,36 @@
 
             return (
                 <div className="antialiased">
-                    <Navigation interactionsActive={interactionsActive} />
-                    <Hero interactionsActive={interactionsActive} />
-                    <Hardware interactionsActive={interactionsActive} />
-                    <Software interactionsActive={interactionsActive} />
-                    <Wallet interactionsActive={interactionsActive} />
-                    <Integrations interactionsActive={interactionsActive} />
+                    <Navigation interactionsActive={interactionsActive} currentView={view} setView={setView} />
+                    
+                    {/* Conditional Rendering */}
+                    {view === 'home' ? (
+                        <>
+                            <Hero interactionsActive={interactionsActive} />
+                            <Hardware interactionsActive={interactionsActive} />
+                            <Software interactionsActive={interactionsActive} />
+                            <Wallet interactionsActive={interactionsActive} />
+                            <Integrations interactionsActive={interactionsActive} />
+                        </>
+                    ) : (
+                        <WalletPage onBack={() => { setView('home'); window.scrollTo(0,0); }} />
+                    )}
+                    
                     <Footer />
 
-                    {/* Toggle Button for Interactions */}
-                    <button 
-                        onClick={() => setInteractionsActive(!interactionsActive)}
-                        className={`fixed bottom-6 right-6 z-50 px-4 py-2 rounded-full font-bold shadow-lg transition-all duration-300 ${
-                            interactionsActive 
-                            ? 'bg-blue-600 text-white ring-4 ring-blue-300' 
-                            : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-                        }`}
-                    >
-                        {interactionsActive ? 'Interactions On' : 'Toggle Interactions'}
-                    </button>
+                    {/* Toggle Button for Interactions (Only visible on Home view for now) */}
+                    {view === 'home' && (
+                        <button 
+                            onClick={() => setInteractionsActive(!interactionsActive)}
+                            className={`fixed bottom-6 right-6 z-50 px-4 py-2 rounded-full font-bold shadow-lg transition-all duration-300 ${
+                                interactionsActive 
+                                ? 'bg-blue-600 text-white ring-4 ring-blue-300' 
+                                : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                            }`}
+                        >
+                            {interactionsActive ? 'Interactions On' : 'Toggle Interactions'}
+                        </button>
+                    )}
                 </div>
             );
         };
