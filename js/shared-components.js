@@ -257,15 +257,20 @@ const PhoneMockup = ({ src, alt, onError, className = '' }) => (
 
 // PhoneCarousel Component - iPhone frame with carousel functionality
 // Uses same frame style as PhoneMockup for consistency across the site
-const PhoneCarousel = ({ images, className = '', size = 'default' }) => {
-    const [currentSlide, setCurrentSlide] = React.useState(0);
+// Supports controlled mode via currentSlide/onSlideChange props
+const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide: controlledSlide, onSlideChange }) => {
+    const [internalSlide, setInternalSlide] = React.useState(0);
+
+    // Use controlled or internal state
+    const currentSlide = controlledSlide !== undefined ? controlledSlide : internalSlide;
+    const setCurrentSlide = onSlideChange || setInternalSlide;
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % images.length);
+        setCurrentSlide((currentSlide + 1) % images.length);
     };
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + images.length) % images.length);
+        setCurrentSlide((currentSlide - 1 + images.length) % images.length);
     };
 
     const goToSlide = (index) => {
