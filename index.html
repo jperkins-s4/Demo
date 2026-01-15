@@ -264,6 +264,15 @@
             Lock: ({ className }) => (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
             ),
+            Gift: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+            ),
+            ShoppingBag: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            ),
+            Ticket: ({ className }) => (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 7v2a3 3 0 1 1 0 6v2c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-2a3 3 0 1 1 0-6V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
+            ),
         };
 
         // --- 2. DATA ARRAYS (Using Icons) ---
@@ -956,22 +965,43 @@
         // --- REUSABLE COMPONENTS FOR WALLET PAGE ---
 
         // Reusable FeatureCard component for capability tiles
-        const FeatureCard = ({ icon: Icon, title, children, featured = false, className = '' }) => {
+        const FeatureCard = ({
+            icon: Icon,
+            title,
+            benefit = null,
+            gradientFrom = '',
+            gradientTo = '',
+            isPrimary = true,
+            children,
+            featured = false,
+            className = ''
+        }) => {
             const baseClasses = featured
-                ? "md:col-span-2 lg:col-span-3 p-4 rounded-2xl bg-shift4-sky-blue/10 border-2 border-shift4-sky-blue/40 hover:bg-shift4-sky-blue/15 transition-colors backdrop-blur-md shadow-lg shadow-shift4-sky-blue/20"
-                : "p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group";
+                ? "md:col-span-2 lg:col-span-3 p-6 rounded-2xl bg-slate-800/50 border-2 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out backdrop-blur-sm"
+                : isPrimary
+                ? "p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out backdrop-blur-sm group"
+                : "p-4 rounded-2xl bg-slate-800/30 border border-slate-700/30 hover:bg-slate-800/50 hover:border-slate-600/50 transition-all duration-300 ease-out backdrop-blur-sm";
+
+            const gradientClasses = gradientFrom && gradientTo
+                ? `bg-gradient-to-br ${gradientFrom} ${gradientTo}`
+                : 'bg-shift4-sky-blue/20';
 
             return (
                 <div className={`${baseClasses} ${className}`}>
                     <div className="flex items-center gap-2 mb-2">
-                        <div className={`rounded-full bg-shift4-sky-blue/20 flex items-center justify-center ${featured ? 'w-10 h-10' : 'w-8 h-8'} ${!featured && 'group-hover:scale-110 transition-transform'} flex-shrink-0`}>
-                            <Icon className={`text-shift4-sky-blue ${featured ? 'w-5 h-5' : 'w-4 h-4'}`} />
+                        <div className={`rounded-xl ${gradientClasses} flex items-center justify-center p-2.5 ${!featured && 'group-hover:scale-110 transition-transform'} flex-shrink-0`}>
+                            <Icon className={`text-white w-5 h-5`} />
                         </div>
-                        <h3 className={`font-bold text-white ${featured ? 'text-lg' : 'text-base'}`}>{title}</h3>
+                        <h3 className={`font-bold text-white ${featured ? 'text-lg' : 'text-lg'}`}>{title}</h3>
                         {featured && (
                             <span className="ml-auto px-3 py-1 bg-shift4-sky-blue/20 rounded-full text-xs font-bold text-white uppercase">Featured</span>
                         )}
                     </div>
+                    {benefit && (
+                        <p className="text-slate-400 text-xs mb-3 leading-relaxed">
+                            {benefit}
+                        </p>
+                    )}
                     {children}
                 </div>
             );
@@ -986,10 +1016,29 @@
 
         // Reusable small badge for compact lists
         const SmallBadge = ({ children, className = '' }) => (
-            <span className={`px-3 py-1 bg-white/5 rounded-full border border-shift4-sky-blue/20 text-xs text-slate-300 hover:bg-white/10 hover:border-shift4-sky-blue/40 transition-all duration-200 cursor-pointer ${className}`}>
+            <span className={`px-3 py-1 bg-slate-700/50 rounded-full border border-slate-600/50 text-xs text-slate-300 hover:bg-slate-700 hover:border-cyan-400/50 transition-all duration-200 cursor-pointer ${className}`}>
                 {children}
             </span>
         );
+
+        // Compact horizontal card for secondary capabilities
+        const CompactCard = ({ icon: Icon, title, description, gradientFrom, gradientTo, className = '' }) => {
+            const gradientClasses = gradientFrom && gradientTo
+                ? `bg-gradient-to-br ${gradientFrom} ${gradientTo}`
+                : 'bg-shift4-sky-blue/20';
+
+            return (
+                <div className={`flex-1 flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/30 hover:bg-slate-800/50 hover:border-slate-600/50 transition-all duration-300 ${className}`}>
+                    <div className={`rounded-xl ${gradientClasses} p-2.5 flex-shrink-0`}>
+                        <Icon className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                        <h4 className="font-bold text-white text-sm mb-1">{title}</h4>
+                        <p className="text-slate-400 text-xs leading-relaxed">{description}</p>
+                    </div>
+                </div>
+            );
+        };
 
         // Reusable PhoneMockup component
         const PhoneMockup = ({ src, alt, onError, className = '' }) => (
@@ -1230,81 +1279,117 @@
                     <section id="wallet-capabilities" aria-labelledby="wallet-capabilities-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-center">
                         <div className="container mx-auto px-6 py-6">
                             {/* Section Header */}
-                            <div className="text-center mb-3">
-                                <span className="text-shift4-sky-blue font-bold tracking-widest uppercase text-xs mb-1 block">Mobile Commerce</span>
-                                <h2 id="wallet-capabilities-heading" className="text-2xl md:text-3xl font-bold text-white mb-2">Wallet Capabilities</h2>
-                                <p className="text-slate-300 max-w-3xl mx-auto text-sm">
-                                    A complete mobile commerce platform with payment processing, loyalty rewards, and fan engagement tools.
+                            <div className="text-center mb-4">
+                                <span className="text-xs font-semibold text-cyan-400 tracking-wider uppercase block mb-1">Mobile Commerce</span>
+                                <h2 id="wallet-capabilities-heading" className="text-3xl font-bold text-white mb-2">Wallet Capabilities</h2>
+                                <div className="h-0.5 w-20 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-2"></div>
+                                <p className="text-slate-300 max-w-3xl mx-auto text-xs">
+                                    Everything you need to power mobile payments, loyalty programs, and digital ordering.
                                 </p>
                             </div>
 
-                            {/* 7 Capability Tiles Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-w-7xl mx-auto">
-                                <FeatureCard icon={Icons.Fingerprint} title="Identity & Payments">
-                                    <ul className="text-slate-300 text-xs space-y-1">
-                                        <li>• Ticketing login (no new account required)</li>
-                                        <li>• Profile + member badge (name, email, tier level)</li>
-                                        <li>• Card on file + BIN-based discounts</li>
-                                        <li>• QR wallet payments</li>
+                            {/* Main Capability Cards - 3-column grid with 4 primary cards + featured */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto mb-4">
+                                {/* Card 1: Digital Wallet & Payments */}
+                                <FeatureCard
+                                    icon={Icons.Wallet}
+                                    title="Digital Wallet & Payments"
+                                    benefit="Seamless payment experience with secure, tokenized transactions"
+                                    gradientFrom="from-blue-500"
+                                    gradientTo="to-cyan-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticketing login with member profiles & tier badges</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Card-on-file with BIN-based discounts</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> QR wallet payments</li>
                                     </ul>
                                 </FeatureCard>
 
-                                <FeatureCard icon={Icons.CircleDollarSign} title="Stored Value">
-                                    <ul className="text-slate-300 text-xs space-y-1">
-                                        <li>• Custom virtual currency (e.g., Shift4 Bucks)</li>
-                                        <li>• Balance + credits/debits ledger</li>
-                                        <li>• Load gift cards (GiveX) + user-to-user transfers</li>
-                                        <li>• Expiring tranches (oldest-expiring spent first)</li>
+                                {/* Card 2: Stored Value & Currency */}
+                                <FeatureCard
+                                    icon={Icons.CircleDollarSign}
+                                    title="Stored Value & Currency"
+                                    benefit="Flexible virtual currency system with gift card integration"
+                                    gradientFrom="from-emerald-500"
+                                    gradientTo="to-teal-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Custom branded currency (e.g., Shift4 Bucks)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Load gift cards (GiveX) with user transfers</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Smart expiring tranches (oldest-spent first)</li>
                                     </ul>
                                 </FeatureCard>
 
-                                <FeatureCard icon={Icons.Smartphone} title="Mobile Orders">
-                                    <ul className="text-slate-300 text-xs space-y-1">
-                                        <li>• F&B pickup or delivery</li>
-                                        <li>• Real-time order status</li>
-                                        <li>• Digital receipts + order history</li>
-                                        <li>• One-click re-order</li>
+                                {/* Card 3: Mobile Orders & Fulfillment */}
+                                <FeatureCard
+                                    icon={Icons.ShoppingBag}
+                                    title="Mobile Orders & Fulfillment"
+                                    benefit="Complete digital ordering from browse to pickup"
+                                    gradientFrom="from-violet-500"
+                                    gradientTo="to-purple-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> F&B pickup or delivery options</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time order tracking & status</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Digital receipts with full history</li>
                                     </ul>
                                 </FeatureCard>
 
-                                <FeatureCard icon={Icons.Percent} title="Discounts & Loyalty">
-                                    <ul className="text-slate-300 text-xs space-y-1">
-                                        <li>• Auto-discounts from ticketing attributes</li>
-                                        <li>• Member tier pricing (Silver/Gold/Platinum)</li>
-                                        <li>• Item/category/check promos + threshold-based offers</li>
-                                        <li>• Rules engine: date/time, usage limits, min cart value, stacking logic</li>
+                                {/* Card 4: Loyalty & Promotions */}
+                                <FeatureCard
+                                    icon={Icons.Gift}
+                                    title="Loyalty & Promotions"
+                                    benefit="Automated rewards and flexible promotion engine"
+                                    gradientFrom="from-orange-500"
+                                    gradientTo="to-amber-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Auto-discounts from ticketing attributes</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Member tier pricing (Silver/Gold/Platinum)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Advanced rules: usage caps, stacking, thresholds</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Item/category/check-level promos</li>
                                     </ul>
+                                    <div className="border-t border-slate-700 mt-2 pt-2">
+                                        <p className="text-xs text-slate-500">Examples: $5 off $30, Free item, Tiered %</p>
+                                    </div>
                                 </FeatureCard>
 
-                                <FeatureCard icon={Icons.CreditCard} title="Loaded Tickets">
-                                    <ul className="text-slate-300 text-xs space-y-1">
-                                        <li>• Load tickets with currency or promotional discounts</li>
-                                        <li>• Auto-assign via ticketing attributes (follows ticket when forwarded)</li>
-                                        <li>• Configurable load window before event</li>
-                                        <li>• Redeem during event; unused balance expires 3am next day</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                <FeatureCard icon={Icons.BadgeCheck} title="Promotions">
-                                    <ul className="text-slate-300 text-xs space-y-1">
-                                        <li>• Examples: $5 off $30, free item, tiered %, Amex BIN offer</li>
-                                        <li>• Controls: Menu/revenue center targeting, usage caps, max discounted items, stacking priority</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                <FeatureCard icon={Icons.Zap} title="Payments & Acceptance" featured>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {/* Cards 5-6: Payments & Acceptance - spans 2 columns */}
+                                <div className="lg:col-span-2">
+                                    <FeatureCard
+                                        icon={Icons.Zap}
+                                        title="Payments & Acceptance"
+                                        benefit="Unified payment processing across all channels"
+                                        gradientFrom="from-shift4-sky-blue"
+                                        gradientTo="to-cyan-500"
+                                        featured={true}
+                                    >
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
-                                            <h4 className="text-xs font-bold text-shift4-sky-blue mb-1">Instant Processing</h4>
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="p-2 rounded-lg bg-cyan-500/20">
+                                                    <Icons.Zap className="w-5 h-5 text-cyan-400" />
+                                                </div>
+                                                <h4 className="font-bold text-white text-xs">Instant Processing</h4>
+                                            </div>
                                             <ul className="text-slate-300 text-xs space-y-1">
-                                                <li>• Instant application of discounts + stored value + card on file</li>
-                                                <li>• Compatible with SkyTab Venue POS/kiosk/mobile ordering</li>
-                                                <li>• Compatible with SkyTab Restaurant POS</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Instant application of discounts, stored value, and card on file</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Compatible with SkyTab Venue POS/kiosk/mobile ordering</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Compatible with SkyTab Restaurant POS</li>
                                             </ul>
                                         </div>
                                         <div>
-                                            <h4 className="text-xs font-bold text-shift4-sky-blue mb-1">System Integrations</h4>
-                                            <div className="flex flex-wrap gap-1 mb-2">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="p-2 rounded-lg bg-cyan-500/20">
+                                                    <Icons.Link className="w-5 h-5 text-cyan-400" />
+                                                </div>
+                                                <h4 className="font-bold text-white text-xs">System Integrations</h4>
+                                            </div>
+                                            <div className="flex flex-wrap gap-2 mb-2">
                                                 <SmallBadge>RetailCloud</SmallBadge>
                                                 <SmallBadge>Retail Pro</SmallBadge>
                                                 <SmallBadge>Fanatics</SmallBadge>
@@ -1312,10 +1397,29 @@
                                                 <SmallBadge>MyVenue</SmallBadge>
                                                 <SmallBadge>Tapin2</SmallBadge>
                                             </div>
-                                            <p className="text-slate-400 text-xs">Currency can be disabled at retail locations</p>
+                                            <p className="text-slate-400 text-xs">Currency can be disabled at specific retail locations</p>
                                         </div>
                                     </div>
-                                </FeatureCard>
+                                    </FeatureCard>
+                                </div>
+                            </div>
+
+                            {/* Compact secondary cards - horizontal layout */}
+                            <div className="flex flex-col md:flex-row gap-4 max-w-7xl mx-auto">
+                                <CompactCard
+                                    icon={Icons.Ticket}
+                                    title="Loaded Tickets"
+                                    description="Pre-load tickets with currency or discounts via ticketing attributes"
+                                    gradientFrom="from-indigo-500"
+                                    gradientTo="to-blue-500"
+                                />
+                                <CompactCard
+                                    icon={Icons.TrendingUp}
+                                    title="Promotion Controls"
+                                    description="Menu targeting, usage limits, and stacking priority rules"
+                                    gradientFrom="from-rose-500"
+                                    gradientTo="to-pink-500"
+                                />
                             </div>
                         </div>
                     </section>
