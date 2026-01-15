@@ -255,8 +255,9 @@ const PhoneMockup = ({ src, alt, onError, className = '' }) => (
     </div>
 );
 
-// PhoneCarousel Component - Image carousel for iPhone mockup
-const PhoneCarousel = ({ images, className = '' }) => {
+// PhoneCarousel Component - iPhone frame with carousel functionality
+// Uses same frame style as PhoneMockup for consistency across the site
+const PhoneCarousel = ({ images, className = '', size = 'default' }) => {
     const [currentSlide, setCurrentSlide] = React.useState(0);
 
     const nextSlide = () => {
@@ -271,63 +272,68 @@ const PhoneCarousel = ({ images, className = '' }) => {
         setCurrentSlide(index);
     };
 
+    // Size variants for different contexts
+    const wrapperClasses = size === 'large'
+        ? 'w-full lg:w-[45%] flex flex-col items-center'
+        : 'w-full lg:w-1/3 flex flex-col items-center';
+
     return (
-        <div className="w-full lg:w-1/3 flex flex-col items-center">
-            {/* Image Container with overlaid controls */}
-            <div className={`relative w-[600px] h-[750px] flex items-center justify-center group ${className}`}>
-                {/* Images with Crossfade Transition - Full display with hover effect */}
+        <div className={wrapperClasses}>
+            {/* iPhone Frame - matches PhoneMockup style */}
+            <div className={`relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500 ${className}`}>
+                {/* Carousel images with crossfade */}
                 {images.map((img, index) => (
                     <img
                         key={img.src}
                         src={img.src}
                         alt={img.alt}
                         loading="lazy"
-                        className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2 ${
+                        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                             index === currentSlide ? 'opacity-100' : 'opacity-0'
                         }`}
                     />
                 ))}
+            </div>
 
-                {/* Navigation Controls - Floating pill at bottom */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-black/40 backdrop-blur-md rounded-full px-5 py-3 z-10">
-                    {/* Previous Arrow */}
-                    <button
-                        onClick={prevSlide}
-                        className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-300"
-                        aria-label="Previous image"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </button>
+            {/* Navigation Controls - Below phone frame */}
+            <div className="mt-4 flex items-center gap-3 bg-black/50 backdrop-blur-xl rounded-full px-4 py-2.5 border border-white/10">
+                {/* Previous Arrow */}
+                <button
+                    onClick={prevSlide}
+                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    aria-label="Previous image"
+                >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                    </svg>
+                </button>
 
-                    {/* Navigation Dots */}
-                    <div className="flex gap-2">
-                        {images.map((_, index) => (
-                            <button
-                                key={index}
-                                onClick={() => goToSlide(index)}
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                    index === currentSlide
-                                        ? 'bg-shift4-sky-blue w-6'
-                                        : 'bg-white/40 w-2 hover:bg-white/60'
-                                }`}
-                                aria-label={`Go to slide ${index + 1}`}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Next Arrow */}
-                    <button
-                        onClick={nextSlide}
-                        className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all duration-300"
-                        aria-label="Next image"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                    </button>
+                {/* Navigation Dots */}
+                <div className="flex gap-1.5">
+                    {images.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => goToSlide(index)}
+                            className={`rounded-full transition-all duration-300 ${
+                                index === currentSlide
+                                    ? 'bg-shift4-sky-blue h-2 w-6'
+                                    : 'bg-white/30 h-2 w-2 hover:bg-white/50'
+                            }`}
+                            aria-label={`Go to slide ${index + 1}`}
+                        />
+                    ))}
                 </div>
+
+                {/* Next Arrow */}
+                <button
+                    onClick={nextSlide}
+                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    aria-label="Next image"
+                >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
+                </button>
             </div>
         </div>
     );

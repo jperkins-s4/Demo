@@ -361,83 +361,85 @@
                     </section>
 
                     {/* SECTION 4: Passes Highlights */}
-                    <section id="passes-highlights" aria-labelledby="passes-highlights-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-center">
-                        <div className="container mx-auto px-6 py-6">
-                            {/* Section Header */}
-                            <div className="text-center mb-3">
-                                <span className="text-shift4-sky-blue font-bold tracking-widest uppercase text-xs mb-1 block">Pass Technology</span>
-                                <h2 id="passes-highlights-heading" className="text-2xl md:text-3xl font-bold text-white">Passes Highlights</h2>
+                    <section id="passes-highlights" aria-labelledby="passes-highlights-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue flex items-center relative">
+                        {/* Subtle background gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-shift4-sky-blue/5 via-transparent to-cyan-500/5 pointer-events-none"></div>
+
+                        <div className="container mx-auto px-6 relative z-10">
+                            {/* Centered Section Header */}
+                            <div className="text-center mb-1">
+                                <span className="text-shift4-sky-blue font-semibold tracking-[0.2em] uppercase text-sm mb-2 block">Pass Technology</span>
+                                <h2 id="passes-highlights-heading" className="text-4xl font-bold text-white tracking-tight">Passes Highlights</h2>
                             </div>
 
-                            {/* iPhone + Tiles Layout */}
-                            <div className="flex flex-col lg:flex-row items-center gap-4 scale-90 -my-4">
-                                {/* iPhone Carousel - Left Side */}
+                            {/* iPhone + Bento Tiles Layout */}
+                            <div className="flex flex-col lg:flex-row items-center gap-4">
+                                {/* iPhone Carousel - Left Side (Larger) */}
                                 <PhoneCarousel
+                                    size="large"
                                     images={[
-                                        { src: '../site/wallet1.png', alt: 'Pass in Apple Wallet - Digital pass with QR code and member information' },
-                                        { src: '../site/wallet2.png', alt: 'Pass with notification - Contextual alert displayed on digital pass' },
-                                        { src: '../site/wallet3.png', alt: 'Lock screen notification - Geofence-triggered pass appearing on lock screen' }
+                                        { src: '../site/pass1.png', alt: 'Shift4 Stadium pass - Gold Member with $250 balance and QR code' },
+                                        { src: '../site/pass2.png', alt: 'Lock screen geofence notification - Welcome to Shift4 Stadium' },
+                                        { src: '../site/pass3.png', alt: 'Lock screen push notification - Promotional offer for fans' }
                                     ]}
                                 />
 
-                                {/* Highlight Tiles - Right Side */}
-                                <div className="w-full lg:w-2/3">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        {/* Tile 1: Apple & Google Wallet */}
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                    <Icons.Wallet className="w-6 h-6 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Apple & Google Wallet</h3>
+                                {/* Bento Grid - Right Side - 2-Row Layout */}
+                                <div className="w-full lg:w-[55%] flex flex-col gap-4">
+
+                                    {/* Row 1: 2 Primary tiles */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Apple & Google Wallet */}
+                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-shift4-sky-blue/40 hover:shadow-[0_0_40px_rgba(19,110,246,0.15)]">
+                                            <div className="absolute -top-20 -right-20 w-40 h-40 bg-shift4-sky-blue/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-shift4-sky-blue to-cyan-400 flex items-center justify-center shadow-lg shadow-shift4-sky-blue/25 mb-4 group-hover:scale-110 transition-all duration-300">
+                                                <Icons.Wallet className="w-7 h-7 text-white" />
                                             </div>
+                                            <h3 className="text-lg font-bold text-white mb-2">Apple & Google Wallet</h3>
                                             <p className="text-slate-300 text-sm leading-relaxed">Native passes for POS and Kiosks. QR codes with NFC "tap to pay" planned.</p>
                                         </div>
 
-                                        {/* Tile 2: Pass Builder */}
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                    <Icons.PenTool className="w-6 h-6 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Pass Builder</h3>
+                                        {/* Pass Builder */}
+                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(139,92,246,0.15)]">
+                                            <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 mb-4 group-hover:scale-110 transition-all duration-300">
+                                                <Icons.PenTool className="w-7 h-7 text-white" />
                                             </div>
+                                            <h3 className="text-lg font-bold text-white mb-2">Pass Builder</h3>
                                             <p className="text-slate-300 text-sm leading-relaxed">Easy creation of branded wallet passes with custom fields.</p>
                                         </div>
+                                    </div>
 
-                                        {/* Tile 3: Geofence Lock Screen */}
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                    <Icons.MapPin className="w-6 h-6 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Geofence Lock Screen</h3>
+                                    {/* Row 2: 3 Feature tiles (equal size) */}
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {/* Geofence Lock Screen */}
+                                        <div className="relative overflow-hidden rounded-2xl bg-slate-800/60 border border-white/[0.08] p-6 group cursor-pointer transition-all duration-300 hover:bg-slate-800/80 hover:border-emerald-500/30 hover:-translate-y-0.5">
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                                <Icons.MapPin className="w-6 h-6 text-white" />
                                             </div>
-                                            <p className="text-slate-300 text-sm leading-relaxed">Passes appear on lock screen when entering venue geofences.</p>
+                                            <h3 className="text-base font-bold text-white mb-1.5">Geofence Lock Screen</h3>
+                                            <p className="text-slate-400 text-sm leading-relaxed">Passes appear on lock screen when entering venue geofences.</p>
                                         </div>
 
-                                        {/* Tile 4: Push Notifications */}
-                                        <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                    <Icons.Bell className="w-6 h-6 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Push Notifications</h3>
+                                        {/* Push Notifications */}
+                                        <div className="relative overflow-hidden rounded-2xl bg-slate-800/60 border border-white/[0.08] p-6 group cursor-pointer transition-all duration-300 hover:bg-slate-800/80 hover:border-amber-500/30 hover:-translate-y-0.5">
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                                <Icons.Bell className="w-6 h-6 text-white" />
                                             </div>
-                                            <p className="text-slate-300 text-sm leading-relaxed">New marketing channel with notifications enabled by default.</p>
+                                            <h3 className="text-base font-bold text-white mb-1.5">Push Notifications</h3>
+                                            <p className="text-slate-400 text-sm leading-relaxed">New marketing channel with notifications enabled by default.</p>
                                         </div>
 
-                                        {/* Tile 5: Frictionless Payments - Spans 2 columns */}
-                                        <div className="md:col-span-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group">
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="w-12 h-12 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                                                    <Icons.Zap className="w-6 h-6 text-shift4-sky-blue" />
-                                                </div>
-                                                <h3 className="text-lg font-bold text-white">Frictionless Payments</h3>
+                                        {/* Frictionless Payments */}
+                                        <div className="relative overflow-hidden rounded-2xl bg-slate-800/60 border border-white/[0.08] p-6 group cursor-pointer transition-all duration-300 hover:bg-slate-800/80 hover:border-cyan-500/30 hover:-translate-y-0.5">
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-shift4-sky-blue flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                                                <Icons.Zap className="w-6 h-6 text-white" />
                                             </div>
-                                            <p className="text-slate-300 text-sm leading-relaxed">Discounts, stored value, and card-on-file applied automatically at checkout across all systems.</p>
+                                            <h3 className="text-base font-bold text-white mb-1.5">Frictionless Payments</h3>
+                                            <p className="text-slate-400 text-sm leading-relaxed">Discounts, stored value, and card-on-file applied automatically.</p>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
