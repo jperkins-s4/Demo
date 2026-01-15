@@ -1288,55 +1288,63 @@
                                 </p>
                             </div>
 
-                            {/* Main Capability Cards - 3-column grid with featured tile at top */}
+                            {/* Main Capability Cards - 3-column grid with 3 equal-width tiles at top */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto mb-4">
-                                {/* Card 1: Digital Wallet & Payments */}
+                                {/* Tile 1: Member Identity & Wallet */}
                                 <FeatureCard
                                     icon={Icons.Wallet}
-                                    title="Digital Wallet & Payments"
-                                    benefit="Seamless payment experience with secure, tokenized transactions"
+                                    title="Member Identity & Wallet"
+                                    benefit="Secure member authentication with integrated digital wallet"
                                     gradientFrom="from-blue-500"
                                     gradientTo="to-cyan-500"
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticketing login with member profiles & tier badges</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Secure tokenized wallet storage</li>
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Card-on-file with BIN-based discounts</li>
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> QR wallet payments</li>
                                     </ul>
                                 </FeatureCard>
 
-                                {/* Cards 2-3: Payments & Acceptance - spans 2 columns */}
-                                <div className="lg:col-span-2">
-                                    <FeatureCard
-                                        icon={Icons.Zap}
-                                        title="Payments & Acceptance"
-                                        benefit="Unified payment processing across all channels"
-                                        gradientFrom="from-shift4-sky-blue"
-                                        gradientTo="to-cyan-500"
-                                        featured={true}
-                                    >
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {/* Tile 2: Payment Processing & Acceptance */}
+                                <FeatureCard
+                                    icon={Icons.Zap}
+                                    title="Payment Processing & Acceptance"
+                                    benefit="Unified payment processing across all channels"
+                                    gradientFrom="from-shift4-sky-blue"
+                                    gradientTo="to-cyan-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Instant application of discounts, stored value, and card on file</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Compatible with mobile, kiosk, and POS ordering</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time transaction processing</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Multi-channel payment acceptance</li>
+                                    </ul>
+                                </FeatureCard>
+
+                                {/* Tile 3: System Integrations */}
+                                <FeatureCard
+                                    icon={Icons.Link}
+                                    title="System Integrations"
+                                    benefit="Enterprise-grade compatibility across platforms"
+                                    gradientFrom="from-purple-500"
+                                    gradientTo="to-indigo-500"
+                                    isPrimary={true}
+                                >
+                                    <div className="space-y-3">
+                                        {/* POS Systems */}
                                         <div>
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <div className="p-2 rounded-lg bg-cyan-500/20">
-                                                    <Icons.Zap className="w-5 h-5 text-cyan-400" />
-                                                </div>
-                                                <h4 className="font-bold text-white text-xs">Instant Processing</h4>
-                                            </div>
+                                            <h4 className="font-bold text-white text-xs mb-2">POS Systems</h4>
                                             <ul className="text-slate-300 text-xs space-y-1">
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Instant application of discounts, stored value, and card on file</li>
                                                 <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Compatible with SkyTab Venue POS/kiosk/mobile ordering</li>
                                                 <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Compatible with SkyTab Restaurant POS</li>
                                             </ul>
                                         </div>
+                                        {/* Platform Integrations */}
                                         <div>
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <div className="p-2 rounded-lg bg-cyan-500/20">
-                                                    <Icons.Link className="w-5 h-5 text-cyan-400" />
-                                                </div>
-                                                <h4 className="font-bold text-white text-xs">System Integrations</h4>
-                                            </div>
+                                            <h4 className="font-bold text-white text-xs mb-2">Platform Integrations</h4>
                                             <div className="flex flex-wrap gap-2 mb-2">
                                                 <SmallBadge>RetailCloud</SmallBadge>
                                                 <SmallBadge>Retail Pro</SmallBadge>
@@ -1345,11 +1353,10 @@
                                                 <SmallBadge>MyVenue</SmallBadge>
                                                 <SmallBadge>Tapin2</SmallBadge>
                                             </div>
-                                            <p className="text-slate-400 text-xs">Currency can be disabled at specific retail locations</p>
+                                            <p className="text-slate-400 text-xs italic">Currency can be disabled at specific retail locations</p>
                                         </div>
                                     </div>
-                                    </FeatureCard>
-                                </div>
+                                </FeatureCard>
 
                                 {/* Card 4: Stored Value & Currency */}
                                 <FeatureCard
