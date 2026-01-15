@@ -1258,19 +1258,19 @@
                                     onError={handleImageError}
                                 />
 
-                                {/* iPhone 2 - New Wallet Screen */}
+                                {/* iPhone 2 - Wallet Screen */}
                                 <PhoneMockup
-                                    src="site/wallet-capabilities-new.png"
-                                    alt="Wallet Capabilities - Mobile interface showing Shift4 Bucks balance and menu options"
+                                    src="site/Walletscreen.png"
+                                    alt="Wallet Screen - Mobile interface showing Shift4 Bucks balance and menu options"
                                     onError={handleImageError}
                                 />
 
-                                {/* iPhone 3 - Placeholder (blank for now) */}
-                                <div className="w-full lg:w-1/3 flex justify-center">
-                                    <div className="relative w-72 h-[600px] bg-slate-800/30 rounded-[3rem] border-8 border-slate-700/50 shadow-2xl flex items-center justify-center overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500">
-                                        <span className="text-slate-500 text-sm">Coming Soon</span>
-                                    </div>
-                                </div>
+                                {/* iPhone 3 - Cards Screen */}
+                                <PhoneMockup
+                                    src="site/cardsscreen.png"
+                                    alt="Cards Screen - Credit card selection and Shift4Bucks payment interface"
+                                    onError={handleImageError}
+                                />
                             </div>
                         </div>
                     </section>
@@ -1288,7 +1288,7 @@
                                 </p>
                             </div>
 
-                            {/* Main Capability Cards - 3-column grid with 4 primary cards + featured */}
+                            {/* Main Capability Cards - 3-column grid with featured tile at top */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto mb-4">
                                 {/* Card 1: Digital Wallet & Payments */}
                                 <FeatureCard
@@ -1306,59 +1306,7 @@
                                     </ul>
                                 </FeatureCard>
 
-                                {/* Card 2: Stored Value & Currency */}
-                                <FeatureCard
-                                    icon={Icons.CircleDollarSign}
-                                    title="Stored Value & Currency"
-                                    benefit="Flexible virtual currency system with gift card integration"
-                                    gradientFrom="from-emerald-500"
-                                    gradientTo="to-teal-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Custom branded currency (e.g., Shift4 Bucks)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Load gift cards (GiveX) with user transfers</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Smart expiring tranches (oldest-spent first)</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                {/* Card 3: Mobile Orders & Fulfillment */}
-                                <FeatureCard
-                                    icon={Icons.ShoppingBag}
-                                    title="Mobile Orders & Fulfillment"
-                                    benefit="Complete digital ordering from browse to pickup"
-                                    gradientFrom="from-violet-500"
-                                    gradientTo="to-purple-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> F&B pickup or delivery options</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time order tracking & status</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Digital receipts with full history</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                {/* Card 4: Loyalty & Promotions */}
-                                <FeatureCard
-                                    icon={Icons.Gift}
-                                    title="Loyalty & Promotions"
-                                    benefit="Automated rewards and flexible promotion engine"
-                                    gradientFrom="from-orange-500"
-                                    gradientTo="to-amber-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Auto-discounts from ticketing attributes</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Member tier pricing (Silver/Gold/Platinum)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Advanced rules: usage caps, stacking, thresholds</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Item/category/check-level promos</li>
-                                    </ul>
-                                    <div className="border-t border-slate-700 mt-2 pt-2">
-                                        <p className="text-xs text-slate-500">Examples: $5 off $30, Free item, Tiered %</p>
-                                    </div>
-                                </FeatureCard>
-
-                                {/* Cards 5-6: Payments & Acceptance - spans 2 columns */}
+                                {/* Cards 2-3: Payments & Acceptance - spans 2 columns */}
                                 <div className="lg:col-span-2">
                                     <FeatureCard
                                         icon={Icons.Zap}
@@ -1402,6 +1350,58 @@
                                     </div>
                                     </FeatureCard>
                                 </div>
+
+                                {/* Card 4: Stored Value & Currency */}
+                                <FeatureCard
+                                    icon={Icons.CircleDollarSign}
+                                    title="Stored Value & Currency"
+                                    benefit="Flexible virtual currency system with gift card integration"
+                                    gradientFrom="from-emerald-500"
+                                    gradientTo="to-teal-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Custom branded currency (e.g., Shift4 Bucks)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Load gift cards (GiveX) with user transfers</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Smart expiring tranches (oldest-spent first)</li>
+                                    </ul>
+                                </FeatureCard>
+
+                                {/* Card 5: Mobile Orders & Fulfillment */}
+                                <FeatureCard
+                                    icon={Icons.ShoppingBag}
+                                    title="Mobile Orders & Fulfillment"
+                                    benefit="Complete digital ordering from browse to pickup"
+                                    gradientFrom="from-violet-500"
+                                    gradientTo="to-purple-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> F&B pickup or delivery options</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time order tracking & status</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Digital receipts with full history</li>
+                                    </ul>
+                                </FeatureCard>
+
+                                {/* Card 6: Loyalty & Promotions */}
+                                <FeatureCard
+                                    icon={Icons.Gift}
+                                    title="Loyalty & Promotions"
+                                    benefit="Automated rewards and flexible promotion engine"
+                                    gradientFrom="from-orange-500"
+                                    gradientTo="to-amber-500"
+                                    isPrimary={true}
+                                >
+                                    <ul className="text-slate-300 text-xs space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Auto-discounts from ticketing attributes</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Member tier pricing (Silver/Gold/Platinum)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Advanced rules: usage caps, stacking, thresholds</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Item/category/check-level promos</li>
+                                    </ul>
+                                    <div className="border-t border-slate-700 mt-2 pt-2">
+                                        <p className="text-xs text-slate-500">Examples: $5 off $30, Free item, Tiered %</p>
+                                    </div>
+                                </FeatureCard>
                             </div>
 
                             {/* Compact secondary cards - horizontal layout */}
