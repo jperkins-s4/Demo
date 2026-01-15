@@ -177,19 +177,23 @@ const FeatureCard = ({
     className = ''
 }) => {
     const baseClasses = featured
-        ? "md:col-span-2 lg:col-span-3 p-6 rounded-2xl bg-slate-800/50 border-2 border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out backdrop-blur-sm"
+        ? "relative overflow-hidden md:col-span-2 lg:col-span-3 p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 ease-out group"
         : isPrimary
-        ? "p-5 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-800/70 hover:border-slate-600 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 ease-out backdrop-blur-sm group"
-        : "p-4 rounded-2xl bg-slate-800/30 border border-slate-700/30 hover:bg-slate-800/50 hover:border-slate-600/50 transition-all duration-300 ease-out backdrop-blur-sm";
+        ? "relative overflow-hidden p-5 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 ease-out group"
+        : "relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 transition-all duration-500 ease-out group";
 
     const gradientClasses = gradientFrom && gradientTo
         ? `bg-gradient-to-br ${gradientFrom} ${gradientTo}`
         : 'bg-shift4-sky-blue/20';
 
+    // Extract color for glow effect from gradientFrom
+    const glowColor = gradientFrom.replace('from-', '').split('-')[0] || 'slate';
+
     return (
         <div className={`${baseClasses} ${className}`}>
+            <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${glowColor}-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
             <div className="flex items-center gap-2 mb-2">
-                <div className={`rounded-xl ${gradientClasses} flex items-center justify-center p-2.5 ${!featured && 'group-hover:scale-110 transition-transform'} flex-shrink-0`}>
+                <div className={`rounded-lg ${gradientClasses} flex items-center justify-center p-2.5 shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
                     <Icon className={`text-white w-5 h-5`} />
                 </div>
                 <h3 className={`font-bold text-white ${featured ? 'text-lg' : 'text-lg'}`}>{title}</h3>
@@ -227,9 +231,13 @@ const CompactCard = ({ icon: Icon, title, description, gradientFrom, gradientTo,
         ? `bg-gradient-to-br ${gradientFrom} ${gradientTo}`
         : 'bg-shift4-sky-blue/20';
 
+    // Extract color for glow effect from gradientFrom
+    const glowColor = gradientFrom ? gradientFrom.replace('from-', '').split('-')[0] : 'slate';
+
     return (
-        <div className={`flex-1 flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/30 hover:bg-slate-800/50 hover:border-slate-600/50 transition-all duration-300 ${className}`}>
-            <div className={`rounded-xl ${gradientClasses} p-2.5 flex-shrink-0`}>
+        <div className={`relative overflow-hidden flex-1 flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 transition-all duration-500 group ${className}`}>
+            <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${glowColor}-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <div className={`rounded-lg ${gradientClasses} p-2.5 shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
                 <Icon className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1">
