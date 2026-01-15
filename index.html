@@ -958,16 +958,16 @@
         // Reusable FeatureCard component for capability tiles
         const FeatureCard = ({ icon: Icon, title, children, featured = false, className = '' }) => {
             const baseClasses = featured
-                ? "md:col-span-2 lg:col-span-3 p-8 rounded-2xl bg-shift4-sky-blue/10 border-2 border-shift4-sky-blue/40 hover:bg-shift4-sky-blue/15 transition-colors backdrop-blur-md shadow-lg shadow-shift4-sky-blue/20"
-                : "p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group";
+                ? "md:col-span-2 lg:col-span-3 p-4 rounded-2xl bg-shift4-sky-blue/10 border-2 border-shift4-sky-blue/40 hover:bg-shift4-sky-blue/15 transition-colors backdrop-blur-md shadow-lg shadow-shift4-sky-blue/20"
+                : "p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-md group";
 
             return (
                 <div className={`${baseClasses} ${className}`}>
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className={`rounded-full bg-shift4-sky-blue/20 flex items-center justify-center ${featured ? 'w-12 h-12' : 'w-10 h-10'} ${!featured && 'group-hover:scale-110 transition-transform'} flex-shrink-0`}>
-                            <Icon className={`text-shift4-sky-blue ${featured ? 'w-6 h-6' : 'w-5 h-5'}`} />
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className={`rounded-full bg-shift4-sky-blue/20 flex items-center justify-center ${featured ? 'w-10 h-10' : 'w-8 h-8'} ${!featured && 'group-hover:scale-110 transition-transform'} flex-shrink-0`}>
+                            <Icon className={`text-shift4-sky-blue ${featured ? 'w-5 h-5' : 'w-4 h-4'}`} />
                         </div>
-                        <h3 className={`font-bold text-white ${featured ? 'text-xl' : 'text-lg'}`}>{title}</h3>
+                        <h3 className={`font-bold text-white ${featured ? 'text-lg' : 'text-base'}`}>{title}</h3>
                         {featured && (
                             <span className="ml-auto px-3 py-1 bg-shift4-sky-blue/20 rounded-full text-xs font-bold text-white uppercase">Featured</span>
                         )}
@@ -1199,34 +1199,10 @@
                                 </p>
                             </div>
 
-                            {/* iPhone Mockup Hero - 3 Phones */}
-                            <div className="flex justify-center items-center gap-4 mb-3 scale-75 -my-4">
-                                {/* iPhone 1 - Wallet Badge Screen */}
-                                <PhoneMockup
-                                    src="site/wallet-badge.png"
-                                    alt="Wallet Badge - Shift4 Stadium pass with QR code"
-                                    onError={handleImageError}
-                                />
-
-                                {/* iPhone 2 - New Wallet Screen */}
-                                <PhoneMockup
-                                    src="site/wallet-capabilities-new.png"
-                                    alt="Wallet Capabilities - Mobile interface showing Shift4 Bucks balance and menu options"
-                                    onError={handleImageError}
-                                />
-
-                                {/* iPhone 3 - Placeholder (blank for now) */}
-                                <div className="w-full lg:w-1/3 flex justify-center">
-                                    <div className="relative w-72 h-[600px] bg-slate-800/30 rounded-[3rem] border-8 border-slate-700/50 shadow-2xl flex items-center justify-center overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500">
-                                        <span className="text-slate-500 text-sm">Coming Soon</span>
-                                    </div>
-                                </div>
-                            </div>
-
                             {/* 7 Capability Tiles Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 max-w-7xl mx-auto">
                                 <FeatureCard icon={Icons.Fingerprint} title="Identity & Payments">
-                                    <ul className="text-slate-300 text-sm space-y-2">
+                                    <ul className="text-slate-300 text-xs space-y-1">
                                         <li>• Ticketing login (no new account required)</li>
                                         <li>• Profile + member badge (name, email, tier level)</li>
                                         <li>• Card on file + BIN-based discounts</li>
@@ -1235,7 +1211,7 @@
                                 </FeatureCard>
 
                                 <FeatureCard icon={Icons.CircleDollarSign} title="Stored Value">
-                                    <ul className="text-slate-300 text-sm space-y-2">
+                                    <ul className="text-slate-300 text-xs space-y-1">
                                         <li>• Custom virtual currency (e.g., Shift4 Bucks)</li>
                                         <li>• Balance + credits/debits ledger</li>
                                         <li>• Load gift cards (GiveX) + user-to-user transfers</li>
@@ -1244,7 +1220,7 @@
                                 </FeatureCard>
 
                                 <FeatureCard icon={Icons.Smartphone} title="Mobile Orders">
-                                    <ul className="text-slate-300 text-sm space-y-2">
+                                    <ul className="text-slate-300 text-xs space-y-1">
                                         <li>• F&B pickup or delivery</li>
                                         <li>• Real-time order status</li>
                                         <li>• Digital receipts + order history</li>
@@ -1253,7 +1229,7 @@
                                 </FeatureCard>
 
                                 <FeatureCard icon={Icons.Percent} title="Discounts & Loyalty">
-                                    <ul className="text-slate-300 text-sm space-y-2">
+                                    <ul className="text-slate-300 text-xs space-y-1">
                                         <li>• Auto-discounts from ticketing attributes</li>
                                         <li>• Member tier pricing (Silver/Gold/Platinum)</li>
                                         <li>• Item/category/check promos + threshold-based offers</li>
@@ -1262,7 +1238,7 @@
                                 </FeatureCard>
 
                                 <FeatureCard icon={Icons.CreditCard} title="Loaded Tickets">
-                                    <ul className="text-slate-300 text-sm space-y-2">
+                                    <ul className="text-slate-300 text-xs space-y-1">
                                         <li>• Load tickets with currency or promotional discounts</li>
                                         <li>• Auto-assign via ticketing attributes (follows ticket when forwarded)</li>
                                         <li>• Configurable load window before event</li>
@@ -1271,25 +1247,25 @@
                                 </FeatureCard>
 
                                 <FeatureCard icon={Icons.BadgeCheck} title="Promotions">
-                                    <ul className="text-slate-300 text-sm space-y-2">
+                                    <ul className="text-slate-300 text-xs space-y-1">
                                         <li>• Examples: $5 off $30, free item, tiered %, Amex BIN offer</li>
                                         <li>• Controls: Menu/revenue center targeting, usage caps, max discounted items, stacking priority</li>
                                     </ul>
                                 </FeatureCard>
 
                                 <FeatureCard icon={Icons.Zap} title="Payments & Acceptance" featured>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div>
-                                            <h4 className="text-sm font-bold text-shift4-sky-blue mb-2">Instant Processing</h4>
-                                            <ul className="text-slate-300 text-sm space-y-2">
+                                            <h4 className="text-xs font-bold text-shift4-sky-blue mb-1">Instant Processing</h4>
+                                            <ul className="text-slate-300 text-xs space-y-1">
                                                 <li>• Instant application of discounts + stored value + card on file</li>
                                                 <li>• Compatible with SkyTab Venue POS/kiosk/mobile ordering</li>
                                                 <li>• Compatible with SkyTab Restaurant POS</li>
                                             </ul>
                                         </div>
                                         <div>
-                                            <h4 className="text-sm font-bold text-shift4-sky-blue mb-2">System Integrations</h4>
-                                            <div className="flex flex-wrap gap-2 mb-3">
+                                            <h4 className="text-xs font-bold text-shift4-sky-blue mb-1">System Integrations</h4>
+                                            <div className="flex flex-wrap gap-1 mb-2">
                                                 <SmallBadge>RetailCloud</SmallBadge>
                                                 <SmallBadge>Retail Pro</SmallBadge>
                                                 <SmallBadge>Fanatics</SmallBadge>
