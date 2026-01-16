@@ -87,3 +87,25 @@ a:focus-visible {
 .hidden-accessible {
     display: none;
 }
+
+/* Scroll margin for fixed navbar offset */
+section[id] {
+    scroll-margin-top: 5rem;
+}
+
+/* Active navigation link styling */
+.nav-link-active {
+    color: #136EF6;
+    position: relative;
+}
+
+.nav-link-active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #136EF6;
+    border-radius: 1px;
+}

@@ -120,6 +120,9 @@ const Icons = {
     ShoppingBag: ({ className }) => (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
     ),
+    Sparkles: ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>
+    ),
     Ticket: ({ className }) => (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 7v2a3 3 0 1 1 0 6v2c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-2a3 3 0 1 1 0-6V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2Z"></path><path d="M13 5v2"></path><path d="M13 17v2"></path><path d="M13 11v2"></path></svg>
     ),
@@ -164,6 +167,24 @@ class ErrorBoundary extends React.Component {
 
 // --- REUSABLE COMPONENTS ---
 
+// Glow color lookup for Tailwind (dynamic classes don't work with purge)
+const GLOW_CLASSES = {
+    blue: 'bg-blue-500/20',
+    cyan: 'bg-cyan-500/20',
+    purple: 'bg-purple-500/20',
+    violet: 'bg-violet-500/20',
+    emerald: 'bg-emerald-500/20',
+    orange: 'bg-orange-500/20',
+    rose: 'bg-rose-500/20',
+    indigo: 'bg-indigo-500/20',
+    amber: 'bg-amber-500/20',
+    teal: 'bg-teal-500/20',
+    pink: 'bg-pink-500/20',
+    sky: 'bg-sky-500/20',
+    shift4: 'bg-shift4-sky-blue/20',
+    slate: 'bg-slate-500/20',
+};
+
 // FeatureCard Component
 const FeatureCard = ({
     icon: Icon,
@@ -186,12 +207,13 @@ const FeatureCard = ({
         ? `bg-gradient-to-br ${gradientFrom} ${gradientTo}`
         : 'bg-shift4-sky-blue/20';
 
-    // Extract color for glow effect from gradientFrom
+    // Extract color for glow effect from gradientFrom using lookup
     const glowColor = gradientFrom.replace('from-', '').split('-')[0] || 'slate';
+    const glowClass = GLOW_CLASSES[glowColor] || GLOW_CLASSES.slate;
 
     return (
         <div className={`${baseClasses} ${className}`}>
-            <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${glowColor}-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <div className={`absolute -top-20 -right-20 w-40 h-40 ${glowClass} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
             <div className="flex items-center gap-2 mb-2">
                 <div className={`rounded-lg ${gradientClasses} flex items-center justify-center p-2.5 shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
                     <Icon className={`text-white w-5 h-5`} />
@@ -231,12 +253,13 @@ const CompactCard = ({ icon: Icon, title, description, gradientFrom, gradientTo,
         ? `bg-gradient-to-br ${gradientFrom} ${gradientTo}`
         : 'bg-shift4-sky-blue/20';
 
-    // Extract color for glow effect from gradientFrom
+    // Extract color for glow effect from gradientFrom using lookup
     const glowColor = gradientFrom ? gradientFrom.replace('from-', '').split('-')[0] : 'slate';
+    const glowClass = GLOW_CLASSES[glowColor] || GLOW_CLASSES.slate;
 
     return (
         <div className={`relative overflow-hidden flex-1 flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 transition-all duration-500 group ${className}`}>
-            <div className={`absolute -top-20 -right-20 w-40 h-40 bg-${glowColor}-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <div className={`absolute -top-20 -right-20 w-40 h-40 ${glowClass} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
             <div className={`rounded-lg ${gradientClasses} p-2.5 shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}>
                 <Icon className="w-5 h-5 text-white" />
             </div>
@@ -297,10 +320,10 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
                 {/* Carousel images with crossfade */}
                 {images.map((img, index) => (
                     <img
-                        key={img.src}
+                        key={index}
                         src={img.src}
                         alt={img.alt}
-                        loading="lazy"
+                        loading={index === 0 ? 'eager' : 'lazy'}
                         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
                             index === currentSlide ? 'opacity-100' : 'opacity-0'
                         }`}
