@@ -241,7 +241,10 @@
 
                                         {/* Center Icon - Shift4 Logo */}
                                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 group cursor-pointer">
-                                            <div className="w-28 h-28 rounded-2xl overflow-hidden shadow-2xl shadow-shift4-sky-blue/40 bg-[#1a1a2e] group-hover:scale-110 transition-transform animate-pulse" style={{animationDuration: '3s'}}>
+                                            <div
+                                                className="w-28 h-28 rounded-2xl overflow-hidden shadow-2xl shadow-shift4-sky-blue/40 bg-[#1a1a2e] group-hover:scale-110 transition-all duration-300 animate-pulse group-hover:[animation-play-state:paused] group-hover:opacity-100 group-hover:shadow-[0_0_60px_rgba(19,110,246,0.6)] group-hover:brightness-110"
+                                                style={{animationDuration: '3s'}}
+                                            >
                                                 <img src="../site/s4-center-icon.png" alt="Shift4" className="w-full h-full object-cover" />
                                             </div>
                                             <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm text-slate-400 font-medium opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Wallet</span>
@@ -577,8 +580,11 @@
                                     currentSlide={passSlide}
                                     onSlideChange={setPassSlide}
                                     images={[
-                                        { src: '../site/pass1.png', alt: 'Shift4 Stadium pass - Gold Member with $250 balance and QR code' },
                                         { src: '../site/pass2.png', alt: 'Lock screen geofence notification - Welcome to Shift4 Stadium' },
+                                        { src: '../site/pass1.png', alt: 'Shift4 Stadium pass - Gold Member with $250 balance and QR code' },
+                                        { src: '../site/pass4.png', alt: 'Transactional notification - Balance update and transaction confirmation' },
+                                        { src: '../site/pass5.png', alt: 'Mobile purchase screen - Order confirmation and payment' },
+                                        { src: '../site/pass6.png', alt: 'Gold member benefits and rewards screen' },
                                         { src: '../site/pass3.png', alt: 'Lock screen push notification - Promotional offer for fans' }
                                     ]}
                                 />
@@ -622,7 +628,7 @@
                                     {/* Row 2: 2 Feature tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {/* Frictionless Payments */}
-                                        <div onClick={() => setPassSlide(0)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        <div onClick={() => setPassSlide(1)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -634,10 +640,11 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Discounts, stored value, and card-on-file applied instantly.</p>
                                                 </div>
                                             </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
 
                                         {/* Optimized Usability */}
-                                        <div onClick={() => setPassSlide(1)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        <div onClick={() => setPassSlide(0)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -649,13 +656,14 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Geofence lock screen access plus real-time balance.</p>
                                                 </div>
                                             </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
                                     </div>
 
                                     {/* Row 3: 2 Notification tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {/* Campaign Notifications */}
-                                        <div onClick={() => setPassSlide(2)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        <div onClick={() => setPassSlide(5)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -667,10 +675,11 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Send geo-relevant rewards and promotions to pass holders.</p>
                                                 </div>
                                             </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
 
                                         {/* Transactional Notifications */}
-                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        <div onClick={() => setPassSlide(2)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -682,6 +691,7 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Discount confirmations and virtual currency credits or debits.</p>
                                                 </div>
                                             </div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
                                     </div>
 

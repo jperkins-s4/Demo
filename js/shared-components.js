@@ -96,6 +96,9 @@ const Icons = {
     ChevronDown: ({ className }) => (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>
     ),
+    ChevronLeft: ({ className }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="15 18 9 12 15 6"></polyline></svg>
+    ),
     Activity: ({ className }) => (
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
     ),
@@ -322,10 +325,16 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
         ? 'w-full lg:w-[45%] flex flex-col items-center'
         : 'w-full lg:w-1/3 flex flex-col items-center';
 
+    const frameClasses = 'relative bg-slate-100 border-solid border-slate-900 shadow-2xl overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500';
+
+    const frameStyle = size === 'large'
+        ? { width: '346px', height: '720px', borderRadius: '3.5rem', borderWidth: '10px' }
+        : { width: '288px', height: '600px', borderRadius: '3rem', borderWidth: '8px' };
+
     return (
         <div className={wrapperClasses}>
             {/* iPhone Frame - matches PhoneMockup style */}
-            <div className={`relative w-72 h-[600px] bg-slate-100 rounded-[3rem] border-8 border-slate-900 shadow-2xl overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500 ${className}`}>
+            <div className={`${frameClasses} ${className}`} style={frameStyle}>
                 {/* Carousel images with crossfade */}
                 {images.map((img, index) => (
                     <img
