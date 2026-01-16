@@ -1116,9 +1116,13 @@
                                                     src={browserTabs[activeTab][activeBrowserTab[activeTab]].image}
                                                     alt={`${browserTabs[activeTab][activeBrowserTab[activeTab]].label} interface`}
                                                     className="w-full h-full object-cover object-top animate-fade-in"
+                                                    onLoad={(e) => {
+                                                        e.target.style.display = 'block';
+                                                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'none';
+                                                    }}
                                                     onError={(e) => {
                                                         e.target.style.display = 'none';
-                                                        e.target.nextSibling.style.display = 'flex';
+                                                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                                                     }}
                                                 />
                                                 {/* Placeholder shown when image fails to load */}
@@ -1228,9 +1232,13 @@
                                             src={browserTabs[expandedTab][activeBrowserTab[expandedTab]].image}
                                             alt={`${browserTabs[expandedTab][activeBrowserTab[expandedTab]].label} interface`}
                                             className="w-full h-full object-cover object-top animate-fade-in"
+                                            onLoad={(e) => {
+                                                e.target.style.display = 'block';
+                                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'none';
+                                            }}
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
-                                                e.target.nextSibling.style.display = 'flex';
+                                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
                                             }}
                                         />
                                         {/* Fallback placeholder if image fails */}
