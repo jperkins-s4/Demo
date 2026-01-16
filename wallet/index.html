@@ -474,76 +474,142 @@
                     </section>
 
                     {/* SECTION 5: Integrations */}
-                    <section id="integrations" aria-labelledby="integrations-heading" className="snap-start snap-always h-screen flex items-center justify-center bg-shift4-midnight-blue relative overflow-hidden">
-                        <div className="container mx-auto px-6">
-                            <div className="text-center mb-12">
-                                <span className="text-shift4-sky-blue font-medium tracking-[0.2em] uppercase text-xs mb-3 block">Ecosystem</span>
-                                <h2 id="integrations-heading" className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">Integrations</h2>
-                                <p className="text-slate-300 max-w-2xl mx-auto text-base leading-relaxed">
-                                    Deploy anywhere with flexible integration options and extensive partner ecosystem.
+                    <section id="integrations" aria-labelledby="integrations-heading" className="snap-start snap-always h-screen flex flex-col justify-center bg-shift4-midnight-blue relative overflow-hidden">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-shift4-sky-blue/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+                        <div className="container mx-auto px-6 relative z-10">
+                            {/* Header */}
+                            <div className="text-center mb-10">
+                                <span className="text-shift4-sky-blue font-medium tracking-[0.2em] uppercase text-xs mb-3 block">ECOSYSTEM</span>
+                                <h2 id="integrations-heading" className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Wallet Integrations</h2>
+                                <p className="text-slate-300 max-w-2xl mx-auto text-base mb-6">
+                                    Deploy anywhere with flexible integration paths and a growing partner ecosystem.
                                 </p>
+                                <div className="flex flex-wrap justify-center gap-3">
+                                    <Badge>No third-party dependencies</Badge>
+                                    <Badge>No additional license fees</Badge>
+                                    <Badge>Ticketing-powered identity</Badge>
+                                </div>
                             </div>
 
-                            <div className="max-w-5xl mx-auto space-y-8">
-                                {/* Subsection 1: Seamless Integration */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-100" tabIndex="0">
+                            {/* Top Row: 3-column grid - Core capabilities */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-6">
+                                {/* Card 1: Identity */}
+                                <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 group">
+                                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Icons.Check className="w-5 h-5 text-shift4-sky-blue" />
+                                        <div className="rounded-xl bg-gradient-to-br from-shift4-sky-blue to-cyan-400 p-3 shadow-lg flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                            <Icons.Fingerprint className="w-5 h-5 text-white" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-white">Seamless Integration</h3>
+                                        <h3 className="font-bold text-white text-lg">Identity & Entitlements</h3>
+                                    </div>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Ticketing login for member profiles</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Secure tokenized wallet storage</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Auto discounts from ticket attributes</li>
+                                    </ul>
+                                </div>
+
+                                {/* Card 2: Deployment */}
+                                <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 group">
+                                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="rounded-xl bg-gradient-to-br from-violet-500 to-purple-500 p-3 shadow-lg flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                            <Icons.MonitorSmartphone className="w-5 h-5 text-white" />
+                                        </div>
+                                        <h3 className="font-bold text-white text-lg">Deployment Options</h3>
+                                    </div>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />SkyTab Venue hosted mobile web</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Native SDK for iOS and Android</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />SSO, deep links, and analytics</li>
+                                    </ul>
+                                </div>
+
+                                {/* Card 3: Payments */}
+                                <div className="relative overflow-hidden p-6 rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 hover:shadow-2xl transition-all duration-300 group">
+                                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <div className="rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 p-3 shadow-lg flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                            <Icons.CreditCard className="w-5 h-5 text-white" />
+                                        </div>
+                                        <h3 className="font-bold text-white text-lg">Payments & Acceptance</h3>
+                                    </div>
+                                    <ul className="text-slate-300 text-sm space-y-2">
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Stored value and card-on-file</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Real-time transaction processing</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />Mobile, kiosk, and POS support</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            {/* Bottom Row: 4-column partner grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+                                {/* Ticketing Authentication */}
+                                <div className="relative overflow-hidden p-5 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="absolute -top-16 -right-16 w-32 h-32 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="flex items-center gap-2.5 mb-4">
+                                        <div className="rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.Lock className="w-4 h-4 text-white" />
+                                        </div>
+                                        <h4 className="font-semibold text-white text-sm">Ticketing Auth</h4>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        <Badge>No Third-Party Dependencies</Badge>
-                                        <Badge>No Added VenueNext License Fees</Badge>
+                                        <SmallBadge>Ticketmaster</SmallBadge>
+                                        <SmallBadge>SeatGeek</SmallBadge>
+                                        <SmallBadge>AXS</SmallBadge>
+                                        <SmallBadge>Tickets.com</SmallBadge>
                                     </div>
                                 </div>
 
-                                {/* Subsection 2: Access Options */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-200" tabIndex="0">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Icons.MonitorSmartphone className="w-5 h-5 text-shift4-sky-blue" />
+                                {/* App Partners */}
+                                <div className="relative overflow-hidden p-5 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="flex items-center gap-2.5 mb-4">
+                                        <div className="rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.Network className="w-4 h-4 text-white" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-white">Access Options</h3>
+                                        <h4 className="font-semibold text-white text-sm">App Partners</h4>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        <Badge>VenueNext Hosted Mobile Web</Badge>
-                                        <Badge>VenueNext SDK for Native Apps</Badge>
+                                        <SmallBadge>Yinzcam</SmallBadge>
+                                        <SmallBadge>Fanreach</SmallBadge>
+                                        <SmallBadge>MLB Ballpark</SmallBadge>
+                                        <SmallBadge>+More</SmallBadge>
                                     </div>
                                 </div>
 
-                                {/* Subsection 3: App Partners */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-300" tabIndex="0">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Icons.Network className="w-5 h-5 text-shift4-sky-blue" />
+                                {/* POS Compatibility */}
+                                <div className="relative overflow-hidden p-5 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="absolute -top-16 -right-16 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="flex items-center gap-2.5 mb-4">
+                                        <div className="rounded-lg bg-gradient-to-br from-shift4-sky-blue to-blue-600 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.Monitor className="w-4 h-4 text-white" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-white">App Partners</h3>
+                                        <h4 className="font-semibold text-white text-sm">POS & Platforms</h4>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        <Badge>Yinzcam</Badge>
-                                        <Badge>Fanreach</Badge>
-                                        <Badge>Raw Engineering</Badge>
-                                        <Badge>MLB Ballpark</Badge>
-                                        <Badge>Sidearm Sports</Badge>
-                                        <Badge>Additional Partners</Badge>
+                                        <SmallBadge>SkyTab POS</SmallBadge>
+                                        <SmallBadge>Kiosk</SmallBadge>
+                                        <SmallBadge>Fanatics</SmallBadge>
+                                        <SmallBadge>NetSuite</SmallBadge>
                                     </div>
                                 </div>
 
-                                {/* Subsection 4: Ticketing Authentication */}
-                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-[0_0_20px_rgba(19,110,246,0.15)] active:scale-[0.98] active:shadow-md transition-all duration-300 backdrop-blur-md group cursor-pointer focus-visible:ring-2 focus-visible:ring-shift4-sky-blue focus-visible:ring-offset-2 focus-visible:ring-offset-shift4-midnight-blue animate-fade-in-up delay-400" tabIndex="0">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="w-10 h-10 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <Icons.Lock className="w-5 h-5 text-shift4-sky-blue" />
+                                {/* Self-Service */}
+                                <div className="relative overflow-hidden p-5 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                    <div className="absolute -top-16 -right-16 w-32 h-32 bg-teal-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                    <div className="flex items-center gap-2.5 mb-4">
+                                        <div className="rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.ShoppingCart className="w-4 h-4 text-white" />
                                         </div>
-                                        <h3 className="text-xl font-bold text-white">Ticketing Authentication</h3>
+                                        <h4 className="font-semibold text-white text-sm">Self-Service</h4>
                                     </div>
                                     <div className="flex flex-wrap gap-2">
-                                        <Badge>Ticketmaster</Badge>
-                                        <Badge>SeatGeek</Badge>
-                                        <Badge>Tickets.com</Badge>
-                                        <Badge>AXS</Badge>
+                                        <SmallBadge>Mashgin</SmallBadge>
+                                        <SmallBadge>Amazon JWO</SmallBadge>
+                                        <SmallBadge>Zippin</SmallBadge>
+                                        <SmallBadge>AiFi</SmallBadge>
                                     </div>
                                 </div>
                             </div>
