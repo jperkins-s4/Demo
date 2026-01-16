@@ -101,6 +101,11 @@ section[id] {
     scroll-margin-top: 5rem;
 }
 
+/* Snap scroll override - sections snap flush to top */
+.snap-y section[id] {
+    scroll-margin-top: 0;
+}
+
 /* Active navigation link styling */
 .nav-link-active {
     color: #136EF6;
