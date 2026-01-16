@@ -1,11 +1,19 @@
 /* SkyTab Venue - Shared Styles */
 
-/* Google Fonts - Inter */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+/* CSS Variables for Shift4 Style Guide */
+:root {
+    --color-night-black: #000000;
+    --color-sky-blue: #136EF6;
+    --color-midnight-blue: #102749;
+    --color-stellar-white: #FFFFFF;
+    --color-cool-grey: #E7E7E7;
+
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
 
 /* Base Styles */
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
 }
 
 /* Hero Gradient */
