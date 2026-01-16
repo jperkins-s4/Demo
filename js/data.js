@@ -16,8 +16,7 @@ const WALLET_NAV_ITEMS = [
     { id: 'wallet-capabilities', label: 'Capabilities' },
     { id: 'passes-highlights', label: 'Passes' },
     { id: 'integrations', label: 'Integrations' },
-    { id: 'back-of-house', label: 'Admin' },
-    { id: 'data-insights', label: 'Insights' },
+    { id: 'unified-platform', label: 'Platform' },
 ];
 
 // Hardware Devices (uses Icons from shared-components.js)
@@ -128,7 +127,3 @@ const INTEGRATION_CATEGORIES = [
     { name: "Digital Menu Boards", partners: "Triple Play, AmpThink, Spectrio, Ping" }
 ];
 
-// Scroll Constants
-const SCROLL_THRESHOLD = 20;
-const SCROLL_OFFSET = 150;
-const NAV_SCROLL_DELAY = 100;

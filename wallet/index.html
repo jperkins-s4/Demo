@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body class="bg-shift4-midnight-blue text-white">
+    <a href="#wallet-overview" class="skip-to-content">Skip to main content</a>
     <div id="root"></div>
 
     <!-- Shared Data -->
@@ -58,15 +59,8 @@
 
         // --- WALLET PAGE COMPONENT ---
         const WalletPage = () => {
-            // Navigation items configuration
-            const navItems = [
-                { id: 'wallet-overview', label: 'Overview' },
-                { id: 'wallet-interface', label: 'Interface' },
-                { id: 'wallet-capabilities', label: 'Capabilities' },
-                { id: 'passes-highlights', label: 'Passes' },
-                { id: 'integrations', label: 'Integrations' },
-                { id: 'unified-platform', label: 'Platform' },
-            ];
+            // Use shared navigation items from data.js
+            const navItems = WALLET_NAV_ITEMS;
 
             // Active section tracking for navigation
             const [activeSection, setActiveSection] = useState('wallet-overview');
@@ -212,7 +206,7 @@
                                                     : 'text-slate-300 hover:text-white'
                                             }`}
                                             aria-label={`Navigate to ${label} section`}
-                                            aria-current={activeSection === id ? 'true' : undefined}
+                                            aria-current={activeSection === id ? 'page' : undefined}
                                         >
                                             {label}
                                             {activeSection === id && (
@@ -279,10 +273,10 @@
                         {/* Background Effects */}
                         <div className="absolute inset-0 overflow-hidden pointer-events-none">
                             {/* Primary spotlight */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-shift4-sky-blue/15 rounded-full blur-[150px] animate-pulse" style={{animationDuration: '4s'}}></div>
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-shift4-sky-blue/15 rounded-full blur-3xl animate-pulse" style={{animationDuration: '4s'}}></div>
                             {/* Secondary accent glow */}
-                            <div className="absolute top-1/4 right-1/4 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] animate-pulse" style={{animationDuration: '6s', animationDelay: '1s'}}></div>
-                            <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-violet-500/10 rounded-full blur-[80px] animate-pulse" style={{animationDuration: '5s', animationDelay: '2s'}}></div>
+                            <div className="absolute top-1/4 right-1/4 w-[300px] h-[300px] bg-cyan-500/10 rounded-full blur-2xl animate-pulse" style={{animationDuration: '6s', animationDelay: '1s'}}></div>
+                            <div className="absolute bottom-1/4 left-1/4 w-[250px] h-[250px] bg-violet-500/10 rounded-full blur-2xl animate-pulse" style={{animationDuration: '5s', animationDelay: '2s'}}></div>
                             {/* Grid overlay */}
                             <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '50px 50px'}}></div>
                         </div>
@@ -400,29 +394,29 @@
 
                                     {/* Stats Row - Interactive */}
                                     <div className="flex flex-wrap justify-center lg:justify-start gap-6 mb-10 animate-fade-in-up delay-400">
-                                        <div className="text-center group cursor-pointer transition-all duration-300 hover:scale-110 hover:-translate-y-1">
-                                            <div className="text-3xl md:text-4xl font-black text-white group-hover:text-shift4-sky-blue transition-colors duration-300">One</div>
-                                            <div className="text-xs text-slate-400 uppercase tracking-wider font-light group-hover:text-slate-300 transition-colors duration-300">Platform</div>
-                                        </div>
-                                        <div className="w-px bg-shift4-cool-grey/20 hidden md:block group-hover:bg-shift4-sky-blue/40 transition-colors duration-300"></div>
-                                        <div className="text-center group cursor-pointer transition-all duration-300 hover:scale-110 hover:-translate-y-1">
-                                            <div className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400 group-hover:from-emerald-300 group-hover:to-cyan-300 transition-all duration-300">Frictionless</div>
-                                            <div className="text-xs text-slate-400 uppercase tracking-wider font-light group-hover:text-slate-300 transition-colors duration-300">Payments</div>
+                                        <div className="text-center">
+                                            <div className="text-3xl md:text-4xl font-black text-white">One</div>
+                                            <div className="text-xs text-slate-400 uppercase tracking-wider font-light">Platform</div>
                                         </div>
                                         <div className="w-px bg-shift4-cool-grey/20 hidden md:block"></div>
-                                        <div className="text-center group cursor-pointer transition-all duration-300 hover:scale-110 hover:-translate-y-1">
-                                            <div className="text-3xl md:text-4xl font-black text-white group-hover:text-cyan-400 transition-colors duration-300">Real-Time</div>
-                                            <div className="text-xs text-slate-400 uppercase tracking-wider font-light group-hover:text-slate-300 transition-colors duration-300">Insights</div>
+                                        <div className="text-center">
+                                            <div className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Frictionless</div>
+                                            <div className="text-xs text-slate-400 uppercase tracking-wider font-light">Payments</div>
+                                        </div>
+                                        <div className="w-px bg-shift4-cool-grey/20 hidden md:block"></div>
+                                        <div className="text-center">
+                                            <div className="text-3xl md:text-4xl font-black text-white">Real-Time</div>
+                                            <div className="text-xs text-slate-400 uppercase tracking-wider font-light">Insights</div>
                                         </div>
                                     </div>
 
-                                    {/* Partner Logos - Interactive */}
+                                    {/* Partner Logos */}
                                     <div className="flex flex-wrap justify-center lg:justify-start items-center gap-4 animate-fade-in-up delay-500">
                                         <span className="text-sm text-slate-400 uppercase tracking-wider font-light mr-2">Works with</span>
-                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-cool-grey/20 text-slate-300 text-sm font-medium cursor-pointer hover:scale-105 hover:bg-white/10 hover:border-shift4-sky-blue/40 hover:text-white hover:shadow-[0_0_15px_rgba(19,110,246,0.2)] transition-all duration-300">Ticketmaster</span>
-                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-cool-grey/20 text-slate-300 text-sm font-medium cursor-pointer hover:scale-105 hover:bg-white/10 hover:border-shift4-sky-blue/40 hover:text-white hover:shadow-[0_0_15px_rgba(19,110,246,0.2)] transition-all duration-300">SeatGeek</span>
-                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-cool-grey/20 text-slate-300 text-sm font-medium cursor-pointer hover:scale-105 hover:bg-white/10 hover:border-shift4-sky-blue/40 hover:text-white hover:shadow-[0_0_15px_rgba(19,110,246,0.2)] transition-all duration-300">AXS</span>
-                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-sky-blue/30 text-shift4-sky-blue text-sm font-medium cursor-pointer hover:scale-105 hover:bg-shift4-sky-blue/20 hover:border-shift4-sky-blue/50 hover:shadow-[0_0_20px_rgba(19,110,246,0.3)] transition-all duration-300 animate-pulse-glow">+12 more</span>
+                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-cool-grey/20 text-slate-300 text-sm font-medium">Ticketmaster</span>
+                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-cool-grey/20 text-slate-300 text-sm font-medium">SeatGeek</span>
+                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-cool-grey/20 text-slate-300 text-sm font-medium">AXS</span>
+                                        <span className="px-4 py-2 rounded-lg bg-white/5 border border-shift4-sky-blue/30 text-shift4-sky-blue text-sm font-medium">+12 more</span>
                                     </div>
                                 </div>
 
@@ -446,57 +440,8 @@
                             </div>
                         </div>
 
-                        {/* CSS Animations */}
-                        <style>{`
-                            /* Override global scroll-margin for snap scroll */
-                            section[id] { scroll-margin-top: 0; }
-
-                            @keyframes float {
-                                0%, 100% { transform: translateY(0px); }
-                                50% { transform: translateY(-10px); }
-                            }
-                            @keyframes marquee {
-                                0% { transform: translateX(0); }
-                                100% { transform: translateX(-50%); }
-                            }
-                            .animate-marquee {
-                                animation: marquee 30s linear infinite;
-                            }
-
-                            /* Right side interactive animations */
-                            @keyframes fadeInUp {
-                                from { opacity: 0; transform: translateY(20px); }
-                                to { opacity: 1; transform: translateY(0); }
-                            }
-                            @keyframes gradientShift {
-                                0%, 100% { background-position: 0% 50%; }
-                                50% { background-position: 100% 50%; }
-                            }
-                            @keyframes pulseGlow {
-                                0%, 100% { box-shadow: 0 0 10px rgba(19,110,246,0.2), inset 0 0 10px rgba(19,110,246,0.1); }
-                                50% { box-shadow: 0 0 25px rgba(19,110,246,0.4), inset 0 0 15px rgba(19,110,246,0.2); }
-                            }
-                            @keyframes shimmer {
-                                0% { background-position: -200% 0; }
-                                100% { background-position: 200% 0; }
-                            }
-                            .animate-fade-in-up {
-                                animation: fadeInUp 0.6s ease-out forwards;
-                                opacity: 0;
-                            }
-                            .animate-gradient-shift {
-                                background-size: 200% 200%;
-                                animation: gradientShift 6s ease infinite;
-                            }
-                            .animate-pulse-glow {
-                                animation: pulseGlow 3s ease-in-out infinite;
-                            }
-                            .delay-100 { animation-delay: 100ms; }
-                            .delay-200 { animation-delay: 200ms; }
-                            .delay-300 { animation-delay: 300ms; }
-                            .delay-400 { animation-delay: 400ms; }
-                            .delay-500 { animation-delay: 500ms; }
-                        `}</style>
+                        {/* Snap scroll override - sections snap flush to top */}
+                        <style>{`section[id] { scroll-margin-top: 0; }`}</style>
                     </section>
 
                     {/* SECTION 2: Wallet Interface - iPhone Showcase */}
@@ -706,7 +651,7 @@
                                     {/* Row 1: 2 Primary tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {/* Apple & Google Wallet */}
-                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-shift4-sky-blue/40 hover:shadow-[0_0_40px_rgba(19,110,246,0.15)]">
+                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group transition-all duration-300 hover:border-white/20">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-shift4-sky-blue/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-shift4-sky-blue to-cyan-400 flex items-center justify-center shadow-lg shadow-shift4-sky-blue/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
@@ -721,7 +666,7 @@
                                         </div>
 
                                         {/* Pass Builder */}
-                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group cursor-pointer transition-all duration-500 hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(139,92,246,0.15)]">
+                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 p-6 group transition-all duration-300 hover:border-white/20">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
@@ -813,7 +758,7 @@
 
                     {/* SECTION 5: Integrations */}
                     <section id="integrations" aria-labelledby="integrations-heading" className="snap-start snap-always h-screen flex flex-col justify-center bg-shift4-midnight-blue relative overflow-hidden isolate">
-                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-shift4-sky-blue/10 rounded-full blur-[120px] pointer-events-none"></div>
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-shift4-sky-blue/10 rounded-full blur-3xl pointer-events-none"></div>
 
                         <div className="container mx-auto px-6 relative z-10">
                             {/* Header */}
@@ -958,8 +903,8 @@
                     <section id="unified-platform" aria-labelledby="unified-platform-heading" className="snap-start snap-always h-screen flex items-center justify-center bg-shift4-midnight-blue relative overflow-hidden isolate">
                         {/* Background Effects */}
                         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[600px] h-[600px] bg-shift4-sky-blue/10 rounded-full blur-[150px]"></div>
-                            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-violet-500/10 rounded-full blur-[120px]"></div>
+                            <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-[400px] h-[400px] bg-shift4-sky-blue/10 rounded-full blur-3xl"></div>
+                            <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-violet-500/10 rounded-full blur-3xl"></div>
                         </div>
 
                         <div className="container mx-auto px-6 relative z-10">
@@ -1144,23 +1089,6 @@
                             </div>
                         </div>
 
-                        {/* CSS for fade animation */}
-                        <style>{`
-                            .animate-fade-in {
-                                animation: fadeIn 0.3s ease-out forwards;
-                            }
-                            @keyframes fadeIn {
-                                from { opacity: 0; transform: translateY(10px); }
-                                to { opacity: 1; transform: translateY(0); }
-                            }
-                            .animate-modal-in {
-                                animation: modalIn 0.3s ease-out forwards;
-                            }
-                            @keyframes modalIn {
-                                from { opacity: 0; transform: scale(0.95); }
-                                to { opacity: 1; transform: scale(1); }
-                            }
-                        `}</style>
                     </section>
 
                     {/* Expanded Browser Modal */}
