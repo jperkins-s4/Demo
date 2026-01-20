@@ -329,7 +329,7 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
 
     const frameStyle = size === 'large'
         ? { width: '346px', height: '720px', borderRadius: '3.5rem', borderWidth: '10px' }
-        : { width: '288px', height: '600px', borderRadius: '3rem', borderWidth: '8px' };
+        : { width: '259px', height: '540px', borderRadius: '2.7rem', borderWidth: '7px' };
 
     return (
         <div className={wrapperClasses}>
