@@ -350,28 +350,28 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
             </div>
 
             {/* Navigation Controls - Below phone frame */}
-            <div className="mt-4 flex items-center gap-3 bg-black/50 backdrop-blur-xl rounded-full px-4 py-2.5 border border-white/10">
+            <div className="mt-3 flex items-center gap-2 bg-black/50 backdrop-blur-xl rounded-full px-3 py-1.5 border border-white/10">
                 {/* Previous Arrow */}
                 <button
                     onClick={prevSlide}
-                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
                     aria-label="Previous image"
                 >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
 
                 {/* Navigation Dots */}
-                <div className="flex gap-1.5">
+                <div className="flex gap-1">
                     {images.map((_, index) => (
                         <button
                             key={index}
                             onClick={() => goToSlide(index)}
                             className={`rounded-full transition-all duration-300 ${
                                 index === currentSlide
-                                    ? 'bg-shift4-sky-blue h-2 w-6'
-                                    : 'bg-white/30 h-2 w-2 hover:bg-white/50'
+                                    ? 'bg-shift4-sky-blue h-1.5 w-5'
+                                    : 'bg-white/30 h-1.5 w-1.5 hover:bg-white/50'
                             }`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
@@ -381,10 +381,10 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
                 {/* Next Arrow */}
                 <button
                     onClick={nextSlide}
-                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
                     aria-label="Next image"
                 >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
