@@ -1,4 +1,5 @@
 // SkyTab Venue - Shared Data Constants
+// Note: URLs point to training/demo environments for demonstration purposes
 
 // Navigation Items for Home Page
 const NAV_ITEMS = [

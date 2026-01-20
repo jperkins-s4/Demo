@@ -298,6 +298,164 @@ const PhoneMockup = ({ src, alt, onError, className = '' }) => (
     </div>
 );
 
+// BrowserPane Component - Reusable browser mockup with tabs
+// Used for both inline display and expanded modal views
+const BrowserPane = ({
+    activeTab,
+    browserTabs,
+    activeLoyaltyCategory,
+    activeBrowserTab,
+    onTabChange,
+    onCategoryChange,
+    getCurrentTabData,
+    getTabsArray,
+    onExpand,
+    onClose,
+    isExpanded = false,
+    className = ''
+}) => {
+    const urlMap = {
+        'loyalty-app': 'venue-loyalty.ordernext.com',
+        'datanow': 'venue-datanow.ordernext.com'
+    };
+
+    const currentTabData = getCurrentTabData(activeTab);
+    const tabsArray = getTabsArray(activeTab);
+    const currentTabIndex = activeTab === 'loyalty-app'
+        ? activeBrowserTab['loyalty-app']?.[activeLoyaltyCategory] || 0
+        : activeBrowserTab[activeTab] || 0;
+
+    return (
+        <div className={`rounded-xl overflow-hidden shadow-2xl border border-slate-700/50 bg-slate-900 ${isExpanded ? 'shadow-black/60 border-white/20 ring-1 ring-white/10' : 'shadow-black/40'} ${className}`}>
+            {/* Browser Chrome */}
+            <div className="bg-slate-800 px-4 py-3 flex items-center gap-3 border-b border-slate-700/50">
+                <div className="flex gap-1.5">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                </div>
+                <div className="bg-slate-700/50 rounded-md px-2 py-1 text-[10px] text-slate-400 whitespace-nowrap">
+                    {urlMap[activeTab]}
+                </div>
+
+                {/* Tab Navigation */}
+                {activeTab === 'loyalty-app' ? (
+                    <div className="flex items-center gap-3 ml-auto">
+                        {/* Primary Category Tabs */}
+                        <div className="flex items-center gap-0.5 border-r border-slate-600/50 pr-3">
+                            {browserTabs['loyalty-app'].categories.map((category) => (
+                                <button
+                                    key={category.id}
+                                    onClick={() => onCategoryChange(category.id)}
+                                    className={`px-2.5 py-1 text-[10px] font-semibold rounded transition-all duration-200 ${
+                                        activeLoyaltyCategory === category.id
+                                            ? 'bg-violet-500/80 text-white shadow-sm'
+                                            : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                    }`}
+                                >
+                                    {category.label}
+                                </button>
+                            ))}
+                        </div>
+                        {/* Secondary Tabs */}
+                        <div className="flex items-center gap-0.5">
+                            {tabsArray.map((tab, index) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => onTabChange(activeTab, index)}
+                                    className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
+                                        currentTabIndex === index
+                                            ? 'bg-slate-600/80 text-white'
+                                            : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                    }`}
+                                >
+                                    {tab.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-0.5 ml-auto">
+                        {tabsArray.map((tab, index) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => onTabChange(activeTab, index)}
+                                className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
+                                    currentTabIndex === index
+                                        ? 'bg-slate-600/80 text-white'
+                                        : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {/* Expand/Close Button */}
+                {isExpanded ? (
+                    <button
+                        onClick={onClose}
+                        className="p-1.5 rounded-md text-slate-500 hover:text-white hover:bg-white/10 transition-all duration-200 hover:scale-110"
+                        aria-label="Close expanded view"
+                        title="Close"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 14h6v6"></path>
+                            <path d="M20 10h-6V4"></path>
+                            <path d="M14 10l7-7"></path>
+                            <path d="M3 21l7-7"></path>
+                        </svg>
+                    </button>
+                ) : (
+                    <button
+                        onClick={onExpand}
+                        className="p-1.5 rounded-md text-slate-500 hover:text-white hover:bg-white/10 transition-all duration-200 hover:scale-110"
+                        aria-label="Expand view"
+                        title="Expand"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M9 21H3v-6"></path>
+                            <path d="M21 3l-7 7"></path>
+                            <path d="M3 21l7-7"></path>
+                        </svg>
+                    </button>
+                )}
+            </div>
+
+            {/* Screenshot Area */}
+            <div className="aspect-[16/10] bg-slate-900 relative overflow-hidden">
+                <img
+                    key={`${isExpanded ? 'expanded-' : ''}${activeTab}-${activeLoyaltyCategory}-${currentTabIndex}`}
+                    src={currentTabData?.image}
+                    alt={`${currentTabData?.label || 'App'} interface`}
+                    className="w-full h-full object-cover object-top animate-fade-in"
+                    onLoad={(e) => {
+                        e.target.style.display = 'block';
+                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'none';
+                    }}
+                    onError={(e) => {
+                        e.target.style.display = 'none';
+                        if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                    }}
+                />
+                {/* Fallback placeholder */}
+                <div className="hidden absolute inset-0 items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+                    <div className="text-center">
+                        <div className={`${isExpanded ? 'w-20 h-20' : 'w-16 h-16'} rounded-2xl bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4`}>
+                            {activeTab === 'loyalty-app' && <Icons.Heart className={`${isExpanded ? 'w-10 h-10' : 'w-8 h-8'} text-violet-400`} />}
+                            {activeTab === 'datanow' && <Icons.Activity className={`${isExpanded ? 'w-10 h-10' : 'w-8 h-8'} text-emerald-400`} />}
+                        </div>
+                        <p className={`text-slate-400 ${isExpanded ? 'text-base' : 'text-sm'}`}>{currentTabData?.label || 'Loading...'}</p>
+                        <p className="text-slate-400 text-xs mt-1 font-light">Add image to /site/ folder</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // PhoneCarousel Component - iPhone frame with carousel functionality
 // Uses same frame style as PhoneMockup for consistency across the site
 // Supports controlled mode via currentSlide/onSlideChange props
