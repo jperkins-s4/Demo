@@ -127,11 +127,6 @@
 
             // Browser tabs configuration for each section
             const browserTabs = {
-                'menu-manager': [
-                    { id: 'items', label: 'Items', image: '../site/menu-manager-ui.png' },
-                    { id: 'categories', label: 'Categories', image: '../site/menu-categories-ui.png' },
-                    { id: 'modifiers', label: 'Modifiers', image: '../site/menu-modifiers-ui.png' },
-                ],
                 'loyalty-app': {
                     isHierarchical: true,
                     categories: [
@@ -174,7 +169,6 @@
 
             // Active browser tab state for each section
             const [activeBrowserTab, setActiveBrowserTab] = useState({
-                'menu-manager': 0,
                 'loyalty-app': { accounts: 0, affiliations: 0, passes: 0 },
                 'datanow': 0
             });
@@ -706,11 +700,10 @@
                             </div>
 
                             {/* iPhone + Bento Tiles Layout */}
-                            <div className="flex flex-col lg:flex-row items-center justify-center gap-4">
-                                {/* iPhone Carousel - Left Side (Larger) */}
-                                <div className="lg:translate-y-[40px]">
+                            <div className="flex flex-col lg:flex-row items-center justify-center gap-2 lg:gap-0 max-w-6xl mx-auto">
+                                {/* iPhone Carousel - Left Side */}
+                                <div className="lg:w-[32%] flex justify-center lg:translate-y-[30px]">
                                 <PhoneCarousel
-                                    size="large"
                                     currentSlide={passSlide}
                                     onSlideChange={setPassSlide}
                                     images={[
@@ -725,115 +718,115 @@
                                 </div>
 
                                 {/* Bento Grid - Right Side - 3-Row Layout */}
-                                <div className="w-full lg:w-[70%] flex flex-col gap-3 lg:translate-y-[20px]">
+                                <div className="w-full lg:w-[68%] flex flex-col gap-2.5 lg:translate-y-[15px]">
 
                                     {/* Row 1: 2 Primary tiles */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                                         {/* Apple & Google Wallet */}
                                         <div
                                             onClick={() => setShowWalletVideo(true)}
-                                            className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-8 group transition-all duration-300 hover:border-shift4-sky-blue/40 cursor-pointer"
+                                            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-5 py-5 group transition-all duration-300 hover:border-shift4-sky-blue/40 cursor-pointer"
                                         >
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-shift4-sky-blue/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-shift4-sky-blue to-cyan-400 flex items-center justify-center shadow-lg shadow-shift4-sky-blue/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
-                                                    <Icons.Wallet className="w-5 h-5 text-white" />
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-shift4-sky-blue to-cyan-400 flex items-center justify-center shadow-lg shadow-shift4-sky-blue/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
+                                                    <Icons.Wallet className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="text-xl font-bold text-white mb-1">Apple & Google Wallet</h3>
-                                                    <p className="text-slate-200 text-base font-medium mb-1">Add a pass in seconds and use it across your venue.</p>
-                                                    <p className="text-slate-400 text-sm leading-relaxed">Scan at POS and kiosks for a simple, consistent guest experience.</p>
+                                                    <h3 className="text-lg font-bold text-white mb-0.5">Apple & Google Wallet</h3>
+                                                    <p className="text-slate-200 text-sm font-medium mb-0.5">Add a pass in seconds and use it across your venue.</p>
+                                                    <p className="text-slate-400 text-xs leading-relaxed">Scan at POS and kiosks for a simple, consistent guest experience.</p>
                                                 </div>
                                             </div>
                                             {/* Play indicator */}
-                                            <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:bg-shift4-sky-blue/30 transition-colors duration-300">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-shift4-sky-blue ml-0.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                            <div className="absolute bottom-2.5 right-2.5 w-7 h-7 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center group-hover:bg-shift4-sky-blue/30 transition-colors duration-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" className="text-shift4-sky-blue ml-0.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                                             </div>
                                         </div>
 
                                         {/* Pass Builder */}
-                                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-8 group transition-all duration-300 hover:border-white/20">
+                                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-5 py-5 group transition-all duration-300 hover:border-white/20">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
-                                                    <Icons.PenTool className="w-5 h-5 text-white" />
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
+                                                    <Icons.PenTool className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="text-xl font-bold text-white mb-1">Pass Builder + Insights</h3>
-                                                    <p className="text-slate-200 text-base font-medium mb-1">Launch venue-branded passes in minutes.</p>
-                                                    <p className="text-slate-400 text-sm leading-relaxed">Measure adoption and redemptions to optimize campaigns and benefits.</p>
+                                                    <h3 className="text-lg font-bold text-white mb-0.5">Pass Builder + Insights</h3>
+                                                    <p className="text-slate-200 text-sm font-medium mb-0.5">Launch venue-branded passes in minutes.</p>
+                                                    <p className="text-slate-400 text-xs leading-relaxed">Measure adoption and redemptions to optimize campaigns and benefits.</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Row 2: 2 Feature tiles */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                                         {/* Frictionless Payments */}
-                                        <div onClick={() => setPassSlide(1)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-8 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        <div onClick={() => setPassSlide(1)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-5 py-5 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                                    <Icons.Zap className="w-5 h-5 text-white" />
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                                    <Icons.Zap className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="text-xl font-bold text-white mb-1">Faster Checkout</h3>
-                                                    <p className="text-slate-200 text-base font-medium mb-1">Apply discounts, stored value, and card-on-file automatically at checkout.</p>
-                                                    <p className="text-slate-400 text-sm leading-relaxed">Fewer taps at the stand means faster lines and higher throughput.</p>
+                                                    <h3 className="text-lg font-bold text-white mb-0.5">Faster Checkout</h3>
+                                                    <p className="text-slate-200 text-sm font-medium mb-0.5">Apply discounts, stored value, and card-on-file automatically at checkout.</p>
+                                                    <p className="text-slate-400 text-xs leading-relaxed">Fewer taps at the stand means faster lines and higher throughput.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-3 left-4 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
 
                                         {/* Optimized Usability */}
-                                        <div onClick={() => setPassSlide(0)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-8 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        <div onClick={() => setPassSlide(0)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-5 py-5 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                                    <Icons.Smartphone className="w-5 h-5 text-white" />
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                                    <Icons.Smartphone className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="text-xl font-bold text-white mb-1">Right Place, Right Time</h3>
-                                                    <p className="text-slate-200 text-base font-medium mb-1">The pass appears automatically at arrival and in-venue moments.</p>
-                                                    <p className="text-slate-400 text-sm leading-relaxed">Location-aware access with real-time balance and benefits.</p>
+                                                    <h3 className="text-lg font-bold text-white mb-0.5">Right Place, Right Time</h3>
+                                                    <p className="text-slate-200 text-sm font-medium mb-0.5">The pass appears automatically at arrival and in-venue moments.</p>
+                                                    <p className="text-slate-400 text-xs leading-relaxed">Location-aware access with real-time balance and benefits.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-3 left-4 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
                                     </div>
 
                                     {/* Row 3: 2 Notification tiles */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                                         {/* Campaign Notifications */}
-                                        <div onClick={() => setPassSlide(5)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-8 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        <div onClick={() => setPassSlide(5)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-5 py-5 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                                    <Icons.Gift className="w-5 h-5 text-white" />
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                                    <Icons.Gift className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="text-xl font-bold text-white mb-1">Targeted Offers</h3>
-                                                    <p className="text-slate-200 text-base font-medium mb-1">Trigger promotions by segment, event, and location.</p>
-                                                    <p className="text-slate-400 text-sm leading-relaxed">Drive merch and concessions with timely rewards, upgrades, and reminders.</p>
+                                                    <h3 className="text-lg font-bold text-white mb-0.5">Targeted Offers</h3>
+                                                    <p className="text-slate-200 text-sm font-medium mb-0.5">Trigger promotions by segment, event, and location.</p>
+                                                    <p className="text-slate-400 text-xs leading-relaxed">Drive merch and concessions with timely rewards, upgrades, and reminders.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-3 left-4 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
 
                                         {/* Transactional Notifications */}
-                                        <div onClick={() => setPassSlide(2)} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-8 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        <div onClick={() => setPassSlide(2)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-5 py-5 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                            <div className="flex items-start gap-4">
-                                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                                    <Icons.FileText className="w-5 h-5 text-white" />
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                                                    <Icons.FileText className="w-4 h-4 text-white" />
                                                 </div>
                                                 <div className="flex-1">
-                                                    <h3 className="text-xl font-bold text-white mb-1">Real-Time Updates</h3>
-                                                    <p className="text-slate-200 text-base font-medium mb-1">Keep guests informed with instant confirmations and balance changes.</p>
-                                                    <p className="text-slate-400 text-sm leading-relaxed">Receipts, redemptions, credits, and expirations delivered automatically.</p>
+                                                    <h3 className="text-lg font-bold text-white mb-0.5">Real-Time Updates</h3>
+                                                    <p className="text-slate-200 text-sm font-medium mb-0.5">Keep guests informed with instant confirmations and balance changes.</p>
+                                                    <p className="text-slate-400 text-xs leading-relaxed">Receipts, redemptions, credits, and expirations delivered automatically.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-3 left-4 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
                                         </div>
                                     </div>
 
@@ -1012,7 +1005,6 @@
                             <div className="flex justify-center mb-6">
                                 <div className="inline-flex items-center gap-2 p-1.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-md">
                                     {[
-                                        { id: 'menu-manager', label: 'Menu Manager', icon: Icons.FileText },
                                         { id: 'loyalty-app', label: 'Loyalty App', icon: Icons.Heart },
                                         { id: 'datanow', label: 'DataNow', icon: Icons.Activity }
                                     ].map((tab) => (
@@ -1037,26 +1029,6 @@
                                 <div className="flex flex-col lg:flex-row items-center gap-6">
                                     {/* Left: Capabilities */}
                                     <div className="w-full lg:w-1/3 space-y-3">
-                                        {activeTab === 'menu-manager' && (
-                                            <div className="space-y-3 animate-fade-in">
-                                                {[
-                                                    { icon: Icons.PenTool, title: 'Visual Menu Builder', desc: 'Drag-and-drop interface to create and organize menus' },
-                                                    { icon: Icons.Zap, title: 'Real-Time Updates', desc: 'Push menu changes instantly across all channels' },
-                                                    { icon: Icons.Settings, title: 'Item Management', desc: 'Control pricing, modifiers, and availability' },
-                                                    { icon: Icons.MapPin, title: 'Multi-Location Support', desc: 'Manage menus with location-specific overrides' }
-                                                ].map((item, i) => (
-                                                    <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-200">
-                                                        <div className="w-11 h-11 rounded-lg bg-shift4-sky-blue/20 flex items-center justify-center flex-shrink-0">
-                                                            <item.icon className="w-5 h-5 text-shift4-sky-blue" />
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="text-white font-semibold text-base">{item.title}</h4>
-                                                            <p className="text-slate-400 text-sm">{item.desc}</p>
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
                                         {activeTab === 'loyalty-app' && (
                                             <div className="space-y-2 animate-fade-in">
                                                 {[
@@ -1131,7 +1103,6 @@
                                                     <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
                                                 </div>
                                                 <div className="bg-slate-700/50 rounded-md px-2 py-1 text-[10px] text-slate-400 whitespace-nowrap">
-                                                    {activeTab === 'menu-manager' && 'venue-menu.ordernext.com'}
                                                     {activeTab === 'loyalty-app' && 'venue-loyalty.ordernext.com'}
                                                     {activeTab === 'datanow' && 'venue-datanow.ordernext.com'}
                                                 </div>
@@ -1223,7 +1194,6 @@
                                                 <div className="hidden w-full h-full items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 absolute inset-0">
                                                     <div className="text-center">
                                                         <div className="w-16 h-16 rounded-2xl bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4">
-                                                            {activeTab === 'menu-manager' && <Icons.FileText className="w-8 h-8 text-shift4-sky-blue" />}
                                                             {activeTab === 'loyalty-app' && <Icons.Heart className="w-8 h-8 text-violet-400" />}
                                                             {activeTab === 'datanow' && <Icons.Activity className="w-8 h-8 text-emerald-400" />}
                                                         </div>
@@ -1267,7 +1237,6 @@
                                             <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
                                         </div>
                                         <div className="bg-slate-700/50 rounded-md px-2 py-1 text-[10px] text-slate-400 whitespace-nowrap">
-                                            {expandedTab === 'menu-manager' && 'venue-menu.ordernext.com'}
                                             {expandedTab === 'loyalty-app' && 'venue-loyalty.ordernext.com'}
                                             {expandedTab === 'datanow' && 'venue-datanow.ordernext.com'}
                                         </div>
@@ -1359,7 +1328,6 @@
                                         <div className="hidden absolute inset-0 items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
                                             <div className="text-center">
                                                 <div className="w-20 h-20 rounded-2xl bg-shift4-sky-blue/20 flex items-center justify-center mx-auto mb-4">
-                                                    {expandedTab === 'menu-manager' && <Icons.FileText className="w-10 h-10 text-shift4-sky-blue" />}
                                                     {expandedTab === 'loyalty-app' && <Icons.Heart className="w-10 h-10 text-violet-400" />}
                                                     {expandedTab === 'datanow' && <Icons.Activity className="w-10 h-10 text-emerald-400" />}
                                                 </div>
