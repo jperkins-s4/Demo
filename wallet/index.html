@@ -1556,15 +1556,28 @@
                                             </div>
                                         )}
 
-                                        {/* Mobile Redemption Tab - Placeholder */}
+                                        {/* Mobile Redemption Tab */}
                                         {redemptionTab === 'mobile' && (
-                                            <div className="flex items-center justify-center h-[500px]">
-                                                <div className="text-center p-8">
-                                                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center mx-auto mb-4 border border-orange-500/20">
-                                                        <Icons.Smartphone className="w-10 h-10 text-orange-400" />
+                                            <div className="flex items-center justify-center py-8">
+                                                <div className="flex flex-col items-center">
+                                                    {/* iPhone Frame with Video */}
+                                                    <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '300px', height: '650px' }}>
+                                                        {/* Dynamic Island */}
+                                                        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
+                                                        {/* Video with inner rounded container */}
+                                                        <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                                                            <video
+                                                                autoPlay
+                                                                muted
+                                                                loop
+                                                                playsInline
+                                                                className="w-full h-full object-cover"
+                                                            >
+                                                                <source src="../site/Mobile-flow.mp4" type="video/mp4" />
+                                                            </video>
+                                                        </div>
                                                     </div>
-                                                    <h3 className="text-xl font-bold text-white mb-2">Mobile Redemption</h3>
-                                                    <p className="text-slate-400 text-sm">Content coming soon</p>
+                                                    <p className="text-center text-slate-500 text-xs mt-4">Mobile ordering with wallet benefits</p>
                                                 </div>
                                             </div>
                                         )}
