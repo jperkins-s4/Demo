@@ -180,21 +180,15 @@ class ErrorBoundary extends React.Component {
 // --- REUSABLE COMPONENTS ---
 
 // Glow color lookup for Tailwind (dynamic classes don't work with purge)
+// Only includes colors actually used in gradientFrom props
 const GLOW_CLASSES = {
     blue: 'bg-blue-500/20',
-    cyan: 'bg-cyan-500/20',
-    purple: 'bg-purple-500/20',
     violet: 'bg-violet-500/20',
     emerald: 'bg-emerald-500/20',
     orange: 'bg-orange-500/20',
     rose: 'bg-rose-500/20',
-    indigo: 'bg-indigo-500/20',
-    amber: 'bg-amber-500/20',
-    teal: 'bg-teal-500/20',
-    pink: 'bg-pink-500/20',
-    sky: 'bg-sky-500/20',
     shift4: 'bg-shift4-sky-blue/20',
-    slate: 'bg-slate-500/20',
+    slate: 'bg-slate-500/20', // default fallback
 };
 
 // FeatureCard Component
