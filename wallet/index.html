@@ -147,7 +147,7 @@
 
             // Dropdown state for capability cards (independent toggles)
             const [loadedTicketsOpen, setLoadedTicketsOpen] = useState(false);
-            const [promoControlsOpen, setPromoControlsOpen] = useState(false);
+            const [mobileOrderingOpen, setMobileOrderingOpen] = useState(false);
 
             // Browser tabs configuration for each section
             const browserTabs = {
@@ -571,7 +571,7 @@
                     </section>
 
                     {/* SECTION 3: Wallet Capabilities */}
-                    <section id="wallet-capabilities" aria-labelledby="wallet-capabilities-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-start pt-20 isolate">
+                    <section id="wallet-capabilities" aria-labelledby="wallet-capabilities-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-start pt-10 isolate">
                         <div className="container mx-auto px-6">
                             {/* Section Header */}
                             <div className="text-center mb-3">
@@ -654,20 +654,25 @@
                                     </ul>
                                 </FeatureCard>
 
-                                {/* Card 5: Mobile Orders & Fulfillment */}
+                                {/* Card 5: Redemption Overview */}
                                 <FeatureCard
-                                    icon={Icons.ShoppingBag}
-                                    title="Mobile Ordering"
-                                    benefit="End-to-end ordering from browse to pickup."
+                                    icon={Icons.ShoppingCart}
+                                    title="Redemption Overview"
+                                    benefit="Accept benefits venue-wide with simple, consistent redemption flows."
                                     gradientFrom="from-orange-500"
                                     gradientTo="to-amber-500"
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Browse to pickup with real-time status updates</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Digital receipts + order history</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Benefits apply automatically at checkout (discounts, stored value)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> POS + kiosks: QR scan or manual entry</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Benefits apply automatically: discounts and stored value</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Retail + Autonomous supported via partners</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time confirmations and balance updates</li>
                                     </ul>
+                                    <button className="mt-3 text-xs text-orange-400 hover:text-orange-300 transition-colors flex items-center gap-1 group">
+                                        View redemption methods
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                    </button>
                                 </FeatureCard>
 
                                 {/* Card 6: Loyalty & Promotions */}
@@ -715,27 +720,27 @@
                                         </div>
                                     )}
                                 </div>
-                                {/* Promotion Controls Dropdown */}
+                                {/* Mobile Ordering Dropdown */}
                                 <div className="flex-1">
                                     <button
-                                        onClick={() => setPromoControlsOpen(!promoControlsOpen)}
+                                        onClick={() => setMobileOrderingOpen(!mobileOrderingOpen)}
                                         className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 transition-all duration-300 group text-left"
                                     >
-                                        <div className="rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.TrendingUp className="w-4 h-4 text-white" />
+                                        <div className="rounded-lg bg-gradient-to-br from-lime-500 to-green-500 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.ShoppingBag className="w-4 h-4 text-white" />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="font-bold text-white text-sm">Promotion Controls</h4>
-                                            <p className="text-slate-400 text-[11px] leading-relaxed">Menu targeting, usage limits, and stacking priority rules.</p>
+                                            <h4 className="font-bold text-white text-sm">Mobile Ordering</h4>
+                                            <p className="text-slate-400 text-[11px] leading-relaxed">Order ahead with wallet benefits applied automatically.</p>
                                         </div>
-                                        <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${promoControlsOpen ? 'rotate-180' : ''}`} />
+                                        <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${mobileOrderingOpen ? 'rotate-180' : ''}`} />
                                     </button>
-                                    {promoControlsOpen && (
+                                    {mobileOrderingOpen && (
                                         <div className="mt-1 p-3 rounded-xl bg-slate-800/40 border border-white/5 animate-fade-in">
                                             <ul className="text-slate-300 text-[11px] space-y-1.5">
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Target promos by item, category, or check level</li>
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Define stacking priority and rule order</li>
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Set usage limits</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Browse to pickup with real-time status updates</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Digital receipts + order history</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Benefits apply automatically at checkout (discounts, stored value)</li>
                                             </ul>
                                         </div>
                                     )}
