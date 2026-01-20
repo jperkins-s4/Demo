@@ -132,15 +132,39 @@
                     { id: 'categories', label: 'Categories', image: '../site/menu-categories-ui.png' },
                     { id: 'modifiers', label: 'Modifiers', image: '../site/menu-modifiers-ui.png' },
                 ],
-                'loyalty-app': [
-                    { id: 'accounts', label: 'Accounts', image: '../site/loyalty-app-ui.png' },
-                    { id: 'adjustments', label: 'Adjustments', image: '../site/loyalty-adjustments-ui.png' },
-                    { id: 'bulk-uploads', label: 'Bulk Uploads', image: '../site/loyalty-bulk-uploads-ui.png' },
-                    { id: 'affiliations', label: 'Affiliations', image: '../site/loyalty-affiliations-ui.png' },
-                    { id: 'passes', label: 'Passes', image: '../site/loyalty-passes-ui.png' },
-                    { id: 'pass-design', label: 'Pass Design', image: '../site/loyalty-pass-design-ui.png' },
-                    { id: 'campaign', label: 'Campaign', image: '../site/loyalty-campaign-ui.png' },
-                ],
+                'loyalty-app': {
+                    isHierarchical: true,
+                    categories: [
+                        {
+                            id: 'accounts',
+                            label: 'Accounts',
+                            tabs: [
+                                { id: 'accounts', label: 'Accounts', image: '../site/loyalty-app-ui.png' },
+                                { id: 'adjustments', label: 'Adjustments', image: '../site/loyalty-adjustments-ui.png' },
+                                { id: 'history', label: 'History', image: '../site/loyalty-history-accounts-ui.png' },
+                                { id: 'bulk-uploads', label: 'Bulk Uploads', image: '../site/loyalty-bulk-uploads-ui.png' }
+                            ]
+                        },
+                        {
+                            id: 'affiliations',
+                            label: 'Affiliations',
+                            tabs: [
+                                { id: 'affiliations', label: 'Affiliations', image: '../site/loyalty-affiliations-ui.png' },
+                                { id: 'add-affiliation', label: 'Add Affiliation', image: '../site/loyalty-affiliation-add-ui.png' }
+                            ]
+                        },
+                        {
+                            id: 'passes',
+                            label: 'Passes',
+                            tabs: [
+                                { id: 'passes', label: 'Passes', image: '../site/loyalty-passes-ui.png' },
+                                { id: 'pass-design', label: 'Pass Design', image: '../site/loyalty-pass-design-ui.png' },
+                                { id: 'geofence', label: 'Geofence', image: '../site/loyalty-geofence-ui.png' },
+                                { id: 'campaign', label: 'Campaign', image: '../site/loyalty-campaign-ui.png' }
+                            ]
+                        }
+                    ]
+                },
                 'datanow': [
                     { id: 'dashboard', label: 'Dashboard', image: '../site/datanow-ui.png' },
                     { id: 'reports', label: 'Reports', image: '../site/datanow-reports-ui.png' },
@@ -151,13 +175,48 @@
             // Active browser tab state for each section
             const [activeBrowserTab, setActiveBrowserTab] = useState({
                 'menu-manager': 0,
-                'loyalty-app': 0,
+                'loyalty-app': { accounts: 0, affiliations: 0, passes: 0 },
                 'datanow': 0
             });
 
+            // Active category state for hierarchical tabs (loyalty-app)
+            const [activeLoyaltyCategory, setActiveLoyaltyCategory] = useState('accounts');
+
             // Helper to update browser tab for a section
             const setTabForSection = (section, tabIndex) => {
-                setActiveBrowserTab(prev => ({ ...prev, [section]: tabIndex }));
+                if (section === 'loyalty-app') {
+                    // For loyalty-app, update the tab within the active category
+                    setActiveBrowserTab(prev => ({
+                        ...prev,
+                        'loyalty-app': { ...prev['loyalty-app'], [activeLoyaltyCategory]: tabIndex }
+                    }));
+                } else {
+                    setActiveBrowserTab(prev => ({ ...prev, [section]: tabIndex }));
+                }
+            };
+
+            // Helper to get current tab data for any section (handles hierarchical structure)
+            const getCurrentTabData = (section) => {
+                const tabs = browserTabs[section];
+
+                if (tabs?.isHierarchical) {
+                    const category = tabs.categories.find(c => c.id === activeLoyaltyCategory);
+                    const tabIndex = activeBrowserTab[section]?.[activeLoyaltyCategory] || 0;
+                    return category?.tabs[tabIndex] || category?.tabs[0];
+                } else if (Array.isArray(tabs)) {
+                    return tabs[activeBrowserTab[section]] || tabs[0];
+                }
+                return null;
+            };
+
+            // Helper to get tabs array for current section
+            const getTabsArray = (section) => {
+                const tabs = browserTabs[section];
+                if (tabs?.isHierarchical) {
+                    const category = tabs.categories.find(c => c.id === activeLoyaltyCategory);
+                    return category?.tabs || [];
+                }
+                return Array.isArray(tabs) ? tabs : [];
             };
 
             // Escape key handler for closing modals
@@ -999,23 +1058,44 @@
                                             </div>
                                         )}
                                         {activeTab === 'loyalty-app' && (
-                                            <div className="space-y-3 animate-fade-in">
+                                            <div className="space-y-2 animate-fade-in">
                                                 {[
-                                                    { icon: Icons.Users, title: 'Member Management', desc: 'Search, view, and manage member profiles and tiers' },
-                                                    { icon: Icons.CircleDollarSign, title: 'Points & Currency', desc: 'Award, deduct, and track stored value balances' },
-                                                    { icon: Icons.Gift, title: 'Campaign Builder', desc: 'Create targeted promotions and reward triggers' },
-                                                    { icon: Icons.RefreshCw, title: 'Real-Time Sync', desc: 'Changes reflect instantly across all touchpoints' }
-                                                ].map((item, i) => (
-                                                    <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-200">
-                                                        <div className="w-11 h-11 rounded-lg bg-violet-500/20 flex items-center justify-center flex-shrink-0">
-                                                            <item.icon className="w-5 h-5 text-violet-400" />
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="text-white font-semibold text-base">{item.title}</h4>
-                                                            <p className="text-slate-400 text-sm">{item.desc}</p>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                    { icon: Icons.Users, title: 'Member & Account Management', desc: 'Search, view, and manage member profiles with fast lookup and clean account detail views', category: 'accounts', tabIndex: 0, activeIndices: [0] },
+                                                    { icon: Icons.CircleDollarSign, title: 'Account Actions and History', desc: 'View balances and transaction history, adjust stored value, assign affiliations, and apply promotions for a single member in seconds', category: 'accounts', tabIndex: 1, activeIndices: [1, 2] },
+                                                    { icon: Icons.FileText, title: 'Bulk Operations via CSV', desc: 'Make mass updates in minutes: bulk stored value adjustments, affiliation assignment, and promotion awarding', category: 'accounts', tabIndex: 3, activeIndices: [3] },
+                                                    { icon: Icons.BadgeCheck, title: 'Affiliations and Tier Setup', desc: 'Define tiers, ranks, and badge styling for your program', category: 'affiliations', tabIndex: 0, activeIndices: [0, 1] },
+                                                    { icon: Icons.Smartphone, title: 'Digital Passes & Analytics', desc: 'Issue and manage Apple Wallet and Google Wallet passes, track activations and engagement', category: 'passes', tabIndex: 0, activeIndices: [0, 1] },
+                                                    { icon: Icons.MapPin, title: 'Campaigns & Location Targeting', desc: 'Launch targeted campaigns with segmentation, notifications, and geofence-triggered experiences', category: 'passes', tabIndex: 3, activeIndices: [2, 3] }
+                                                ].map((item, i) => {
+                                                    const isActive = activeLoyaltyCategory === item.category && item.activeIndices.includes(activeBrowserTab['loyalty-app'][item.category]);
+                                                    return (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => {
+                                                                setActiveLoyaltyCategory(item.category);
+                                                                setActiveBrowserTab(prev => ({
+                                                                    ...prev,
+                                                                    'loyalty-app': { ...prev['loyalty-app'], [item.category]: item.tabIndex }
+                                                                }));
+                                                            }}
+                                                            className={`w-full flex items-start gap-3 p-3 rounded-xl border transition-all duration-200 text-left ${
+                                                                isActive
+                                                                    ? 'bg-violet-500/20 border-violet-500/50 shadow-lg shadow-violet-500/10'
+                                                                    : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+                                                            }`}
+                                                        >
+                                                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                                                isActive ? 'bg-violet-500/30' : 'bg-violet-500/20'
+                                                            }`}>
+                                                                <item.icon className={`w-4 h-4 ${isActive ? 'text-violet-300' : 'text-violet-400'}`} />
+                                                            </div>
+                                                            <div className="min-w-0">
+                                                                <h4 className={`font-semibold text-sm leading-tight ${isActive ? 'text-violet-200' : 'text-white'}`}>{item.title}</h4>
+                                                                <p className={`text-xs mt-0.5 leading-snug ${isActive ? 'text-violet-300/80' : 'text-slate-400'}`}>{item.desc}</p>
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         )}
                                         {activeTab === 'datanow' && (
@@ -1055,22 +1135,59 @@
                                                     {activeTab === 'loyalty-app' && 'venue-loyalty.ordernext.com'}
                                                     {activeTab === 'datanow' && 'venue-datanow.ordernext.com'}
                                                 </div>
-                                                {/* Inline Tabs */}
-                                                <div className="flex items-center gap-0.5 ml-auto">
-                                                    {browserTabs[activeTab].map((tab, index) => (
-                                                        <button
-                                                            key={tab.id}
-                                                            onClick={() => setTabForSection(activeTab, index)}
-                                                            className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
-                                                                activeBrowserTab[activeTab] === index
-                                                                    ? 'bg-slate-600/80 text-white'
-                                                                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
-                                                            }`}
-                                                        >
-                                                            {tab.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                                {/* Inline Tabs - Hierarchical for loyalty-app, flat for others */}
+                                                {activeTab === 'loyalty-app' ? (
+                                                    <div className="flex items-center gap-3 ml-auto">
+                                                        {/* Primary Category Tabs */}
+                                                        <div className="flex items-center gap-0.5 border-r border-slate-600/50 pr-3">
+                                                            {browserTabs['loyalty-app'].categories.map((category) => (
+                                                                <button
+                                                                    key={category.id}
+                                                                    onClick={() => setActiveLoyaltyCategory(category.id)}
+                                                                    className={`px-2.5 py-1 text-[10px] font-semibold rounded transition-all duration-200 ${
+                                                                        activeLoyaltyCategory === category.id
+                                                                            ? 'bg-violet-500/80 text-white shadow-sm'
+                                                                            : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                                                    }`}
+                                                                >
+                                                                    {category.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                        {/* Secondary Tabs within Category */}
+                                                        <div className="flex items-center gap-0.5">
+                                                            {getTabsArray(activeTab).map((tab, index) => (
+                                                                <button
+                                                                    key={tab.id}
+                                                                    onClick={() => setTabForSection(activeTab, index)}
+                                                                    className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
+                                                                        activeBrowserTab['loyalty-app'][activeLoyaltyCategory] === index
+                                                                            ? 'bg-slate-600/80 text-white'
+                                                                            : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                                                    }`}
+                                                                >
+                                                                    {tab.label}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex items-center gap-0.5 ml-auto">
+                                                        {getTabsArray(activeTab).map((tab, index) => (
+                                                            <button
+                                                                key={tab.id}
+                                                                onClick={() => setTabForSection(activeTab, index)}
+                                                                className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
+                                                                    activeBrowserTab[activeTab] === index
+                                                                        ? 'bg-slate-600/80 text-white'
+                                                                        : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                                                }`}
+                                                            >
+                                                                {tab.label}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
                                                 {/* Expand Icon */}
                                                 <button
                                                     onClick={() => setExpandedTab(activeTab)}
@@ -1089,9 +1206,9 @@
                                             {/* Screenshot Area */}
                                             <div className="aspect-[16/10] bg-slate-900 relative overflow-hidden">
                                                 <img
-                                                    key={`${activeTab}-${activeBrowserTab[activeTab]}`}
-                                                    src={browserTabs[activeTab][activeBrowserTab[activeTab]].image}
-                                                    alt={`${browserTabs[activeTab][activeBrowserTab[activeTab]].label} interface`}
+                                                    key={`${activeTab}-${activeLoyaltyCategory}-${activeTab === 'loyalty-app' ? activeBrowserTab['loyalty-app'][activeLoyaltyCategory] : activeBrowserTab[activeTab]}`}
+                                                    src={getCurrentTabData(activeTab)?.image}
+                                                    alt={`${getCurrentTabData(activeTab)?.label || 'App'} interface`}
                                                     className="w-full h-full object-cover object-top animate-fade-in"
                                                     onLoad={(e) => {
                                                         e.target.style.display = 'block';
@@ -1110,7 +1227,7 @@
                                                             {activeTab === 'loyalty-app' && <Icons.Heart className="w-8 h-8 text-violet-400" />}
                                                             {activeTab === 'datanow' && <Icons.Activity className="w-8 h-8 text-emerald-400" />}
                                                         </div>
-                                                        <p className="text-slate-400 text-sm">{browserTabs[activeTab][activeBrowserTab[activeTab]].label}</p>
+                                                        <p className="text-slate-400 text-sm">{getCurrentTabData(activeTab)?.label || 'Loading...'}</p>
                                                         <p className="text-slate-400 text-xs mt-1 font-light">Add image to /site/ folder</p>
                                                     </div>
                                                 </div>
@@ -1154,22 +1271,59 @@
                                             {expandedTab === 'loyalty-app' && 'venue-loyalty.ordernext.com'}
                                             {expandedTab === 'datanow' && 'venue-datanow.ordernext.com'}
                                         </div>
-                                        {/* Inline Tabs */}
-                                        <div className="flex items-center gap-0.5 ml-auto">
-                                            {browserTabs[expandedTab].map((tab, index) => (
-                                                <button
-                                                    key={tab.id}
-                                                    onClick={() => setTabForSection(expandedTab, index)}
-                                                    className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
-                                                        activeBrowserTab[expandedTab] === index
-                                                            ? 'bg-slate-600/80 text-white'
-                                                            : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
-                                                    }`}
-                                                >
-                                                    {tab.label}
-                                                </button>
-                                            ))}
-                                        </div>
+                                        {/* Inline Tabs - Hierarchical for loyalty-app, flat for others */}
+                                        {expandedTab === 'loyalty-app' ? (
+                                            <div className="flex items-center gap-3 ml-auto">
+                                                {/* Primary Category Tabs */}
+                                                <div className="flex items-center gap-0.5 border-r border-slate-600/50 pr-3">
+                                                    {browserTabs['loyalty-app'].categories.map((category) => (
+                                                        <button
+                                                            key={category.id}
+                                                            onClick={() => setActiveLoyaltyCategory(category.id)}
+                                                            className={`px-2.5 py-1 text-[10px] font-semibold rounded transition-all duration-200 ${
+                                                                activeLoyaltyCategory === category.id
+                                                                    ? 'bg-violet-500/80 text-white shadow-sm'
+                                                                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                                            }`}
+                                                        >
+                                                            {category.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                {/* Secondary Tabs within Category */}
+                                                <div className="flex items-center gap-0.5">
+                                                    {getTabsArray(expandedTab).map((tab, index) => (
+                                                        <button
+                                                            key={tab.id}
+                                                            onClick={() => setTabForSection(expandedTab, index)}
+                                                            className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
+                                                                activeBrowserTab['loyalty-app'][activeLoyaltyCategory] === index
+                                                                    ? 'bg-slate-600/80 text-white'
+                                                                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                                            }`}
+                                                        >
+                                                            {tab.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-0.5 ml-auto">
+                                                {getTabsArray(expandedTab).map((tab, index) => (
+                                                    <button
+                                                        key={tab.id}
+                                                        onClick={() => setTabForSection(expandedTab, index)}
+                                                        className={`px-2 py-0.5 text-[10px] font-medium rounded transition-all duration-200 ${
+                                                            activeBrowserTab[expandedTab] === index
+                                                                ? 'bg-slate-600/80 text-white'
+                                                                : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-300'
+                                                        }`}
+                                                    >
+                                                        {tab.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
                                         {/* Close/Minimize Icon */}
                                         <button
                                             onClick={() => setExpandedTab(null)}
@@ -1188,9 +1342,9 @@
                                     {/* Screenshot Area */}
                                     <div className="aspect-[16/10] bg-slate-900 relative overflow-hidden">
                                         <img
-                                            key={`expanded-${expandedTab}-${activeBrowserTab[expandedTab]}`}
-                                            src={browserTabs[expandedTab][activeBrowserTab[expandedTab]].image}
-                                            alt={`${browserTabs[expandedTab][activeBrowserTab[expandedTab]].label} interface`}
+                                            key={`expanded-${expandedTab}-${activeLoyaltyCategory}-${expandedTab === 'loyalty-app' ? activeBrowserTab['loyalty-app'][activeLoyaltyCategory] : activeBrowserTab[expandedTab]}`}
+                                            src={getCurrentTabData(expandedTab)?.image}
+                                            alt={`${getCurrentTabData(expandedTab)?.label || 'App'} interface`}
                                             className="w-full h-full object-cover object-top animate-fade-in"
                                             onLoad={(e) => {
                                                 e.target.style.display = 'block';
@@ -1209,7 +1363,7 @@
                                                     {expandedTab === 'loyalty-app' && <Icons.Heart className="w-10 h-10 text-violet-400" />}
                                                     {expandedTab === 'datanow' && <Icons.Activity className="w-10 h-10 text-emerald-400" />}
                                                 </div>
-                                                <p className="text-slate-400 text-base">{browserTabs[expandedTab][activeBrowserTab[expandedTab]].label}</p>
+                                                <p className="text-slate-400 text-base">{getCurrentTabData(expandedTab)?.label || 'Loading...'}</p>
                                                 <p className="text-slate-400 text-xs mt-1 font-light">Add image to /site/ folder</p>
                                             </div>
                                         </div>
