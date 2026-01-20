@@ -145,6 +145,10 @@
             // Video modal state
             const [showWalletVideo, setShowWalletVideo] = useState(false);
 
+            // Dropdown state for capability cards (independent toggles)
+            const [loadedTicketsOpen, setLoadedTicketsOpen] = useState(false);
+            const [promoControlsOpen, setPromoControlsOpen] = useState(false);
+
             // Browser tabs configuration for each section
             const browserTabs = {
                 'loyalty-app': {
@@ -567,10 +571,10 @@
                     </section>
 
                     {/* SECTION 3: Wallet Capabilities */}
-                    <section id="wallet-capabilities" aria-labelledby="wallet-capabilities-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-center isolate">
-                        <div className="container mx-auto px-6 py-6">
+                    <section id="wallet-capabilities" aria-labelledby="wallet-capabilities-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-start pt-20 isolate">
+                        <div className="container mx-auto px-6">
                             {/* Section Header */}
-                            <div className="text-center mb-4">
+                            <div className="text-center mb-3">
                                 <span className="text-shift4-sky-blue font-semibold tracking-[0.2em] uppercase text-xs mb-3 block">Mobile Commerce</span>
                                 <h2 id="wallet-capabilities-heading" className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Wallet Capabilities</h2>
                                 <p className="text-slate-300 max-w-2xl mx-auto text-base leading-relaxed">
@@ -584,16 +588,16 @@
                                 <FeatureCard
                                     icon={Icons.Wallet}
                                     title="Identity + Wallet Pass"
-                                    benefit="Secure guest identity and a wallet pass that works across the venue."
+                                    benefit="Authenticate with ticketing (or SMS) and issue a secure wallet pass for identity + benefits."
                                     gradientFrom="from-blue-500"
                                     gradientTo="to-cyan-500"
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticketing authentication or SMS sign-in</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Secure, tokenized wallet storage</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Card-on-file support for faster checkout</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> QR wallet scan for POS and kiosks</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Secure, tokenized wallet identity</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Card-on-file for faster checkout</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> QR wallet scan for POS + kiosks</li>
                                     </ul>
                                 </FeatureCard>
 
@@ -601,16 +605,16 @@
                                 <FeatureCard
                                     icon={Icons.Zap}
                                     title="Payments + Acceptance"
-                                    benefit="One payment experience across every channel."
+                                    benefit="One payment experience across every channel, with benefits applied automatically."
                                     gradientFrom="from-emerald-500"
                                     gradientTo="to-teal-500"
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Discounts and stored value applied automatically</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Mobile, kiosk, and POS ordering support</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time transaction processing</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Multi-channel acceptance and reporting</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Discounts + stored value applied automatically</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> POS, kiosk, and mobile ordering support</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time transaction processing + reporting</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Supports retail and autonomous experiences</li>
                                     </ul>
                                 </FeatureCard>
 
@@ -624,9 +628,10 @@
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> SkyTab Venue: POS, kiosk, and mobile</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> SkyTab Venue: POS, kiosk, mobile ordering</li>
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> SkyTab Restaurant POS</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Partner platform integrations</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticketing login integrations (Ticketmaster, SeatGeek, AXS, Tickets.com)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Venue app ecosystem support (SDK/embedded)</li>
                                     </ul>
                                 </FeatureCard>
 
@@ -642,7 +647,10 @@
                                     <ul className="text-slate-300 text-xs space-y-2">
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Custom branded stored value (for example "Shift4 Bucks")</li>
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Gift card loads and transfers</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Configurable expiration and spend rules</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Award via Admin Portal or Loyalty API (bulk and ad hoc)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Value from loaded tickets (ticket-based)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Send/transfer between guests (optional)</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Configurable expiration + spend rules</li>
                                     </ul>
                                 </FeatureCard>
 
@@ -656,9 +664,9 @@
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Pickup and delivery options (where available)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time order status and updates</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Digital receipts and order history</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Browse to pickup with real-time status updates</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Digital receipts + order history</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Benefits apply automatically at checkout (discounts, stored value)</li>
                                     </ul>
                                 </FeatureCard>
 
@@ -672,32 +680,66 @@
                                     isPrimary={true}
                                 >
                                     <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Auto-discounts from ticket attributes</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticket-based benefits via ticket attributes</li>
                                         <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Tiered pricing and member benefits</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Item, category, and check-level promos</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Item/category targeting + check-level promos</li>
+                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Usage limits, stacking priority, and rule controls</li>
                                     </ul>
-                                    <div className="border-t border-slate-700 mt-2 pt-2">
-                                        <p className="text-xs text-slate-400 font-light">Examples: $5 off $30, Free item, Tiered %</p>
-                                    </div>
                                 </FeatureCard>
                             </div>
 
-                            {/* Compact secondary cards - horizontal layout */}
-                            <div className="flex flex-col md:flex-row gap-4 max-w-7xl mx-auto">
-                                <CompactCard
-                                    icon={Icons.Ticket}
-                                    title="Loaded Tickets"
-                                    description="Pre-load tickets with currency or discounts via ticketing attributes"
-                                    gradientFrom="from-violet-500"
-                                    gradientTo="to-purple-500"
-                                />
-                                <CompactCard
-                                    icon={Icons.TrendingUp}
-                                    title="Promotion Controls"
-                                    description="Menu targeting, usage limits, and stacking priority rules"
-                                    gradientFrom="from-rose-500"
-                                    gradientTo="to-pink-500"
-                                />
+                            {/* Secondary cards - collapsible dropdowns */}
+                            <div className="flex flex-col md:flex-row gap-3 max-w-5xl mx-auto justify-center">
+                                {/* Loaded Tickets Dropdown */}
+                                <div className="flex-1">
+                                    <button
+                                        onClick={() => setLoadedTicketsOpen(!loadedTicketsOpen)}
+                                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 transition-all duration-300 group text-left"
+                                    >
+                                        <div className="rounded-lg bg-gradient-to-br from-violet-500 to-purple-500 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.Ticket className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="font-bold text-white text-sm">Loaded Tickets</h4>
+                                            <p className="text-slate-400 text-[11px] leading-relaxed">Pre-load tickets with currency or discounts via ticketing attributes.</p>
+                                        </div>
+                                        <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${loadedTicketsOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    {loadedTicketsOpen && (
+                                        <div className="mt-1 p-3 rounded-xl bg-slate-800/40 border border-white/5 animate-fade-in">
+                                            <ul className="text-slate-300 text-[11px] space-y-1.5">
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Two types: virtual currency or promotional discount</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Travels with the ticket when transferred</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Unused value expires at 3:00am the next day</li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                                {/* Promotion Controls Dropdown */}
+                                <div className="flex-1">
+                                    <button
+                                        onClick={() => setPromoControlsOpen(!promoControlsOpen)}
+                                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 transition-all duration-300 group text-left"
+                                    >
+                                        <div className="rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 p-2 shadow-lg flex-shrink-0">
+                                            <Icons.TrendingUp className="w-4 h-4 text-white" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h4 className="font-bold text-white text-sm">Promotion Controls</h4>
+                                            <p className="text-slate-400 text-[11px] leading-relaxed">Menu targeting, usage limits, and stacking priority rules.</p>
+                                        </div>
+                                        <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${promoControlsOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    {promoControlsOpen && (
+                                        <div className="mt-1 p-3 rounded-xl bg-slate-800/40 border border-white/5 animate-fade-in">
+                                            <ul className="text-slate-300 text-[11px] space-y-1.5">
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Target promos by item, category, or check level</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Define stacking priority and rule order</li>
+                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Set usage limits</li>
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </section>
