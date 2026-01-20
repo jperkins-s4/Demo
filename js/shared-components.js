@@ -253,6 +253,70 @@ const SmallBadge = ({ children, className = '' }) => (
     </span>
 );
 
+// PartnerBadge Component - Frosted glass pills with accent color theming
+// Used for integration partner lists with color-coded categories
+const PARTNER_ACCENT_STYLES = {
+    rose: {
+        bg: 'bg-rose-500/8',
+        bgHover: 'hover:bg-rose-500/18',
+        border: 'border-rose-400/20',
+        borderHover: 'hover:border-rose-400/50',
+        accent: 'bg-gradient-to-b from-rose-400 to-pink-500',
+        glow: 'hover:shadow-rose-500/20',
+        text: 'text-rose-100/90'
+    },
+    orange: {
+        bg: 'bg-orange-500/8',
+        bgHover: 'hover:bg-orange-500/18',
+        border: 'border-orange-400/20',
+        borderHover: 'hover:border-orange-400/50',
+        accent: 'bg-gradient-to-b from-orange-400 to-amber-500',
+        glow: 'hover:shadow-orange-500/20',
+        text: 'text-orange-100/90'
+    },
+    blue: {
+        bg: 'bg-blue-500/8',
+        bgHover: 'hover:bg-blue-500/18',
+        border: 'border-blue-400/20',
+        borderHover: 'hover:border-blue-400/50',
+        accent: 'bg-gradient-to-b from-sky-400 to-blue-500',
+        glow: 'hover:shadow-blue-500/20',
+        text: 'text-blue-100/90'
+    },
+    teal: {
+        bg: 'bg-teal-500/8',
+        bgHover: 'hover:bg-teal-500/18',
+        border: 'border-teal-400/20',
+        borderHover: 'hover:border-teal-400/50',
+        accent: 'bg-gradient-to-b from-teal-400 to-cyan-500',
+        glow: 'hover:shadow-teal-500/20',
+        text: 'text-teal-100/90'
+    }
+};
+
+const PartnerBadge = ({ children, accent = 'blue', className = '' }) => {
+    const styles = PARTNER_ACCENT_STYLES[accent] || PARTNER_ACCENT_STYLES.blue;
+
+    return (
+        <span className={`
+            group inline-flex items-center
+            px-2.5 py-1
+            ${styles.bg} ${styles.bgHover}
+            rounded-md
+            border ${styles.border} ${styles.borderHover}
+            text-xs font-medium ${styles.text}
+            hover:text-white
+            shadow-sm ${styles.glow} hover:shadow-md
+            hover:scale-[1.02]
+            transition-all duration-200 ease-out
+            cursor-pointer
+            ${className}
+        `}>
+            {children}
+        </span>
+    );
+};
+
 // CompactCard Component for secondary capabilities
 const CompactCard = ({ icon: Icon, title, description, gradientFrom, gradientTo, className = '' }) => {
     const gradientClasses = gradientFrom && gradientTo

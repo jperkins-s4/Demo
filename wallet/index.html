@@ -904,7 +904,7 @@
 
                         <div className="container mx-auto px-6 relative z-10">
                             {/* Header */}
-                            <div className="text-center mb-10">
+                            <div className="text-center mb-6">
                                 <span className="text-shift4-sky-blue font-semibold tracking-[0.2em] uppercase text-xs mb-3 block">ECOSYSTEM</span>
                                 <h2 id="integrations-heading" className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Integrations That Fit Your Venue</h2>
                                 <p className="text-slate-300 max-w-2xl mx-auto text-base mb-6">
@@ -915,7 +915,6 @@
                                     <Badge>Flexible deployment</Badge>
                                     <Badge>Secure, tokenized identity</Badge>
                                 </div>
-                                <p className="text-slate-400 text-sm mt-4">Authenticate → Issue wallet pass → Accept benefits venue-wide</p>
                             </div>
 
                             {/* Top Row: 3-column grid - Core capabilities */}
@@ -925,7 +924,7 @@
                                     <div className="absolute -top-20 -right-20 w-40 h-40 bg-cyan-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="rounded-xl bg-gradient-to-br from-shift4-sky-blue to-cyan-400 p-3 shadow-lg flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-                                            <Icons.Fingerprint className="w-5 h-5 text-white" />
+                                            <Icons.BadgeCheck className="w-5 h-5 text-white" />
                                         </div>
                                         <h3 className="font-bold text-white text-lg">Identity + Entitlements</h3>
                                     </div>
@@ -971,81 +970,81 @@
                             </div>
 
                             {/* Bottom Row: 4-column partner grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
                                 {/* Ticketing Authentication */}
-                                <div className="relative overflow-hidden p-6 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                <div className="relative overflow-hidden p-4 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
                                     <div className="absolute -top-16 -right-16 w-32 h-32 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    <div className="flex items-center gap-2.5 mb-4">
-                                        <div className="rounded-lg bg-gradient-to-br from-rose-500 to-pink-500 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.Lock className="w-4 h-4 text-white" />
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="rounded-md bg-gradient-to-br from-rose-500 to-pink-500 p-1.5 shadow-lg flex-shrink-0">
+                                            <Icons.Lock className="w-3.5 h-3.5 text-white" />
                                         </div>
                                         <h4 className="font-semibold text-white text-sm">Ticketing Providers</h4>
                                     </div>
-                                    <p className="text-slate-400 text-xs mb-3">Use existing ticketing for login and entitlements.</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        <SmallBadge>Ticketmaster</SmallBadge>
-                                        <SmallBadge>SeatGeek</SmallBadge>
-                                        <SmallBadge>AXS</SmallBadge>
-                                        <SmallBadge>Tickets.com</SmallBadge>
+                                    <p className="text-slate-400 text-[11px] mb-2 leading-relaxed">Use existing ticketing for login and entitlements.</p>
+                                    <div className="flex flex-wrap justify-center gap-1.5">
+                                        <PartnerBadge accent="rose">Ticketmaster</PartnerBadge>
+                                        <PartnerBadge accent="rose">SeatGeek</PartnerBadge>
+                                        <PartnerBadge accent="rose">AXS</PartnerBadge>
+                                        <PartnerBadge accent="rose">Tickets.com</PartnerBadge>
                                     </div>
                                 </div>
 
                                 {/* App Partners */}
-                                <div className="relative overflow-hidden p-6 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                <div className="relative overflow-hidden p-4 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
                                     <div className="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    <div className="flex items-center gap-2.5 mb-4">
-                                        <div className="rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.Network className="w-4 h-4 text-white" />
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="rounded-md bg-gradient-to-br from-orange-500 to-amber-500 p-1.5 shadow-lg flex-shrink-0">
+                                            <Icons.Network className="w-3.5 h-3.5 text-white" />
                                         </div>
                                         <h4 className="font-semibold text-white text-sm">Venue Apps</h4>
                                     </div>
-                                    <p className="text-slate-400 text-xs mb-3">Extend the pass into fan apps and ordering.</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        <SmallBadge>Yinzcam</SmallBadge>
-                                        <SmallBadge>Fanreach</SmallBadge>
-                                        <SmallBadge>MLB Ballpark</SmallBadge>
-                                        <SmallBadge>Raw Engineering</SmallBadge>
-                                        <SmallBadge>Sidearm Sports</SmallBadge>
+                                    <p className="text-slate-400 text-[11px] mb-2 leading-relaxed">Extend the pass into fan apps and ordering.</p>
+                                    <div className="flex flex-wrap justify-center gap-1.5">
+                                        <PartnerBadge accent="orange">Yinzcam</PartnerBadge>
+                                        <PartnerBadge accent="orange">Fanreach</PartnerBadge>
+                                        <PartnerBadge accent="orange">MLB Ballpark</PartnerBadge>
+                                        <PartnerBadge accent="orange">Raw Engineering</PartnerBadge>
+                                        <PartnerBadge accent="orange">Sidearm Sports</PartnerBadge>
                                     </div>
                                 </div>
 
                                 {/* POS Compatibility */}
-                                <div className="relative overflow-hidden p-6 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                <div className="relative overflow-hidden p-4 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
                                     <div className="absolute -top-16 -right-16 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    <div className="flex items-center gap-2.5 mb-4">
-                                        <div className="rounded-lg bg-gradient-to-br from-shift4-sky-blue to-blue-600 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.Monitor className="w-4 h-4 text-white" />
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="rounded-md bg-gradient-to-br from-shift4-sky-blue to-blue-600 p-1.5 shadow-lg flex-shrink-0">
+                                            <Icons.Monitor className="w-3.5 h-3.5 text-white" />
                                         </div>
                                         <h4 className="font-semibold text-white text-sm">Commerce + POS</h4>
                                     </div>
-                                    <p className="text-slate-400 text-xs mb-3">Accept benefits across revenue centers.</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        <SmallBadge>SkyTab Venue</SmallBadge>
-                                        <SmallBadge>SkyTab POS</SmallBadge>
-                                        <SmallBadge>Fanatics</SmallBadge>
-                                        <SmallBadge>NetSuite</SmallBadge>
-                                        <SmallBadge>RetailCloud</SmallBadge>
-                                        <SmallBadge>Retail Pro</SmallBadge>
-                                        <SmallBadge>Tapin2</SmallBadge>
+                                    <p className="text-slate-400 text-[11px] mb-2 leading-relaxed">Accept benefits across revenue centers.</p>
+                                    <div className="flex flex-wrap justify-center gap-1.5">
+                                        <PartnerBadge accent="blue">SkyTab Venue</PartnerBadge>
+                                        <PartnerBadge accent="blue">SkyTab POS</PartnerBadge>
+                                        <PartnerBadge accent="blue">RetailCloud</PartnerBadge>
+                                        <PartnerBadge accent="blue">Retail Pro</PartnerBadge>
+                                        <PartnerBadge accent="blue">Tapin2</PartnerBadge>
+                                        <PartnerBadge accent="blue">Fanatics</PartnerBadge>
+                                        <PartnerBadge accent="blue">NetSuite</PartnerBadge>
                                     </div>
                                 </div>
 
                                 {/* Self-Service */}
-                                <div className="relative overflow-hidden p-6 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
+                                <div className="relative overflow-hidden p-4 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 hover:-translate-y-1 transition-all duration-300 group">
                                     <div className="absolute -top-16 -right-16 w-32 h-32 bg-teal-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                    <div className="flex items-center gap-2.5 mb-4">
-                                        <div className="rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.ShoppingCart className="w-4 h-4 text-white" />
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="rounded-md bg-gradient-to-br from-teal-500 to-cyan-500 p-1.5 shadow-lg flex-shrink-0">
+                                            <Icons.ShoppingCart className="w-3.5 h-3.5 text-white" />
                                         </div>
                                         <h4 className="font-semibold text-white text-sm">Autonomous Retail</h4>
                                     </div>
-                                    <p className="text-slate-400 text-xs mb-3">Speed lines with unattended experiences.</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        <SmallBadge>Amazon JWO</SmallBadge>
-                                        <SmallBadge>AiFi</SmallBadge>
-                                        <SmallBadge>Mashgin</SmallBadge>
-                                        <SmallBadge>Zippin</SmallBadge>
-                                        <SmallBadge>VisioLab</SmallBadge>
+                                    <p className="text-slate-400 text-[11px] mb-2 leading-relaxed">Speed lines with unattended experiences.</p>
+                                    <div className="flex flex-wrap justify-center gap-1.5">
+                                        <PartnerBadge accent="teal">Amazon JWO</PartnerBadge>
+                                        <PartnerBadge accent="teal">AiFi</PartnerBadge>
+                                        <PartnerBadge accent="teal">Mashgin</PartnerBadge>
+                                        <PartnerBadge accent="teal">Zippin</PartnerBadge>
+                                        <PartnerBadge accent="teal">VisioLab</PartnerBadge>
                                     </div>
                                 </div>
                             </div>
