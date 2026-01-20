@@ -161,9 +161,10 @@
                     ]
                 },
                 'datanow': [
-                    { id: 'dashboard', label: 'Dashboard', image: '../site/datanow-ui.png' },
-                    { id: 'reports', label: 'Reports', image: '../site/datanow-reports-ui.png' },
-                    { id: 'trends', label: 'Trends', image: '../site/datanow-trends-ui.png' },
+                    { id: 'vc-kpis', label: 'Virtual Currency KPIs', image: '../site/datanow-vc-kpis-ui.png' },
+                    { id: 'transfers', label: 'Transfers', image: '../site/datanow-transfers-ui.png' },
+                    { id: 'audit', label: 'Audit', image: '../site/datanow-audit-ui.png' },
+                    { id: 'wallet-insights', label: 'Wallet Insights', image: '../site/datanow-wallet-insights-ui.png' },
                 ]
             };
 
@@ -1073,21 +1074,34 @@
                                         {activeTab === 'datanow' && (
                                             <div className="space-y-3 animate-fade-in">
                                                 {[
-                                                    { icon: Icons.Activity, title: 'Live Dashboards', desc: 'Real-time sales, transactions, and venue metrics' },
-                                                    { icon: Icons.FileText, title: 'Custom Reports', desc: 'Build and schedule automated report delivery' },
-                                                    { icon: Icons.TrendingUp, title: 'Predictive Analytics', desc: 'AI-powered forecasting and trend analysis' },
-                                                    { icon: Icons.Grid, title: 'Unified Data View', desc: 'Single pane across ticketing, POS, and loyalty' }
-                                                ].map((item, i) => (
-                                                    <div key={i} className="flex items-start gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-200">
-                                                        <div className="w-11 h-11 rounded-lg bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                                                            <item.icon className="w-5 h-5 text-emerald-400" />
-                                                        </div>
-                                                        <div>
-                                                            <h4 className="text-white font-semibold text-base">{item.title}</h4>
-                                                            <p className="text-slate-400 text-sm">{item.desc}</p>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                                                    { icon: Icons.CircleDollarSign, title: 'Virtual Currency KPIs', desc: 'Monitor outstanding VC, utilization, origination, and pending expirations.', tabIndex: 0 },
+                                                    { icon: Icons.RefreshCw, title: 'Transfers and Account Health', desc: 'Track transfers end to end and flag duplicate accounts and emails.', tabIndex: 1 },
+                                                    { icon: Icons.ShieldCheck, title: 'Admin and Bulk Audit', desc: 'Audit awards and deductions by user, domain, campaign, and comment.', tabIndex: 2 },
+                                                    { icon: Icons.Wallet, title: 'Wallet Account Insights', desc: 'Analyze wallet-engaged accounts, balances, issued awards, and active rules.', tabIndex: 3 }
+                                                ].map((item, i) => {
+                                                    const isActive = activeBrowserTab['datanow'] === item.tabIndex;
+                                                    return (
+                                                        <button
+                                                            key={i}
+                                                            onClick={() => setTabForSection('datanow', item.tabIndex)}
+                                                            className={`w-full flex items-start gap-4 p-4 rounded-xl border transition-all duration-200 text-left ${
+                                                                isActive
+                                                                    ? 'bg-emerald-500/20 border-emerald-500/40'
+                                                                    : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'
+                                                            }`}
+                                                        >
+                                                            <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                                                                isActive ? 'bg-emerald-500/30' : 'bg-emerald-500/20'
+                                                            }`}>
+                                                                <item.icon className="w-5 h-5 text-emerald-400" />
+                                                            </div>
+                                                            <div>
+                                                                <h4 className={`font-semibold text-base ${isActive ? 'text-emerald-200' : 'text-white'}`}>{item.title}</h4>
+                                                                <p className={`text-sm ${isActive ? 'text-emerald-300/80' : 'text-slate-400'}`}>{item.desc}</p>
+                                                            </div>
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         )}
                                     </div>
