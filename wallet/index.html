@@ -155,6 +155,65 @@
             // Redemption methods modal state
             const [redemptionMethodsOpen, setRedemptionMethodsOpen] = useState(false);
             const [redemptionTab, setRedemptionTab] = useState('pos'); // 'pos' or 'mobile'
+            const [activePosStep, setActivePosStep] = useState(1);
+            const [activeMobileStep, setActiveMobileStep] = useState(1);
+            const [activeWalletStep, setActiveWalletStep] = useState(1);
+            const posVideoRef = React.useRef(null);
+            const mobileVideoRef = React.useRef(null);
+            const walletVideoRef = React.useRef(null);
+
+            // Sync POS steps with video timeline
+            React.useEffect(() => {
+                const video = posVideoRef.current;
+                if (!video || !redemptionMethodsOpen || redemptionTab !== 'pos') return;
+
+                const handleTimeUpdate = () => {
+                    const time = video.currentTime;
+                    if (time >= 23) setActivePosStep(4);
+                    else if (time >= 17) setActivePosStep(3);
+                    else if (time >= 7) setActivePosStep(2);
+                    else setActivePosStep(1);
+                };
+
+                video.addEventListener('timeupdate', handleTimeUpdate);
+                return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+            }, [redemptionMethodsOpen, redemptionTab]);
+
+            // Sync Mobile steps with video timeline
+            React.useEffect(() => {
+                const video = mobileVideoRef.current;
+                if (!video || !redemptionMethodsOpen || redemptionTab !== 'mobile') return;
+
+                const handleTimeUpdate = () => {
+                    const time = video.currentTime;
+                    if (time >= 55) setActiveMobileStep(5);
+                    else if (time >= 22) setActiveMobileStep(4);
+                    else if (time >= 10) setActiveMobileStep(3);
+                    else if (time >= 6) setActiveMobileStep(2);
+                    else setActiveMobileStep(1);
+                };
+
+                video.addEventListener('timeupdate', handleTimeUpdate);
+                return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+            }, [redemptionMethodsOpen, redemptionTab]);
+
+            // Sync Wallet steps with video timeline
+            React.useEffect(() => {
+                const video = walletVideoRef.current;
+                if (!video || !showWalletVideo) return;
+
+                const handleTimeUpdate = () => {
+                    const time = video.currentTime;
+                    if (time >= 31) setActiveWalletStep(5);
+                    else if (time >= 19) setActiveWalletStep(4);
+                    else if (time >= 12) setActiveWalletStep(3);
+                    else if (time >= 6) setActiveWalletStep(2);
+                    else setActiveWalletStep(1);
+                };
+
+                video.addEventListener('timeupdate', handleTimeUpdate);
+                return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+            }, [showWalletVideo]);
 
             // Browser tabs configuration for each section
             const browserTabs = {
@@ -1307,7 +1366,7 @@
 
                                 <div className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
                                     {/* Modal Header */}
-                                    <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+                                    <div className="relative flex items-center justify-center px-6 py-4 border-b border-white/10">
                                         <div className="flex items-center gap-3">
                                             <div className="rounded-lg bg-gradient-to-br from-shift4-sky-blue to-cyan-400 p-2 shadow-lg">
                                                 <Icons.Wallet className="w-4 h-4 text-white" />
@@ -1316,95 +1375,68 @@
                                         </div>
                                         <button
                                             onClick={() => setShowWalletVideo(false)}
-                                            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                                            className="absolute right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                                             aria-label="Close modal"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
                                         </button>
                                     </div>
 
-                                    {/* Modal Content - Two Panes */}
-                                    <div className="flex flex-col md:flex-row">
-                                        {/* Left Pane - Steps */}
-                                        <div className="flex-1 p-6 space-y-5">
-                                            {/* Step 1 - Login */}
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="w-5 h-5 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center text-shift4-sky-blue text-[10px] font-bold">1</div>
-                                                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Login</h3>
+                                    {/* Modal Content */}
+                                    <div className="flex flex-col">
+                                        {/* Steps Bar */}
+                                        <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
+                                            <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
+                                                {/* Step 1 */}
+                                                <div className={`flex items-center gap-2 transition-all duration-300 ${activeWalletStep === 1 ? 'scale-110' : 'opacity-50'}`}>
+                                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeWalletStep === 1 ? 'bg-shift4-sky-blue text-white shadow-lg shadow-shift4-sky-blue/50' : 'bg-shift4-sky-blue/20 text-shift4-sky-blue'}`}>1</div>
+                                                    <span className={`text-xs font-semibold transition-all duration-300 ${activeWalletStep === 1 ? 'text-cyan-400' : 'text-white'}`}>Login</span>
                                                 </div>
-                                                <ul className="space-y-1.5 pl-7">
-                                                    <li className="flex items-start text-slate-300 text-sm">
-                                                        <Icons.CheckCircle className="w-3.5 h-3.5 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />
-                                                        <span>Access your account</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            {/* Step 2 - Open Wallet */}
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="w-5 h-5 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center text-shift4-sky-blue text-[10px] font-bold">2</div>
-                                                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Open Wallet</h3>
+                                                <svg className={`w-4 h-4 transition-colors duration-300 ${activeWalletStep >= 2 ? 'text-shift4-sky-blue' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                {/* Step 2 */}
+                                                <div className={`flex items-center gap-2 transition-all duration-300 ${activeWalletStep === 2 ? 'scale-110' : 'opacity-50'}`}>
+                                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeWalletStep === 2 ? 'bg-shift4-sky-blue text-white shadow-lg shadow-shift4-sky-blue/50' : 'bg-shift4-sky-blue/20 text-shift4-sky-blue'}`}>2</div>
+                                                    <span className={`text-xs font-semibold transition-all duration-300 ${activeWalletStep === 2 ? 'text-cyan-400' : 'text-white'}`}>Open My Wallet</span>
                                                 </div>
-                                                <ul className="space-y-1.5 pl-7">
-                                                    <li className="flex items-start text-slate-300 text-sm">
-                                                        <Icons.CheckCircle className="w-3.5 h-3.5 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />
-                                                        <span>Navigate to My Wallet section</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            {/* Step 3 - Open QR Code Pay Tile */}
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="w-5 h-5 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center text-shift4-sky-blue text-[10px] font-bold">3</div>
-                                                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Open QR Code Pay Tile</h3>
+                                                <svg className={`w-4 h-4 transition-colors duration-300 ${activeWalletStep >= 3 ? 'text-shift4-sky-blue' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                {/* Step 3 */}
+                                                <div className={`flex items-center gap-2 transition-all duration-300 ${activeWalletStep === 3 ? 'scale-110' : 'opacity-50'}`}>
+                                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeWalletStep === 3 ? 'bg-shift4-sky-blue text-white shadow-lg shadow-shift4-sky-blue/50' : 'bg-shift4-sky-blue/20 text-shift4-sky-blue'}`}>3</div>
+                                                    <span className={`text-xs font-semibold transition-all duration-300 ${activeWalletStep === 3 ? 'text-cyan-400' : 'text-white'}`}>Open QR Code Pay</span>
                                                 </div>
-                                                <ul className="space-y-1.5 pl-7">
-                                                    <li className="flex items-start text-slate-300 text-sm">
-                                                        <Icons.CheckCircle className="w-3.5 h-3.5 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />
-                                                        <span>Tap QR Code Pay tile</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            {/* Step 4 - Add Pass */}
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="w-5 h-5 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center text-shift4-sky-blue text-[10px] font-bold">4</div>
-                                                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Add Pass</h3>
+                                                <svg className={`w-4 h-4 transition-colors duration-300 ${activeWalletStep >= 4 ? 'text-shift4-sky-blue' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                {/* Step 4 */}
+                                                <div className={`flex items-center gap-2 transition-all duration-300 ${activeWalletStep === 4 ? 'scale-110' : 'opacity-50'}`}>
+                                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeWalletStep === 4 ? 'bg-shift4-sky-blue text-white shadow-lg shadow-shift4-sky-blue/50' : 'bg-shift4-sky-blue/20 text-shift4-sky-blue'}`}>4</div>
+                                                    <span className={`text-xs font-semibold transition-all duration-300 ${activeWalletStep === 4 ? 'text-cyan-400' : 'text-white'}`}>Add Pass</span>
                                                 </div>
-                                                <ul className="space-y-1.5 pl-7">
-                                                    <li className="flex items-start text-slate-300 text-sm">
-                                                        <Icons.CheckCircle className="w-3.5 h-3.5 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />
-                                                        <span>Add pass to Apple Wallet</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                            {/* Step 5 - Open Apple Wallet */}
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <div className="w-5 h-5 rounded-full bg-shift4-sky-blue/20 flex items-center justify-center text-shift4-sky-blue text-[10px] font-bold">5</div>
-                                                    <h3 className="text-xs font-semibold text-white uppercase tracking-wide">Open Apple Wallet</h3>
+                                                <svg className={`w-4 h-4 transition-colors duration-300 ${activeWalletStep >= 5 ? 'text-shift4-sky-blue' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                {/* Step 5 */}
+                                                <div className={`flex items-center gap-2 transition-all duration-300 ${activeWalletStep === 5 ? 'scale-110' : 'opacity-50'}`}>
+                                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeWalletStep === 5 ? 'bg-shift4-sky-blue text-white shadow-lg shadow-shift4-sky-blue/50' : 'bg-shift4-sky-blue/20 text-shift4-sky-blue'}`}>5</div>
+                                                    <span className={`text-xs font-semibold transition-all duration-300 ${activeWalletStep === 5 ? 'text-cyan-400' : 'text-white'}`}>Open Apple Wallet</span>
                                                 </div>
-                                                <ul className="space-y-1.5 pl-7">
-                                                    <li className="flex items-start text-slate-300 text-sm">
-                                                        <Icons.CheckCircle className="w-3.5 h-3.5 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" />
-                                                        <span>View and use your pass</span>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
 
-                                        {/* Right Pane - Video */}
-                                        <div className="flex-1 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-t md:border-t-0 md:border-l border-white/10 p-6 flex items-center justify-center">
-                                            <div className="relative w-64">
-                                                <div className="bg-gray-800 rounded-[2.5rem] p-2 shadow-2xl border border-gray-600">
-                                                    <div className="relative bg-black rounded-[2rem] overflow-hidden">
-                                                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-6 bg-black rounded-full z-10"></div>
-                                                        <video controls autoPlay muted loop playsInline className="w-full h-auto block">
+                                        {/* Video Content */}
+                                        <div className="flex-1 flex items-center justify-center py-8 bg-gradient-to-br from-slate-900/50 to-slate-950/50">
+                                            <div className="flex flex-col items-center">
+                                                {/* iPhone Frame with Video */}
+                                                <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '300px', height: '650px' }}>
+                                                    {/* Dynamic Island */}
+                                                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
+                                                    {/* Video with inner rounded container */}
+                                                    <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                                                        <video
+                                                            ref={walletVideoRef}
+                                                            controls
+                                                            autoPlay
+                                                            muted
+                                                            loop
+                                                            playsInline
+                                                            className="w-full h-full object-cover"
+                                                        >
                                                             <source src="../site/wallet-pass-add.mp4" type="video/mp4" />
                                                         </video>
                                                     </div>
@@ -1436,7 +1468,7 @@
 
                                 <div className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
                                     {/* Modal Header */}
-                                    <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+                                    <div className="relative flex items-center justify-center px-6 py-4 border-b border-white/10">
                                         <div className="flex items-center gap-3">
                                             <div className="rounded-lg bg-gradient-to-br from-teal-500 to-cyan-500 p-2 shadow-lg">
                                                 <Icons.ShoppingCart className="w-4 h-4 text-white" />
@@ -1445,7 +1477,7 @@
                                         </div>
                                         <button
                                             onClick={() => setJwoDrawerOpen(false)}
-                                            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                                            className="absolute right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                                             aria-label="Close modal"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
@@ -1569,7 +1601,7 @@
 
                                 <div className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
                                     {/* Modal Header */}
-                                    <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+                                    <div className="relative flex items-center justify-center px-6 py-4 border-b border-white/10">
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 p-2 shadow-lg">
@@ -1604,7 +1636,7 @@
                                         </div>
                                         <button
                                             onClick={() => setRedemptionMethodsOpen(false)}
-                                            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                                            className="absolute right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                                             aria-label="Close modal"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
@@ -1615,12 +1647,44 @@
                                     <div className="min-h-[500px]">
                                         {/* POS Redemption Tab */}
                                         {redemptionTab === 'pos' && (
-                                            <div className="flex flex-col md:flex-row h-full">
-                                                {/* Left Pane - Video (larger) */}
-                                                <div className="flex-[4] p-4 flex items-center justify-center bg-gradient-to-br from-slate-900/50 to-slate-950/50">
+                                            <div className="flex flex-col h-full">
+                                                {/* Steps Bar */}
+                                                <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
+                                                    <div className="flex items-center justify-center gap-3 md:gap-6 flex-wrap">
+                                                        {/* Step 1 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 1 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 1 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>1</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 1 ? 'text-orange-400' : 'text-white'}`}>Ring Up Order</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 2 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 2 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 2 ? 'scale-110' : activePosStep > 2 ? 'opacity-50' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 2 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>2</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 2 ? 'text-orange-400' : 'text-white'}`}>Tap QR Pay</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 3 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 3 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 3 ? 'scale-110' : activePosStep > 3 ? 'opacity-50' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 3 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>3</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 3 ? 'text-orange-400' : 'text-white'}`}>Scan Pass</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 4 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 4 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 4 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 4 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>4</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 4 ? 'text-orange-400' : 'text-white'}`}>Complete</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Video and Carousel Row */}
+                                                <div className="flex flex-col md:flex-row flex-1">
+                                                    {/* Left Pane - Video (larger) */}
+                                                    <div className="flex-[4] p-4 flex items-center justify-center bg-gradient-to-br from-slate-900/50 to-slate-950/50">
                                                     <div className="w-full max-w-5xl">
                                                         <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black">
                                                             <video
+                                                                ref={posVideoRef}
                                                                 autoPlay
                                                                 muted
                                                                 loop
@@ -1636,42 +1700,82 @@
                                                     </div>
                                                 </div>
 
-                                                {/* Right Pane - iPhone Carousel (smaller) */}
-                                                <div className="flex-[1] bg-gradient-to-br from-slate-800/30 to-slate-900/30 border-t md:border-t-0 md:border-l border-white/10 p-4 flex items-center justify-center">
-                                                    <PhoneCarousel
-                                                        images={[
-                                                            { src: '../site/Pass.PNG', alt: 'Wallet Pass showing QR code' },
-                                                            { src: '../site/Noti-Wallet.PNG', alt: 'Wallet notification after redemption' }
-                                                        ]}
-                                                        size="default"
-                                                    />
+                                                    {/* Right Pane - iPhone Carousel (smaller) */}
+                                                    <div className="flex-[1] bg-gradient-to-br from-slate-800/30 to-slate-900/30 border-t md:border-t-0 md:border-l border-white/10 p-4 flex items-center justify-center">
+                                                        <PhoneCarousel
+                                                            images={[
+                                                                { src: '../site/Pass.PNG', alt: 'Wallet Pass showing QR code' },
+                                                                { src: '../site/Noti-Wallet.PNG', alt: 'Wallet notification after redemption' }
+                                                            ]}
+                                                            size="default"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
 
                                         {/* Mobile Redemption Tab */}
                                         {redemptionTab === 'mobile' && (
-                                            <div className="flex items-center justify-center py-8">
-                                                <div className="flex flex-col items-center">
-                                                    {/* iPhone Frame with Video */}
-                                                    <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '300px', height: '650px' }}>
-                                                        {/* Dynamic Island */}
-                                                        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
-                                                        {/* Video with inner rounded container */}
-                                                        <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
-                                                            <video
-                                                                autoPlay
-                                                                muted
-                                                                loop
-                                                                playsInline
-                                                                controls
-                                                                className="w-full h-full object-cover"
-                                                            >
-                                                                <source src="../site/Mobile-flow.mp4" type="video/mp4" />
-                                                            </video>
+                                            <div className="flex flex-col h-full">
+                                                {/* Steps Bar */}
+                                                <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
+                                                    <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
+                                                        {/* Step 1 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 1 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 1 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>1</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 1 ? 'text-orange-400' : 'text-white'}`}>Log In</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 2 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 2 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 2 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 2 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>2</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 2 ? 'text-orange-400' : 'text-white'}`}>Open My Wallet</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 3 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 3 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 3 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 3 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>3</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 3 ? 'text-orange-400' : 'text-white'}`}>View Benefits</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 4 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 4 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 4 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 4 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>4</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 4 ? 'text-orange-400' : 'text-white'}`}>Shop</span>
+                                                        </div>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 5 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        {/* Step 5 */}
+                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 5 ? 'scale-110' : 'opacity-50'}`}>
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 5 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>5</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 5 ? 'text-orange-400' : 'text-white'}`}>Checkout</span>
                                                         </div>
                                                     </div>
-                                                    <p className="text-center text-slate-500 text-xs mt-4">Mobile ordering with wallet benefits</p>
+                                                </div>
+
+                                                {/* Video Content */}
+                                                <div className="flex-1 flex items-center justify-center py-6 bg-gradient-to-br from-slate-900/50 to-slate-950/50">
+                                                    <div className="flex flex-col items-center">
+                                                        {/* iPhone Frame with Video */}
+                                                        <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '300px', height: '650px' }}>
+                                                            {/* Dynamic Island */}
+                                                            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
+                                                            {/* Video with inner rounded container */}
+                                                            <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                                                                <video
+                                                                    ref={mobileVideoRef}
+                                                                    autoPlay
+                                                                    muted
+                                                                    loop
+                                                                    playsInline
+                                                                    controls
+                                                                    className="w-full h-full object-cover"
+                                                                >
+                                                                    <source src="../site/mobile-redemption-flow.mov" type="video/mp4" />
+                                                                </video>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-center text-slate-500 text-xs mt-4">Mobile ordering with wallet benefits</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )}
