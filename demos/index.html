@@ -179,7 +179,8 @@
                     stepColor: 'bg-orange-500',
                     stepGlow: 'shadow-orange-500/50',
                     video: '../site/mobile-redemption-flow.mov',
-                    videoType: 'video/mp4',
+                    videoType: 'video/quicktime',
+                    layout: 'portrait',
                     description: 'Mobile ordering with wallet benefits',
                     steps: [
                         { time: 0, label: 'Log In' },
@@ -199,6 +200,7 @@
                     stepGlow: 'shadow-blue-500/50',
                     video: '../site/POS-Wallet.mp4',
                     videoType: 'video/mp4',
+                    layout: 'landscape',
                     description: 'POS terminal scanning wallet QR code',
                     steps: [
                         { time: 0, label: 'Ring Up Order' },
@@ -248,12 +250,17 @@
             ]
         };
 
+        // Helper to get icon component
+        const getIcon = (iconName, className = "w-5 h-5") => {
+            const IconComponent = Icons[iconName];
+            return IconComponent ? <IconComponent className={className} /> : null;
+        };
+
         // --- DEMOS PAGE COMPONENT ---
         const DemosPage = () => {
             const [activeCategory, setActiveCategory] = useState('wallet-mobile');
             const [activeTab, setActiveTab] = useState('mobile-ordering');
             const [activeStep, setActiveStep] = useState(0);
-            const [dropdownOpen, setDropdownOpen] = useState(null); // which category dropdown is open
             const videoRef = useRef(null);
 
             // Get current category tabs
@@ -261,17 +268,6 @@
 
             // Get current tab config
             const currentTab = currentCategoryTabs.find(t => t.id === activeTab);
-
-            // Close dropdown when clicking outside
-            useEffect(() => {
-                const handleClickOutside = (e) => {
-                    if (!e.target.closest('.dropdown-container')) {
-                        setDropdownOpen(null);
-                    }
-                };
-                document.addEventListener('click', handleClickOutside);
-                return () => document.removeEventListener('click', handleClickOutside);
-            }, []);
 
             // When category changes, select first tab in that category
             useEffect(() => {
@@ -303,7 +299,7 @@
 
                 video.addEventListener('timeupdate', handleTimeUpdate);
                 return () => video.removeEventListener('timeupdate', handleTimeUpdate);
-            }, [activeTab, currentTab]);
+            }, [activeTab]);
 
             // Reset step and video when tab changes
             useEffect(() => {
@@ -319,12 +315,6 @@
                     videoRef.current.currentTime = currentTab.steps[stepIndex].time;
                     setActiveStep(stepIndex);
                 }
-            };
-
-            // Get icon component
-            const getIcon = (iconName) => {
-                const IconComponent = Icons[iconName];
-                return IconComponent ? <IconComponent className="w-5 h-5" /> : null;
             };
 
             return (
@@ -470,13 +460,33 @@
                         <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-slate-900/50 to-slate-950/50">
                             <div className="w-full max-w-5xl">
                                 {currentTab?.video ? (
-                                    <>
-                                        {/* Video for QR Pay (landscape) */}
-                                        {currentTab.id === 'qr-pay' && (
+                                    <div className="flex flex-col items-center">
+                                        {currentTab.layout === 'portrait' ? (
+                                            /* Portrait: iPhone frame */
                                             <div className="relative">
-                                                {/* Glow effect */}
+                                                <div className={`absolute -inset-4 bg-gradient-to-r ${currentTab.gradient} rounded-[4rem] blur-2xl opacity-20`}></div>
+                                                <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1 w-80 h-[693px]">
+                                                    <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
+                                                    <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                                                        <video
+                                                            ref={videoRef}
+                                                            key={currentTab.id}
+                                                            autoPlay
+                                                            muted
+                                                            loop
+                                                            playsInline
+                                                            controls
+                                                            className="w-full h-full object-cover"
+                                                        >
+                                                            <source src={currentTab.video} type={currentTab.videoType} />
+                                                        </video>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            /* Landscape: full-width video */
+                                            <div className="relative w-full">
                                                 <div className={`absolute -inset-2 bg-gradient-to-r ${currentTab.gradient} rounded-2xl blur-xl opacity-20`}></div>
-
                                                 <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black">
                                                     <video
                                                         ref={videoRef}
@@ -489,45 +499,12 @@
                                                         className="w-full h-auto"
                                                     >
                                                         <source src={currentTab.video} type={currentTab.videoType} />
-                                                        Your browser does not support the video tag.
                                                     </video>
                                                 </div>
                                             </div>
                                         )}
-
-                                        {/* Video for Wallet Redemption (portrait/phone) */}
-                                        {currentTab.id === 'wallet-redemption' && (
-                                            <div className="flex flex-col items-center">
-                                                {/* iPhone Frame with Video */}
-                                                <div className="relative">
-                                                    {/* Glow effect */}
-                                                    <div className={`absolute -inset-4 bg-gradient-to-r ${currentTab.gradient} rounded-[4rem] blur-2xl opacity-20`}></div>
-
-                                                    <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '320px', height: '693px' }}>
-                                                        {/* Dynamic Island */}
-                                                        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
-                                                        {/* Video with inner rounded container */}
-                                                        <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
-                                                            <video
-                                                                ref={videoRef}
-                                                                key={currentTab.id}
-                                                                autoPlay
-                                                                muted
-                                                                loop
-                                                                playsInline
-                                                                controls
-                                                                className="w-full h-full object-cover"
-                                                            >
-                                                                <source src={currentTab.video} type={currentTab.videoType} />
-                                                            </video>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-
                                         <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
-                                    </>
+                                    </div>
                                 ) : (
                                     /* Placeholder for demos without video */
                                     <div className="flex flex-col items-center justify-center py-20">
