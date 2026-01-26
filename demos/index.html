@@ -178,16 +178,35 @@
                     gradient: 'from-orange-500 to-amber-500',
                     stepColor: 'bg-orange-500',
                     stepGlow: 'shadow-orange-500/50',
-                    video: '../site/mobile-redemption-flow.mov',
-                    videoType: 'video/quicktime',
-                    layout: 'portrait',
+                    layout: 'dual',
                     description: 'Mobile ordering with wallet benefits',
+                    devices: [
+                        {
+                            type: 'iphone',
+                            label: 'Mobile Ordering',
+                            video: '../site/Mobile Ordering.MP4',
+                            videoType: 'video/mp4'
+                        },
+                        {
+                            type: 'ipad',
+                            label: 'Xpedite',
+                            video: '../site/Xpedite.mp4',
+                            videoType: 'video/mp4'
+                        }
+                    ],
                     steps: [
-                        { time: 0, label: 'Log In' },
-                        { time: 6, label: 'Open My Wallet' },
-                        { time: 10, label: 'View Benefits' },
-                        { time: 22, label: 'Shop' },
-                        { time: 55, label: 'Checkout' }
+                        // Ordering (iPhone video - 0:00 to ~1:20)
+                        { time: 0, label: 'Browse Menus', category: 'Ordering', device: 'iphone' },
+                        { time: 21, label: 'Add Items to Cart', category: 'Ordering', device: 'iphone' },
+                        { time: 49, label: 'Checkout', category: 'Ordering', device: 'iphone' },
+                        { time: 54, label: 'Review Order', category: 'Ordering', device: 'iphone' },
+                        { time: 64, label: 'Place Order', category: 'Ordering', device: 'iphone' },
+                        // Fulfillment (iPad video - ~28s total)
+                        { time: 0, label: 'Order Received', category: 'Fulfillment', device: 'ipad' },
+                        { time: 12, label: 'Prepare Order', category: 'Fulfillment', device: 'ipad' },
+                        { time: 18, label: 'Mark Ready', category: 'Fulfillment', device: 'ipad' },
+                        { time: 22, label: 'Hand Off to Guest', category: 'Fulfillment', device: 'ipad' },
+                        { time: 28, label: 'Close Order', category: 'Fulfillment', device: 'ipad' }
                     ]
                 },
                 {
@@ -261,7 +280,14 @@
             const [activeCategory, setActiveCategory] = useState('wallet-mobile');
             const [activeTab, setActiveTab] = useState('mobile-ordering');
             const [activeStep, setActiveStep] = useState(0);
+            const [isPaused, setIsPaused] = useState(false);
             const videoRef = useRef(null);
+            const ipadVideoRef = useRef(null);
+
+            // Refs for video sync state (accessible across functions)
+            const ipadHasStartedRef = useRef(false);
+            const iphoneIsPausedRef = useRef(false);
+            const prevIphoneTimeRef = useRef(0); // Track previous time to detect loops
 
             // Get current category tabs
             const currentCategoryTabs = DEMO_TABS[activeCategory] || [];
@@ -277,10 +303,10 @@
                 }
             }, [activeCategory]);
 
-            // Sync steps with video timeline
+            // Sync steps with video timeline (for non-dual layouts)
             useEffect(() => {
                 const video = videoRef.current;
-                if (!video || !currentTab?.video) return;
+                if (!video || !currentTab?.video || currentTab?.layout === 'dual') return;
 
                 const handleTimeUpdate = () => {
                     const time = video.currentTime;
@@ -307,7 +333,124 @@
                 if (videoRef.current) {
                     videoRef.current.currentTime = 0;
                 }
+                // Reset iPad video to first frame and pause
+                if (ipadVideoRef.current) {
+                    ipadVideoRef.current.currentTime = 0;
+                    ipadVideoRef.current.pause();
+                }
             }, [activeTab]);
+
+            /*
+             * VIDEO SYNC LOGIC FOR DUAL LAYOUT (Mobile Ordering tab)
+             * --------------------------------------------------------
+             * This creates a synchronized playback experience between iPhone and iPad:
+             *
+             * Timeline:
+             *   0:00 - 1:08  →  iPhone plays (steps 0-4: Ordering), iPad paused
+             *   1:08         →  iPad starts playing, step jumps to 5 (Fulfillment)
+             *   1:10         →  iPhone pauses and waits
+             *   iPad plays   →  Steps 5-9 sync with iPad video timestamps
+             *   iPad ends    →  Everything resets, cycle restarts from step 0
+             *
+             * Steps 0-4 (Ordering) sync with iPhone video
+             * Steps 5-9 (Fulfillment) sync with iPad video
+             */
+            useEffect(() => {
+                const iphoneVideo = videoRef.current;
+                const ipadVideo = ipadVideoRef.current;
+                if (!iphoneVideo || !ipadVideo || currentTab?.layout !== 'dual') return;
+
+                const IPAD_TRIGGER_TIME = 68; // 1:08 - iPad starts (3s longer on Place Order)
+                const IPHONE_PAUSE_TIME = 70; // 1:10 - iPhone pauses
+
+                // Get ordering steps (iPhone) and fulfillment steps (iPad)
+                const orderingSteps = currentTab.steps.filter(s => s.device === 'iphone');
+                const fulfillmentSteps = currentTab.steps.filter(s => s.device === 'ipad');
+
+                const handleIphoneTimeUpdate = () => {
+                    const time = iphoneVideo.currentTime;
+                    const prevTime = prevIphoneTimeRef.current;
+                    prevIphoneTimeRef.current = time;
+
+                    // Update step for Ordering phase (steps 0-4)
+                    if (!ipadHasStartedRef.current) {
+                        for (let i = orderingSteps.length - 1; i >= 0; i--) {
+                            if (time >= orderingSteps[i].time) {
+                                setActiveStep(i);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Start iPad when iPhone hits 1:08 (auto-play only, not manual navigation)
+                    if (time >= IPAD_TRIGGER_TIME && !ipadHasStartedRef.current) {
+                        ipadHasStartedRef.current = true;
+                        ipadVideo.currentTime = 0;
+                        ipadVideo.play();
+                        setActiveStep(5); // Jump to first Fulfillment step
+                    }
+
+                    // Pause iPhone at 1:10 while iPad plays
+                    if (time >= IPHONE_PAUSE_TIME && !iphoneIsPausedRef.current && ipadHasStartedRef.current) {
+                        iphoneIsPausedRef.current = true;
+                        iphoneVideo.pause();
+                    }
+
+                    // Reset flags only when iPhone actually loops (jumps from high time to low time)
+                    // This prevents resetting when manually navigating to iPad steps
+                    const hasLooped = prevTime > 60 && time < 5;
+                    if (hasLooped) {
+                        ipadHasStartedRef.current = false;
+                        iphoneIsPausedRef.current = false;
+                        setActiveStep(0);
+                    }
+                };
+
+                const handleIpadTimeUpdate = () => {
+                    if (!ipadHasStartedRef.current) return;
+                    const time = ipadVideo.currentTime;
+
+                    // Update step for Fulfillment phase (steps 5-9)
+                    for (let i = fulfillmentSteps.length - 1; i >= 0; i--) {
+                        if (time >= fulfillmentSteps[i].time) {
+                            setActiveStep(5 + i); // Offset by 5 for fulfillment steps
+                            break;
+                        }
+                    }
+                };
+
+                const handleIpadEnded = () => {
+                    // When iPad finishes, restart the entire cycle from the beginning
+                    // Reset iPad
+                    ipadVideo.currentTime = 0;
+                    ipadVideo.pause();
+
+                    // Reset iPhone to start
+                    iphoneVideo.currentTime = 0;
+                    iphoneVideo.play();
+
+                    // Reset all flags and step
+                    ipadHasStartedRef.current = false;
+                    iphoneIsPausedRef.current = false;
+                    setActiveStep(0);
+                };
+
+                iphoneVideo.addEventListener('timeupdate', handleIphoneTimeUpdate);
+                ipadVideo.addEventListener('timeupdate', handleIpadTimeUpdate);
+                ipadVideo.addEventListener('ended', handleIpadEnded);
+
+                // Initialize iPad paused at first frame and reset flags
+                ipadVideo.currentTime = 0;
+                ipadVideo.pause();
+                ipadHasStartedRef.current = false;
+                iphoneIsPausedRef.current = false;
+
+                return () => {
+                    iphoneVideo.removeEventListener('timeupdate', handleIphoneTimeUpdate);
+                    ipadVideo.removeEventListener('timeupdate', handleIpadTimeUpdate);
+                    ipadVideo.removeEventListener('ended', handleIpadEnded);
+                };
+            }, [activeTab, currentTab]);
 
             // Seek video to step time
             const seekToStep = (stepIndex) => {
@@ -316,6 +459,76 @@
                     setActiveStep(stepIndex);
                 }
             };
+
+            // Toggle pause/play for all videos
+            const togglePause = () => {
+                const iphoneVideo = videoRef.current;
+                const ipadVideo = ipadVideoRef.current;
+
+                if (isPaused) {
+                    // Resume - use refs to determine which video should play
+                    if (ipadHasStartedRef.current) {
+                        // We're in Fulfillment phase - resume iPad
+                        if (ipadVideo && !ipadVideo.ended) {
+                            ipadVideo.play();
+                        }
+                    } else {
+                        // We're in Ordering phase - resume iPhone
+                        if (iphoneVideo) {
+                            iphoneVideo.play();
+                        }
+                    }
+                } else {
+                    // Pause all videos
+                    if (iphoneVideo) iphoneVideo.pause();
+                    if (ipadVideo) ipadVideo.pause();
+                }
+                setIsPaused(!isPaused);
+            };
+
+            // Navigate to previous/next step
+            const goToStep = (stepIndex) => {
+                if (!currentTab?.steps || stepIndex < 0 || stepIndex >= currentTab.steps.length) return;
+
+                const iphoneVideo = videoRef.current;
+                const ipadVideo = ipadVideoRef.current;
+                const step = currentTab.steps[stepIndex];
+
+                // Determine which video to seek based on step's device
+                if (step.device === 'iphone') {
+                    // Navigating to Ordering step - reset refs to initial state
+                    ipadHasStartedRef.current = false;
+                    iphoneIsPausedRef.current = false;
+
+                    if (iphoneVideo) {
+                        iphoneVideo.currentTime = step.time;
+                        if (!isPaused) iphoneVideo.play();
+                    }
+                    if (ipadVideo) {
+                        ipadVideo.currentTime = 0;
+                        ipadVideo.pause();
+                    }
+                } else if (step.device === 'ipad') {
+                    // Navigating to Fulfillment step - set iPad as started
+                    ipadHasStartedRef.current = true;
+                    iphoneIsPausedRef.current = true;
+
+                    if (ipadVideo) {
+                        ipadVideo.currentTime = step.time;
+                        if (!isPaused) ipadVideo.play();
+                    }
+                    if (iphoneVideo) {
+                        // Seek iPhone to end of Ordering phase (where it pauses at 1:10)
+                        iphoneVideo.currentTime = 70;
+                        iphoneVideo.pause();
+                    }
+                }
+
+                setActiveStep(stepIndex);
+            };
+
+            const goToPrevStep = () => goToStep(activeStep - 1);
+            const goToNextStep = () => goToStep(activeStep + 1);
 
             return (
                 <div className="min-h-screen flex flex-col bg-gradient-to-br from-shift4-midnight-blue via-slate-900 to-shift4-night-black">
@@ -410,58 +623,239 @@
                     {/* Main Content */}
                     <main id="demos-content" className="flex-1 flex flex-col">
 
-                        {/* Steps Timeline */}
-                        <div className="flex-shrink-0 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
-                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                                <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
-                                    {currentTab?.steps.map((step, index) => (
-                                        <React.Fragment key={index}>
-                                            <button
-                                                onClick={() => seekToStep(index)}
-                                                className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${
-                                                    activeStep === index ? 'scale-110' : 'opacity-50 hover:opacity-80'
-                                                }`}
+                        {/* Steps Timeline - Carousel for dual layout, standard for others */}
+                        <div className="flex-shrink-0">
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
+                                {currentTab?.layout === 'dual' ? (
+                                    /* Rotating Carousel for Dual Layout */
+                                    <div className="flex flex-col items-center">
+                                        {/* Category Label */}
+                                        <div className="mb-3 h-5 relative">
+                                            <span className="text-xs font-semibold uppercase tracking-widest text-sky-400">
+                                                {currentTab.steps[activeStep]?.category}
+                                            </span>
+                                        </div>
+
+                                        {/* Carousel Container */}
+                                        <div className="relative w-full max-w-2xl overflow-hidden h-14">
+
+                                            {/* Carousel Track */}
+                                            <div
+                                                className="absolute top-1/2 flex items-center transition-transform duration-500 ease-out"
+                                                style={{
+                                                    left: '50%',
+                                                    transform: `translateY(-50%) translateX(calc(-${activeStep * 200}px - 100px))`
+                                                }}
                                             >
-                                                <div className={`
-                                                    w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
-                                                    transition-all duration-300
-                                                    ${activeStep === index
-                                                        ? `${currentTab.stepColor} text-white shadow-lg ${currentTab.stepGlow}`
-                                                        : `${currentTab.stepColor}/20 text-white/70`
-                                                    }
-                                                `}>
-                                                    {index + 1}
-                                                </div>
-                                                <span className={`text-sm font-semibold transition-all duration-300 hidden sm:inline ${
-                                                    activeStep === index ? 'text-white' : 'text-slate-400'
-                                                }`}>
-                                                    {step.label}
-                                                </span>
-                                            </button>
-                                            {index < currentTab.steps.length - 1 && (
-                                                <svg
-                                                    className={`w-4 h-4 transition-colors duration-300 hidden sm:block ${
-                                                        activeStep > index ? currentTab.stepColor.replace('bg-', 'text-') : 'text-slate-600'
+                                                {currentTab.steps.map((step, index) => {
+                                                    const isActive = index === activeStep;
+                                                    const isAdjacent = Math.abs(index - activeStep) === 1;
+
+                                                    return (
+                                                        <div
+                                                            key={index}
+                                                            className="flex-shrink-0 w-[200px] flex items-center justify-center transition-all duration-500 ease-out"
+                                                            style={{
+                                                                opacity: isActive ? 1 : isAdjacent ? 0.5 : 0.15,
+                                                                transform: `scale(${isActive ? 1 : 0.85})`,
+                                                            }}
+                                                        >
+                                                            <div
+                                                                className={`
+                                                                    flex items-center gap-3 px-5 py-2.5 rounded-full
+                                                                    transition-all duration-500
+                                                                    ${isActive
+                                                                        ? 'bg-[#136EF6] text-white'
+                                                                        : 'bg-slate-800/80 border border-slate-700/50'
+                                                                    }
+                                                                `}
+                                                            >
+                                                                <span className={`
+                                                                    w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold
+                                                                    ${isActive
+                                                                        ? 'bg-white/20 text-white'
+                                                                        : 'bg-slate-700 text-slate-400'
+                                                                    }
+                                                                `}>
+                                                                    {index + 1}
+                                                                </span>
+                                                                <span className={`
+                                                                    text-sm font-semibold whitespace-nowrap
+                                                                    ${isActive ? 'text-white' : 'text-slate-400'}
+                                                                `}>
+                                                                    {step.label}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* Progress Dots */}
+                                        <div className="flex items-center gap-1.5 mt-3">
+                                            {currentTab.steps.map((step, index) => (
+                                                <div
+                                                    key={index}
+                                                    className={`
+                                                        h-1.5 rounded-full transition-all duration-300
+                                                        ${index === activeStep
+                                                            ? 'w-5 bg-[#136EF6]'
+                                                            : index < activeStep
+                                                                ? 'w-1.5 bg-[#136EF6]/50'
+                                                                : 'w-1.5 bg-slate-600'
+                                                        }
+                                                    `}
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    /* Standard Timeline for Other Layouts */
+                                    <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
+                                        {currentTab?.steps.map((step, index) => (
+                                            <React.Fragment key={index}>
+                                                <button
+                                                    onClick={() => seekToStep(index)}
+                                                    className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${
+                                                        activeStep === index ? 'scale-110' : 'opacity-50 hover:opacity-80'
                                                     }`}
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
                                                 >
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            )}
-                                        </React.Fragment>
-                                    ))}
-                                </div>
+                                                    <div className={`
+                                                        w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
+                                                        transition-all duration-300
+                                                        ${activeStep === index
+                                                            ? `${currentTab.stepColor} text-white shadow-lg ${currentTab.stepGlow}`
+                                                            : `${currentTab.stepColor}/20 text-white/70`
+                                                        }
+                                                    `}>
+                                                        {index + 1}
+                                                    </div>
+                                                    <span className={`text-sm font-semibold transition-all duration-300 hidden sm:inline ${
+                                                        activeStep === index ? 'text-white' : 'text-slate-400'
+                                                    }`}>
+                                                        {step.label}
+                                                    </span>
+                                                </button>
+                                                {index < currentTab.steps.length - 1 && (
+                                                    <svg
+                                                        className={`w-4 h-4 transition-colors duration-300 hidden sm:block ${
+                                                            activeStep > index ? currentTab.stepColor.replace('bg-', 'text-') : 'text-slate-600'
+                                                        }`}
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                    </svg>
+                                                )}
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
                         {/* Video Area */}
-                        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-slate-900/50 to-slate-950/50">
-                            <div className="w-full max-w-5xl">
-                                {currentTab?.video ? (
+                        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
+                            {/* Playback Controls */}
+                            {currentTab?.layout === 'dual' && (
+                                <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
+                                    {/* Previous Step */}
+                                    <button
+                                        onClick={goToPrevStep}
+                                        disabled={activeStep === 0}
+                                        className={`w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 flex items-center justify-center transition-all duration-200 ${activeStep === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:scale-110'}`}
+                                        title="Previous Step"
+                                    >
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                    </button>
+
+                                    {/* Pause/Play */}
+                                    <button
+                                        onClick={togglePause}
+                                        className="w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 flex items-center justify-center transition-all duration-200 hover:scale-110"
+                                        title={isPaused ? 'Play' : 'Pause'}
+                                    >
+                                        {isPaused ? (
+                                            <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M8 5v14l11-7z"/>
+                                            </svg>
+                                        ) : (
+                                            <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                                            </svg>
+                                        )}
+                                    </button>
+
+                                    {/* Next Step */}
+                                    <button
+                                        onClick={goToNextStep}
+                                        disabled={activeStep === (currentTab?.steps?.length || 1) - 1}
+                                        className={`w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 flex items-center justify-center transition-all duration-200 ${activeStep === (currentTab?.steps?.length || 1) - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:scale-110'}`}
+                                        title="Next Step"
+                                    >
+                                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            )}
+                            <div className="w-full max-w-6xl">
+                                {(currentTab?.video || currentTab?.devices) ? (
                                     <div className="flex flex-col items-center">
-                                        {currentTab.layout === 'portrait' ? (
+                                        {currentTab.layout === 'dual' ? (
+                                            /* Dual: iPhone + iPad side by side */
+                                            <div className="flex items-center justify-center gap-8 lg:gap-16">
+                                                {currentTab.devices.map((device, idx) => (
+                                                    <div key={device.type} className="flex flex-col items-center">
+                                                        {device.type === 'iphone' ? (
+                                                            /* iPhone Frame */
+                                                            <div className="relative">
+                                                                <div className="absolute -inset-4 bg-[#136EF6] rounded-[3rem] blur-2xl opacity-25"></div>
+                                                                <div className="relative bg-black rounded-[2.5rem] border-[6px] border-slate-800 shadow-2xl overflow-hidden p-0.5 w-56 h-[484px] lg:w-64 lg:h-[554px]">
+                                                                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-full z-10"></div>
+                                                                    <div className="w-full h-full rounded-[2rem] overflow-hidden bg-black">
+                                                                        <video
+                                                                            ref={videoRef}
+                                                                            key={device.type}
+                                                                            autoPlay
+                                                                            muted
+                                                                            loop
+                                                                            playsInline
+                                                                            className="w-full h-full object-cover"
+                                                                        >
+                                                                            <source src={device.video} type={device.videoType} />
+                                                                        </video>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ) : (
+                                                            /* iPad Frame - Landscape */
+                                                            <div className="relative">
+                                                                <div className="absolute -inset-4 bg-[#136EF6] rounded-[2rem] blur-2xl opacity-25"></div>
+                                                                <div className="relative bg-black rounded-[1.5rem] border-[6px] border-slate-800 shadow-2xl overflow-hidden p-0.5 w-[532px] h-[374px] lg:w-[638px] lg:h-[440px]">
+                                                                    <div className="w-full h-full rounded-[1rem] overflow-hidden bg-black">
+                                                                        <video
+                                                                            ref={ipadVideoRef}
+                                                                            key={device.type}
+                                                                            muted
+                                                                            playsInline
+                                                                            className="w-full h-full object-cover"
+                                                                        >
+                                                                            <source src={device.video} type={device.videoType} />
+                                                                        </video>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                        <p className="text-slate-400 text-sm mt-3 font-medium">{device.label}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : currentTab.layout === 'portrait' ? (
                                             /* Portrait: iPhone frame */
                                             <div className="relative">
                                                 <div className={`absolute -inset-4 bg-gradient-to-r ${currentTab.gradient} rounded-[4rem] blur-2xl opacity-20`}></div>
@@ -503,7 +897,9 @@
                                                 </div>
                                             </div>
                                         )}
-                                        <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
+                                        {currentTab.layout !== 'dual' && (
+                                            <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
+                                        )}
                                     </div>
                                 ) : (
                                     /* Placeholder for demos without video */
