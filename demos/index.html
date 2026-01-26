@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyTab Venue Demos</title>
+    <link rel="icon" type="image/png" href="../site/s4-center-icon.png">
+    <link rel="apple-touch-icon" href="../site/s4-center-icon.png">
+    <meta name="description" content="SkyTab Venue Demo Videos - Watch POS, Kiosk, and Wallet redemption flows in action.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="SkyTab Venue Demos | Product Demo">
+    <meta property="og:description" content="Watch SkyTab Venue demo videos for POS, Kiosk, and Wallet redemption flows.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="../site/stv.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SkyTab Venue Demos | Product Demo">
+    <meta name="twitter:description" content="Demo videos for SkyTab Venue POS platform.">
+
+    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'shift4': {
+                            'night-black': '#000000',
+                            'sky-blue': '#136EF6',
+                            'midnight-blue': '#102749',
+                            'cool-grey': '#E7E7E7',
+                            'stellar-white': '#FFFFFF',
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Shared CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <style>
+        /* Custom scrollbar for tabs */
+        .tabs-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .tabs-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 2px;
+        }
+        .tabs-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+        }
+        .tabs-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body class="bg-shift4-midnight-blue text-white">
+    <a href="#demos-content" class="skip-to-content">Skip to main content</a>
+    <div id="root"></div>
+
+    <!-- Shared Data -->
+    <script src="../js/data.js"></script>
+
+    <!-- Shared Components (JSX - needs Babel) -->
+    <script type="text/babel" src="../js/shared-components.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- DEMO CATEGORIES AND TABS CONFIGURATION ---
+        const DEMO_CATEGORIES = [
+            {
+                id: 'pos',
+                label: 'POS',
+                icon: 'Monitor',
+                color: 'blue',
+                gradient: 'from-blue-500 to-sky-500',
+            },
+            {
+                id: 'wallet-mobile',
+                label: 'Wallet & Mobile',
+                icon: 'Wallet',
+                color: 'orange',
+                gradient: 'from-orange-500 to-amber-500',
+            },
+            {
+                id: 'back-of-house',
+                label: 'Back of House',
+                icon: 'LayoutGrid',
+                color: 'violet',
+                gradient: 'from-violet-500 to-purple-500',
+            }
+        ];
+
+        const DEMO_TABS = {
+            'pos': [
+                {
+                    id: 'fixed-pos',
+                    label: 'Fixed POS',
+                    icon: 'Monitor',
+                    color: 'blue',
+                    gradient: 'from-blue-500 to-sky-500',
+                    stepColor: 'bg-blue-500',
+                    stepGlow: 'shadow-blue-500/50',
+                    video: null,
+                    videoType: 'video/mp4',
+                    description: 'Countertop POS terminal for high-volume service',
+                    steps: [
+                        { time: 0, label: 'Ring Up Order' },
+                        { time: 10, label: 'Apply Discounts' },
+                        { time: 20, label: 'Process Payment' },
+                        { time: 30, label: 'Complete' }
+                    ]
+                },
+                {
+                    id: 'mobile-pos',
+                    label: 'Mobile POS',
+                    icon: 'Smartphone',
+                    color: 'violet',
+                    gradient: 'from-violet-500 to-purple-500',
+                    stepColor: 'bg-violet-500',
+                    stepGlow: 'shadow-violet-500/50',
+                    video: null,
+                    videoType: 'video/mp4',
+                    description: 'Handheld POS for line-busting and in-seat service',
+                    steps: [
+                        { time: 0, label: 'Take Order' },
+                        { time: 10, label: 'Add Items' },
+                        { time: 20, label: 'Tap to Pay' },
+                        { time: 30, label: 'Complete' }
+                    ]
+                },
+                {
+                    id: 'kiosk',
+                    label: 'Kiosk',
+                    icon: 'Kiosk',
+                    color: 'emerald',
+                    gradient: 'from-emerald-500 to-teal-500',
+                    stepColor: 'bg-emerald-500',
+                    stepGlow: 'shadow-emerald-500/50',
+                    video: null,
+                    videoType: 'video/mp4',
+                    description: 'Self-service kiosk ordering flow',
+                    steps: [
+                        { time: 0, label: 'Select Items' },
+                        { time: 10, label: 'Add to Cart' },
+                        { time: 20, label: 'Choose Payment' },
+                        { time: 30, label: 'Complete' }
+                    ]
+                }
+            ],
+            'wallet-mobile': [
+                {
+                    id: 'mobile-ordering',
+                    label: 'Mobile Ordering',
+                    icon: 'Smartphone',
+                    color: 'orange',
+                    gradient: 'from-orange-500 to-amber-500',
+                    stepColor: 'bg-orange-500',
+                    stepGlow: 'shadow-orange-500/50',
+                    video: '../site/mobile-redemption-flow.mov',
+                    videoType: 'video/mp4',
+                    description: 'Mobile ordering with wallet benefits',
+                    steps: [
+                        { time: 0, label: 'Log In' },
+                        { time: 6, label: 'Open My Wallet' },
+                        { time: 10, label: 'View Benefits' },
+                        { time: 22, label: 'Shop' },
+                        { time: 55, label: 'Checkout' }
+                    ]
+                },
+                {
+                    id: 'qr-pay',
+                    label: 'QR Pay',
+                    icon: 'CreditCard',
+                    color: 'blue',
+                    gradient: 'from-blue-500 to-sky-500',
+                    stepColor: 'bg-blue-500',
+                    stepGlow: 'shadow-blue-500/50',
+                    video: '../site/POS-Wallet.mp4',
+                    videoType: 'video/mp4',
+                    description: 'POS terminal scanning wallet QR code',
+                    steps: [
+                        { time: 0, label: 'Ring Up Order' },
+                        { time: 7, label: 'Tap QR Pay' },
+                        { time: 17, label: 'Scan Pass' },
+                        { time: 23, label: 'Complete' }
+                    ]
+                },
+                {
+                    id: 'mobile-wallet',
+                    label: 'Mobile Wallet',
+                    icon: 'Wallet',
+                    color: 'emerald',
+                    gradient: 'from-emerald-500 to-teal-500',
+                    stepColor: 'bg-emerald-500',
+                    stepGlow: 'shadow-emerald-500/50',
+                    video: null,
+                    videoType: 'video/mp4',
+                    description: 'Apple & Google Wallet pass management',
+                    steps: [
+                        { time: 0, label: 'Add Pass' },
+                        { time: 10, label: 'View Benefits' },
+                        { time: 20, label: 'Use Pass' },
+                        { time: 30, label: 'Track Rewards' }
+                    ]
+                }
+            ],
+            'back-of-house': [
+                {
+                    id: 'menu-manager',
+                    label: 'Menu Manager',
+                    icon: 'LayoutGrid',
+                    color: 'violet',
+                    gradient: 'from-violet-500 to-purple-500',
+                    stepColor: 'bg-violet-500',
+                    stepGlow: 'shadow-violet-500/50',
+                    video: null,
+                    videoType: 'video/mp4',
+                    description: 'Manage menus, items, and pricing',
+                    steps: [
+                        { time: 0, label: 'Browse Menus' },
+                        { time: 10, label: 'Edit Items' },
+                        { time: 20, label: 'Set Pricing' },
+                        { time: 30, label: 'Publish' }
+                    ]
+                }
+            ]
+        };
+
+        // --- DEMOS PAGE COMPONENT ---
+        const DemosPage = () => {
+            const [activeCategory, setActiveCategory] = useState('wallet-mobile');
+            const [activeTab, setActiveTab] = useState('mobile-ordering');
+            const [activeStep, setActiveStep] = useState(0);
+            const [dropdownOpen, setDropdownOpen] = useState(null); // which category dropdown is open
+            const videoRef = useRef(null);
+
+            // Get current category tabs
+            const currentCategoryTabs = DEMO_TABS[activeCategory] || [];
+
+            // Get current tab config
+            const currentTab = currentCategoryTabs.find(t => t.id === activeTab);
+
+            // Close dropdown when clicking outside
+            useEffect(() => {
+                const handleClickOutside = (e) => {
+                    if (!e.target.closest('.dropdown-container')) {
+                        setDropdownOpen(null);
+                    }
+                };
+                document.addEventListener('click', handleClickOutside);
+                return () => document.removeEventListener('click', handleClickOutside);
+            }, []);
+
+            // When category changes, select first tab in that category
+            useEffect(() => {
+                const tabs = DEMO_TABS[activeCategory];
+                if (tabs && tabs.length > 0) {
+                    setActiveTab(tabs[0].id);
+                }
+            }, [activeCategory]);
+
+            // Sync steps with video timeline
+            useEffect(() => {
+                const video = videoRef.current;
+                if (!video || !currentTab?.video) return;
+
+                const handleTimeUpdate = () => {
+                    const time = video.currentTime;
+                    const steps = currentTab.steps;
+
+                    // Find the current step based on time
+                    let currentStepIndex = 0;
+                    for (let i = steps.length - 1; i >= 0; i--) {
+                        if (time >= steps[i].time) {
+                            currentStepIndex = i;
+                            break;
+                        }
+                    }
+                    setActiveStep(currentStepIndex);
+                };
+
+                video.addEventListener('timeupdate', handleTimeUpdate);
+                return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+            }, [activeTab, currentTab]);
+
+            // Reset step and video when tab changes
+            useEffect(() => {
+                setActiveStep(0);
+                if (videoRef.current) {
+                    videoRef.current.currentTime = 0;
+                }
+            }, [activeTab]);
+
+            // Seek video to step time
+            const seekToStep = (stepIndex) => {
+                if (videoRef.current && currentTab?.steps[stepIndex]) {
+                    videoRef.current.currentTime = currentTab.steps[stepIndex].time;
+                    setActiveStep(stepIndex);
+                }
+            };
+
+            // Get icon component
+            const getIcon = (iconName) => {
+                const IconComponent = Icons[iconName];
+                return IconComponent ? <IconComponent className="w-5 h-5" /> : null;
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col bg-gradient-to-br from-shift4-midnight-blue via-slate-900 to-shift4-night-black">
+                    {/* Header with Navigation */}
+                    <header className="flex-shrink-0 border-b border-white/10 bg-black/30 backdrop-blur-xl">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div className="flex items-center justify-between h-14">
+                                {/* Back Link */}
+                                <a
+                                    href="../index.html"
+                                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group flex-shrink-0"
+                                >
+                                    <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    <span className="text-sm font-medium hidden sm:inline">Back</span>
+                                </a>
+
+                                {/* Navigation - Categories with Inline Sub-tabs */}
+                                <div className="flex items-center gap-1">
+                                    {DEMO_CATEGORIES.map((category, catIndex) => {
+                                        const isActive = activeCategory === category.id;
+                                        const categoryTabs = DEMO_TABS[category.id] || [];
+
+                                        return (
+                                            <React.Fragment key={category.id}>
+                                                {/* Separator */}
+                                                {catIndex > 0 && (
+                                                    <div className="w-px h-6 bg-white/10 mx-1 hidden sm:block"></div>
+                                                )}
+
+                                                {/* Category Button */}
+                                                <button
+                                                    onClick={() => setActiveCategory(category.id)}
+                                                    className={`
+                                                        flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-md font-medium text-xs sm:text-sm
+                                                        transition-all duration-200 whitespace-nowrap outline-none
+                                                        ${isActive
+                                                            ? 'text-white'
+                                                            : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                                        }
+                                                    `}
+                                                >
+                                                    <div className={`
+                                                        p-1 rounded transition-all duration-200
+                                                        ${isActive
+                                                            ? `bg-gradient-to-br ${category.gradient}`
+                                                            : 'bg-white/10'
+                                                        }
+                                                    `}>
+                                                        {getIcon(category.icon)}
+                                                    </div>
+                                                    <span className="hidden sm:inline">{category.label}</span>
+                                                </button>
+
+                                                {/* Inline Sub-tabs (segmented control) */}
+                                                {isActive && categoryTabs.length > 1 && (
+                                                    <div className="flex items-center bg-white/5 rounded-md p-0.5 ml-1">
+                                                        {categoryTabs.map((tab) => (
+                                                            <button
+                                                                key={tab.id}
+                                                                onClick={() => setActiveTab(tab.id)}
+                                                                className={`
+                                                                    px-2 sm:px-3 py-1 rounded text-xs font-medium
+                                                                    transition-all duration-150 outline-none whitespace-nowrap
+                                                                    ${activeTab === tab.id
+                                                                        ? 'bg-white/15 text-white'
+                                                                        : 'text-slate-400 hover:text-white'
+                                                                    }
+                                                                `}
+                                                            >
+                                                                {tab.label}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </React.Fragment>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Logo */}
+                                <img
+                                    src="../site/Shift4 Logo - RBG.png"
+                                    alt="Shift4"
+                                    className="h-5 opacity-90 hover:opacity-100 transition-opacity flex-shrink-0"
+                                />
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main id="demos-content" className="flex-1 flex flex-col">
+
+                        {/* Steps Timeline */}
+                        <div className="flex-shrink-0 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
+                            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                                <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
+                                    {currentTab?.steps.map((step, index) => (
+                                        <React.Fragment key={index}>
+                                            <button
+                                                onClick={() => seekToStep(index)}
+                                                className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${
+                                                    activeStep === index ? 'scale-110' : 'opacity-50 hover:opacity-80'
+                                                }`}
+                                            >
+                                                <div className={`
+                                                    w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold
+                                                    transition-all duration-300
+                                                    ${activeStep === index
+                                                        ? `${currentTab.stepColor} text-white shadow-lg ${currentTab.stepGlow}`
+                                                        : `${currentTab.stepColor}/20 text-white/70`
+                                                    }
+                                                `}>
+                                                    {index + 1}
+                                                </div>
+                                                <span className={`text-sm font-semibold transition-all duration-300 hidden sm:inline ${
+                                                    activeStep === index ? 'text-white' : 'text-slate-400'
+                                                }`}>
+                                                    {step.label}
+                                                </span>
+                                            </button>
+                                            {index < currentTab.steps.length - 1 && (
+                                                <svg
+                                                    className={`w-4 h-4 transition-colors duration-300 hidden sm:block ${
+                                                        activeStep > index ? currentTab.stepColor.replace('bg-', 'text-') : 'text-slate-600'
+                                                    }`}
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                                </svg>
+                                            )}
+                                        </React.Fragment>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Video Area */}
+                        <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-slate-900/50 to-slate-950/50">
+                            <div className="w-full max-w-5xl">
+                                {currentTab?.video ? (
+                                    <>
+                                        {/* Video for QR Pay (landscape) */}
+                                        {currentTab.id === 'qr-pay' && (
+                                            <div className="relative">
+                                                {/* Glow effect */}
+                                                <div className={`absolute -inset-2 bg-gradient-to-r ${currentTab.gradient} rounded-2xl blur-xl opacity-20`}></div>
+
+                                                <div className="relative rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black">
+                                                    <video
+                                                        ref={videoRef}
+                                                        key={currentTab.id}
+                                                        autoPlay
+                                                        muted
+                                                        loop
+                                                        playsInline
+                                                        controls
+                                                        className="w-full h-auto"
+                                                    >
+                                                        <source src={currentTab.video} type={currentTab.videoType} />
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {/* Video for Wallet Redemption (portrait/phone) */}
+                                        {currentTab.id === 'wallet-redemption' && (
+                                            <div className="flex flex-col items-center">
+                                                {/* iPhone Frame with Video */}
+                                                <div className="relative">
+                                                    {/* Glow effect */}
+                                                    <div className={`absolute -inset-4 bg-gradient-to-r ${currentTab.gradient} rounded-[4rem] blur-2xl opacity-20`}></div>
+
+                                                    <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '320px', height: '693px' }}>
+                                                        {/* Dynamic Island */}
+                                                        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
+                                                        {/* Video with inner rounded container */}
+                                                        <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                                                            <video
+                                                                ref={videoRef}
+                                                                key={currentTab.id}
+                                                                autoPlay
+                                                                muted
+                                                                loop
+                                                                playsInline
+                                                                controls
+                                                                className="w-full h-full object-cover"
+                                                            >
+                                                                <source src={currentTab.video} type={currentTab.videoType} />
+                                                            </video>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
+                                    </>
+                                ) : (
+                                    /* Placeholder for demos without video */
+                                    <div className="flex flex-col items-center justify-center py-20">
+                                        <div className="relative">
+                                            {/* Glow effect */}
+                                            <div className={`absolute -inset-8 bg-gradient-to-r ${currentTab?.gradient} rounded-3xl blur-3xl opacity-10`}></div>
+
+                                            <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/80 rounded-2xl border border-white/10 p-12 text-center">
+                                                <div className={`w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br ${currentTab?.gradient} flex items-center justify-center shadow-xl`}>
+                                                    <div className="w-12 h-12 text-white">
+                                                        {getIcon(currentTab?.icon)}
+                                                    </div>
+                                                </div>
+                                                <h3 className="text-xl font-bold text-white mb-2">{currentTab?.label} Demo Coming Soon</h3>
+                                                <p className="text-slate-400 max-w-md">
+                                                    {currentTab?.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="flex-shrink-0 border-t border-white/10 bg-black/30 py-4">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <p className="text-center text-slate-500 text-xs">
+                                SkyTab Venue Demo Videos
+                            </p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        // --- MAIN APP ---
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(
+            <ErrorBoundary>
+                <DemosPage />
+            </ErrorBoundary>
+        );
+    </script>
+</body>
+</html>
