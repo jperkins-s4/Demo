@@ -256,14 +256,54 @@
                     gradient: 'from-violet-500 to-purple-500',
                     stepColor: 'bg-violet-500',
                     stepGlow: 'shadow-violet-500/50',
-                    video: null,
+                    layout: 'browser',
+                    video: '../site/Menu Manager Demo.mp4',
                     videoType: 'video/mp4',
-                    description: 'Manage menus, items, and pricing',
+                    description: 'Manage menus, items, and pricing across your venue',
                     steps: [
-                        { time: 0, label: 'Browse Menus' },
-                        { time: 10, label: 'Edit Items' },
-                        { time: 20, label: 'Set Pricing' },
-                        { time: 30, label: 'Publish' }
+                        // Log In
+                        { time: 0, label: 'Sign In', category: 'Log In' },
+
+                        // Revenue Centers
+                        { time: 5, label: 'Filter by Service Type', category: 'Revenue Centers' },
+                        { time: 12, label: 'Search Revenue Center', category: 'Revenue Centers' },
+                        { time: 19, label: 'Edit Revenue Center', category: 'Revenue Centers' },
+                        { time: 39, label: 'Menus Settings', category: 'Revenue Centers' },
+                        { time: 54, label: 'Menu Items', category: 'Revenue Centers' },
+                        { time: 72, label: 'Revenue Center Settings', category: 'Revenue Centers' },
+
+                        // Items
+                        { time: 100, label: 'View Items', category: 'Items' },
+                        { time: 108, label: 'Search Items', category: 'Items' },
+                        { time: 121, label: 'Edit Item', category: 'Items' },
+                        { time: 130, label: 'View Assigned Menus', category: 'Items' },
+                        { time: 140, label: 'Pricing and Price Levels', category: 'Items' },
+                        { time: 147, label: 'Taxes', category: 'Items' },
+                        { time: 154, label: 'Item Settings', category: 'Items' },
+
+                        // Configuration
+                        { time: 170, label: 'Display Categories', category: 'Configuration' },
+                        { time: 177, label: 'Reporting Categories', category: 'Configuration' },
+                        { time: 182, label: 'Modifier Groups', category: 'Configuration' },
+                        { time: 190, label: 'Sales Events', category: 'Configuration' },
+
+                        // Orders App
+                        { time: 203, label: 'View Orders', category: 'Orders App' },
+                        { time: 208, label: 'Filter by Date Range', category: 'Orders App' },
+                        { time: 218, label: 'Filter by Order Status', category: 'Orders App' },
+                        { time: 223, label: 'Filter by Revenue Center', category: 'Orders App' },
+                        { time: 229, label: 'Search Orders', category: 'Orders App' },
+                        { time: 236, label: 'View Order Details', category: 'Orders App' },
+                        { time: 253, label: 'Send Receipt', category: 'Orders App' },
+                        { time: 264, label: 'Process Refund', category: 'Orders App' },
+
+                        // Status App
+                        { time: 286, label: 'Revenue Centers', category: 'Status App' },
+                        { time: 296, label: 'Global Availability', category: 'Status App' },
+                        { time: 312, label: 'Global Items', category: 'Status App' },
+
+                        // Settings
+                        { time: 328, label: 'Venue Settings', category: 'Settings' }
                     ]
                 }
             ]
@@ -465,6 +505,19 @@
                 const iphoneVideo = videoRef.current;
                 const ipadVideo = ipadVideoRef.current;
 
+                // Handle browser layout (single video)
+                if (currentTab?.layout === 'browser') {
+                    if (iphoneVideo) {
+                        if (isPaused) {
+                            iphoneVideo.play();
+                        } else {
+                            iphoneVideo.pause();
+                        }
+                    }
+                    setIsPaused(!isPaused);
+                    return;
+                }
+
                 if (isPaused) {
                     // Resume - use refs to determine which video should play
                     if (ipadHasStartedRef.current) {
@@ -494,7 +547,17 @@
                 const ipadVideo = ipadVideoRef.current;
                 const step = currentTab.steps[stepIndex];
 
-                // Determine which video to seek based on step's device
+                // Handle browser layout (single video, no device property)
+                if (currentTab.layout === 'browser') {
+                    if (iphoneVideo && currentTab.video) {
+                        iphoneVideo.currentTime = step.time;
+                        if (!isPaused) iphoneVideo.play();
+                    }
+                    setActiveStep(stepIndex);
+                    return;
+                }
+
+                // Determine which video to seek based on step's device (for dual layout)
                 if (step.device === 'iphone') {
                     // Navigating to Ordering step - reset refs to initial state
                     ipadHasStartedRef.current = false;
@@ -626,8 +689,8 @@
                         {/* Steps Timeline - Carousel for dual layout, standard for others */}
                         <div className="flex-shrink-0">
                             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
-                                {currentTab?.layout === 'dual' ? (
-                                    /* Rotating Carousel for Dual Layout */
+                                {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser') ? (
+                                    /* Rotating Carousel for Dual/Browser Layout */
                                     <div className="flex flex-col items-center">
                                         {/* Category Label */}
                                         <div className="mb-3 h-5 relative">
@@ -637,14 +700,14 @@
                                         </div>
 
                                         {/* Carousel Container */}
-                                        <div className="relative w-full max-w-2xl overflow-hidden h-14">
+                                        <div className="relative w-full max-w-3xl overflow-hidden h-14">
 
                                             {/* Carousel Track */}
                                             <div
                                                 className="absolute top-1/2 flex items-center transition-transform duration-500 ease-out"
                                                 style={{
                                                     left: '50%',
-                                                    transform: `translateY(-50%) translateX(calc(-${activeStep * 200}px - 100px))`
+                                                    transform: `translateY(-50%) translateX(calc(-${activeStep * 260}px - 130px))`
                                                 }}
                                             >
                                                 {currentTab.steps.map((step, index) => {
@@ -654,7 +717,8 @@
                                                     return (
                                                         <div
                                                             key={index}
-                                                            className="flex-shrink-0 w-[200px] flex items-center justify-center transition-all duration-500 ease-out"
+                                                            onClick={() => goToStep(index)}
+                                                            className="flex-shrink-0 w-[260px] flex items-center justify-center transition-all duration-500 ease-out cursor-pointer"
                                                             style={{
                                                                 opacity: isActive ? 1 : isAdjacent ? 0.5 : 0.15,
                                                                 transform: `scale(${isActive ? 1 : 0.85})`,
@@ -662,7 +726,7 @@
                                                         >
                                                             <div
                                                                 className={`
-                                                                    flex items-center gap-3 px-5 py-2.5 rounded-full
+                                                                    flex items-center gap-3 px-5 py-2.5 rounded-full h-10
                                                                     transition-all duration-500
                                                                     ${isActive
                                                                         ? 'bg-[#136EF6] text-white'
@@ -670,15 +734,17 @@
                                                                     }
                                                                 `}
                                                             >
-                                                                <span className={`
-                                                                    w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold
-                                                                    ${isActive
-                                                                        ? 'bg-white/20 text-white'
-                                                                        : 'bg-slate-700 text-slate-400'
-                                                                    }
-                                                                `}>
-                                                                    {index + 1}
-                                                                </span>
+                                                                {currentTab?.layout !== 'browser' && (
+                                                                    <span className={`
+                                                                        w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
+                                                                        ${isActive
+                                                                            ? 'bg-white/20 text-white'
+                                                                            : 'bg-slate-700 text-slate-400'
+                                                                        }
+                                                                    `}>
+                                                                        {index + 1}
+                                                                    </span>
+                                                                )}
                                                                 <span className={`
                                                                     text-sm font-semibold whitespace-nowrap
                                                                     ${isActive ? 'text-white' : 'text-slate-400'}
@@ -692,23 +758,26 @@
                                             </div>
                                         </div>
 
-                                        {/* Progress Dots */}
-                                        <div className="flex items-center gap-1.5 mt-3">
-                                            {currentTab.steps.map((step, index) => (
-                                                <div
-                                                    key={index}
-                                                    className={`
-                                                        h-1.5 rounded-full transition-all duration-300
-                                                        ${index === activeStep
-                                                            ? 'w-5 bg-[#136EF6]'
-                                                            : index < activeStep
-                                                                ? 'w-1.5 bg-[#136EF6]/50'
-                                                                : 'w-1.5 bg-slate-600'
-                                                        }
-                                                    `}
-                                                />
-                                            ))}
-                                        </div>
+                                        {/* Progress Dots - only for non-browser layouts */}
+                                        {currentTab?.layout !== 'browser' && (
+                                            <div className="flex items-center gap-1.5 mt-3">
+                                                {currentTab.steps.map((step, index) => (
+                                                    <div
+                                                        key={index}
+                                                        onClick={() => goToStep(index)}
+                                                        className={`
+                                                            h-1.5 rounded-full transition-all duration-300 cursor-pointer hover:opacity-80
+                                                            ${index === activeStep
+                                                                ? 'w-5 bg-[#136EF6]'
+                                                                : index < activeStep
+                                                                    ? 'w-1.5 bg-[#136EF6]/50'
+                                                                    : 'w-1.5 bg-slate-600'
+                                                            }
+                                                        `}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     /* Standard Timeline for Other Layouts */
@@ -759,7 +828,7 @@
                         {/* Video Area */}
                         <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
                             {/* Playback Controls */}
-                            {currentTab?.layout === 'dual' && (
+                            {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser') && (
                                 <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
                                     {/* Previous Step */}
                                     <button
@@ -804,7 +873,58 @@
                                 </div>
                             )}
                             <div className="w-full max-w-6xl">
-                                {(currentTab?.video || currentTab?.devices) ? (
+                                {currentTab?.layout === 'browser' ? (
+                                    /* Browser Frame with Video */
+                                    <div className="flex flex-col items-center w-full">
+                                        <div className="relative w-full max-w-4xl">
+                                            {/* Glow Effect */}
+                                            <div className="absolute -inset-4 bg-[#136EF6] rounded-2xl blur-2xl opacity-20"></div>
+
+                                            {/* Mac Window Frame */}
+                                            <div className="relative rounded-xl overflow-hidden shadow-2xl border border-slate-700/50 bg-slate-900">
+                                                {/* Browser Chrome */}
+                                                <div className="bg-slate-800 px-4 py-3 flex items-center gap-3 border-b border-slate-700/50">
+                                                    <div className="flex gap-1.5">
+                                                        <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                                        <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                                        <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                                                    </div>
+                                                    <div className="bg-slate-700/50 rounded-md px-4 py-1 text-xs text-slate-400">
+                                                        venue-menu.ordernext.com
+                                                    </div>
+                                                </div>
+
+                                                {/* Video Area */}
+                                                <div className="aspect-[752/499] bg-slate-900 relative overflow-hidden">
+                                                    {currentTab.video ? (
+                                                        <video
+                                                            ref={videoRef}
+                                                            key={currentTab.id}
+                                                            autoPlay
+                                                            muted
+                                                            loop
+                                                            playsInline
+                                                            className="w-full h-full object-cover"
+                                                        >
+                                                            <source src={currentTab.video} type={currentTab.videoType} />
+                                                        </video>
+                                                    ) : (
+                                                        /* Placeholder when no video */
+                                                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
+                                                            <div className="text-center">
+                                                                <div className="w-20 h-20 rounded-2xl bg-[#136EF6]/20 flex items-center justify-center mx-auto mb-4">
+                                                                    {getIcon('LayoutGrid', 'w-10 h-10 text-sky-400')}
+                                                                </div>
+                                                                <h3 className="text-white font-semibold mb-2">Menu Manager Demo</h3>
+                                                                <p className="text-slate-400 text-sm">Video coming soon</p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (currentTab?.video || currentTab?.devices) ? (
                                     <div className="flex flex-col items-center">
                                         {currentTab.layout === 'dual' ? (
                                             /* Dual: iPhone + iPad side by side */
