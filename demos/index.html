@@ -136,36 +136,56 @@
                     id: 'mobile-pos',
                     label: 'Mobile POS',
                     icon: 'Smartphone',
-                    color: 'violet',
-                    gradient: 'from-violet-500 to-purple-500',
-                    stepColor: 'bg-violet-500',
-                    stepGlow: 'shadow-violet-500/50',
-                    video: null,
+                    color: 'blue',
+                    gradient: 'from-sky-500 to-blue-600',
+                    stepColor: 'bg-[#136EF6]',
+                    stepGlow: 'shadow-sky-500/50',
+                    layout: 'device',
+                    videoWidth: 488,
+                    videoHeight: 956,
+                    video: '../site/Mobile POS Demo.mov',
                     videoType: 'video/mp4',
-                    description: 'Handheld POS for line-busting and in-seat service',
+                    description: 'Mobile POS',
                     steps: [
-                        { time: 0, label: 'Take Order' },
-                        { time: 10, label: 'Add Items' },
-                        { time: 20, label: 'Tap to Pay' },
-                        { time: 30, label: 'Complete' }
+                        { time: 0, label: 'Enter PIN or scan badge to sign in', category: 'Log In' },
+                        { time: 13, label: 'Add items to the cart', category: 'Build Order' },
+                        { time: 62, label: 'Review cart', category: 'Build Order' },
+                        { time: 71, label: 'Add Order Notes', category: 'Build Order' },
+                        { time: 82, label: 'Apply discounts or promos', category: 'Build Order' },
+                        { time: 104, label: 'Choose payment tender', category: 'Build Order' },
+                        { time: 112, label: 'Hand device to guest for checkout', category: 'Take Payment' },
+                        { time: 116, label: 'Guest selects tip', category: 'Take Payment' },
+                        { time: 127, label: 'Guest selects Round Up (optional)', category: 'Take Payment' },
+                        { time: 133, label: 'Guest taps, inserts, or swipes card', category: 'Take Payment' },
+                        { time: 136, label: 'Guest confirms order total', category: 'Take Payment' },
+                        { time: 143, label: 'Guest chooses receipt method', category: 'Take Payment' },
+                        { time: 152, label: 'View completed orders in Orders', category: 'Close Out and Review' },
+                        { time: 172, label: 'Review Sales Report', category: 'Close Out and Review' }
                     ]
                 },
                 {
                     id: 'kiosk',
                     label: 'Kiosk',
                     icon: 'Kiosk',
-                    color: 'emerald',
-                    gradient: 'from-emerald-500 to-teal-500',
-                    stepColor: 'bg-emerald-500',
-                    stepGlow: 'shadow-emerald-500/50',
-                    video: null,
+                    color: 'blue',
+                    gradient: 'from-sky-500 to-blue-600',
+                    stepColor: 'bg-[#136EF6]',
+                    stepGlow: 'shadow-sky-500/50',
+                    layout: 'device',
+                    videoWidth: 822,
+                    videoHeight: 1194,
+                    video: '../site/Kiosk Demo.mov',
                     videoType: 'video/mp4',
-                    description: 'Self-service kiosk ordering flow',
+                    description: 'Self-service Kiosk',
                     steps: [
-                        { time: 0, label: 'Select Items' },
-                        { time: 10, label: 'Add to Cart' },
-                        { time: 20, label: 'Choose Payment' },
-                        { time: 30, label: 'Complete' }
+                        { time: 0, label: 'Launch Kiosk', category: 'Start Order' },
+                        { time: 5, label: 'Browse the menu', category: 'Build Order' },
+                        { time: 16, label: 'Add items to cart', category: 'Build Order' },
+                        { time: 56, label: 'Review cart and confirm total', category: 'Checkout' },
+                        { time: 61, label: 'Select payment method', category: 'Payment' },
+                        { time: 65, label: 'Choose tip amount', category: 'Payment' },
+                        { time: 71, label: 'Add Round Up donation (optional)', category: 'Payment' },
+                        { time: 77, label: 'Tap/insert/swipe card to pay', category: 'Payment' }
                     ]
                 }
             ],
@@ -515,6 +535,32 @@
                     return;
                 }
 
+                // Handle portrait layout (single video)
+                if (currentTab?.layout === 'portrait') {
+                    if (iphoneVideo) {
+                        if (isPaused) {
+                            iphoneVideo.play();
+                        } else {
+                            iphoneVideo.pause();
+                        }
+                    }
+                    setIsPaused(!isPaused);
+                    return;
+                }
+
+                // Handle device layout (single video)
+                if (currentTab?.layout === 'device') {
+                    if (iphoneVideo) {
+                        if (isPaused) {
+                            iphoneVideo.play();
+                        } else {
+                            iphoneVideo.pause();
+                        }
+                    }
+                    setIsPaused(!isPaused);
+                    return;
+                }
+
                 if (isPaused) {
                     // Resume - use refs to determine which video should play
                     if (ipadHasStartedRef.current) {
@@ -546,6 +592,26 @@
 
                 // Handle browser layout (single video, no device property)
                 if (currentTab.layout === 'browser') {
+                    if (iphoneVideo && currentTab.video) {
+                        iphoneVideo.currentTime = step.time;
+                        if (!isPaused) iphoneVideo.play();
+                    }
+                    setActiveStep(stepIndex);
+                    return;
+                }
+
+                // Handle portrait layout (single video, no device property)
+                if (currentTab.layout === 'portrait') {
+                    if (iphoneVideo && currentTab.video) {
+                        iphoneVideo.currentTime = step.time;
+                        if (!isPaused) iphoneVideo.play();
+                    }
+                    setActiveStep(stepIndex);
+                    return;
+                }
+
+                // Handle device layout (single video, no device property)
+                if (currentTab.layout === 'device') {
                     if (iphoneVideo && currentTab.video) {
                         iphoneVideo.currentTime = step.time;
                         if (!isPaused) iphoneVideo.play();
@@ -686,7 +752,7 @@
                         {/* Steps Timeline - Carousel for dual layout, standard for others */}
                         <div className="flex-shrink-0">
                             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
-                                {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser') ? (
+                                {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser' || currentTab?.layout === 'portrait' || currentTab?.layout === 'device') ? (
                                     /* Rotating Carousel for Dual/Browser Layout */
                                     <div className="flex flex-col items-center">
                                         {/* Category Label */}
@@ -704,7 +770,7 @@
                                                 className="absolute top-1/2 flex items-center transition-transform duration-500 ease-out"
                                                 style={{
                                                     left: '50%',
-                                                    transform: `translateY(-50%) translateX(calc(-${activeStep * 260}px - 130px))`
+                                                    transform: `translateY(-50%) translateX(calc(-${activeStep * 340}px - 170px))`
                                                 }}
                                             >
                                                 {currentTab.steps.map((step, index) => {
@@ -715,7 +781,7 @@
                                                         <div
                                                             key={index}
                                                             onClick={() => goToStep(index)}
-                                                            className="flex-shrink-0 w-[260px] flex items-center justify-center transition-all duration-500 ease-out cursor-pointer"
+                                                            className="flex-shrink-0 w-[340px] flex items-center justify-center transition-all duration-500 ease-out cursor-pointer"
                                                             style={{
                                                                 opacity: isActive ? 1 : isAdjacent ? 0.5 : 0.15,
                                                                 transform: `scale(${isActive ? 1 : 0.85})`,
@@ -731,18 +797,7 @@
                                                                     }
                                                                 `}
                                                             >
-                                                                {currentTab?.layout !== 'browser' && (
-                                                                    <span className={`
-                                                                        w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
-                                                                        ${isActive
-                                                                            ? 'bg-white/20 text-white'
-                                                                            : 'bg-slate-700 text-slate-400'
-                                                                        }
-                                                                    `}>
-                                                                        {index + 1}
-                                                                    </span>
-                                                                )}
-                                                                <span className={`
+                                                                                                                                <span className={`
                                                                     text-sm font-semibold whitespace-nowrap
                                                                     ${isActive ? 'text-white' : 'text-slate-400'}
                                                                 `}>
@@ -825,7 +880,7 @@
                         {/* Video Area */}
                         <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
                             {/* Playback Controls */}
-                            {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser') && (
+                            {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser' || currentTab?.layout === 'portrait' || currentTab?.layout === 'device') && (
                                 <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
                                     {/* Previous Step */}
                                     <button
@@ -972,10 +1027,35 @@
                                                     </div>
                                                 ))}
                                             </div>
+                                        ) : currentTab.layout === 'device' ? (
+                                            /* Device: Generic device frame preserving video aspect ratio */
+                                            <div className="relative flex flex-col items-center">
+                                                <div className="absolute -inset-4 bg-[#136EF6] rounded-[2rem] blur-2xl opacity-20"></div>
+                                                <div
+                                                    className="relative bg-slate-900 rounded-[1.5rem] border-[6px] border-slate-700 shadow-2xl overflow-hidden"
+                                                    style={{
+                                                        maxHeight: '70vh',
+                                                        aspectRatio: `${currentTab.videoWidth} / ${currentTab.videoHeight}`
+                                                    }}
+                                                >
+                                                    <video
+                                                        ref={videoRef}
+                                                        key={currentTab.id}
+                                                        autoPlay
+                                                        muted
+                                                        loop
+                                                        playsInline
+                                                        className="w-full h-full object-cover"
+                                                    >
+                                                        <source src={currentTab.video} type={currentTab.videoType} />
+                                                    </video>
+                                                </div>
+                                                <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
+                                            </div>
                                         ) : currentTab.layout === 'portrait' ? (
                                             /* Portrait: iPhone frame */
                                             <div className="relative">
-                                                <div className={`absolute -inset-4 bg-gradient-to-r ${currentTab.gradient} rounded-[4rem] blur-2xl opacity-20`}></div>
+                                                <div className="absolute -inset-4 bg-[#136EF6] rounded-[4rem] blur-2xl opacity-20"></div>
                                                 <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1 w-80 h-[693px]">
                                                     <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
                                                     <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
@@ -986,7 +1066,6 @@
                                                             muted
                                                             loop
                                                             playsInline
-                                                            controls
                                                             className="w-full h-full object-cover"
                                                         >
                                                             <source src={currentTab.video} type={currentTab.videoType} />
@@ -1014,7 +1093,7 @@
                                                 </div>
                                             </div>
                                         )}
-                                        {currentTab.layout !== 'dual' && (
+                                        {currentTab.layout !== 'dual' && currentTab.layout !== 'device' && (
                                             <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
                                         )}
                                     </div>
