@@ -90,18 +90,18 @@
         // --- DEMO CATEGORIES AND TABS CONFIGURATION ---
         const DEMO_CATEGORIES = [
             {
-                id: 'pos',
-                label: 'POS',
-                icon: 'Monitor',
-                color: 'blue',
-                gradient: 'from-blue-500 to-sky-500',
-            },
-            {
                 id: 'wallet-mobile',
                 label: 'Wallet & Mobile',
                 icon: 'Wallet',
                 color: 'orange',
                 gradient: 'from-orange-500 to-amber-500',
+            },
+            {
+                id: 'pos',
+                label: 'POS',
+                icon: 'Monitor',
+                color: 'blue',
+                gradient: 'from-blue-500 to-sky-500',
             },
             {
                 id: 'back-of-house',
@@ -355,8 +355,8 @@
 
         // --- DEMOS PAGE COMPONENT ---
         const DemosPage = () => {
-            const [activeCategory, setActiveCategory] = useState('wallet-mobile');
-            const [activeTab, setActiveTab] = useState('mobile-ordering');
+            const [activeCategory, setActiveCategory] = useState('pos');
+            const [activeTab, setActiveTab] = useState('fixed-pos');
             const [activeStep, setActiveStep] = useState(0);
             const [isPaused, setIsPaused] = useState(false);
             const videoRef = useRef(null);
