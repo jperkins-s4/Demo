@@ -167,6 +167,7 @@
             const [passFeatureNavAnimation, setPassFeatureNavAnimation] = useState('');
             const [passFeatureContentKey, setPassFeatureContentKey] = useState(0);
             const [isPassFeatureNavigating, setIsPassFeatureNavigating] = useState(false);
+            const [passFeatureImageIndex, setPassFeatureImageIndex] = useState(0);
 
             // Capabilities data - categorized as 'main' (top row) or 'feature' (bottom rows)
             const CAPABILITIES_DATA = [
@@ -342,7 +343,7 @@
                     gradientFrom: 'from-emerald-500',
                     gradientTo: 'to-teal-500',
                     glowColor: 'emerald',
-                    phoneImage: '../site/pass1.png',
+                    phoneImages: ['../site/pass1.png'],
                     details: [
                         'Automatic loyalty discount application',
                         'Stored value balance displayed and applied',
@@ -359,7 +360,7 @@
                     gradientFrom: 'from-emerald-500',
                     gradientTo: 'to-teal-600',
                     glowColor: 'emerald',
-                    phoneImage: '../site/pass2.png',
+                    phoneImages: ['../site/pass2.png'],
                     details: [
                         'Geofence triggers pass on lock screen',
                         'Location-aware notifications',
@@ -376,7 +377,7 @@
                     gradientFrom: 'from-rose-500',
                     gradientTo: 'to-pink-600',
                     glowColor: 'rose',
-                    phoneImage: '../site/pass5.png',
+                    phoneImages: ['../site/pass6.png', '../site/pass3.png'],
                     details: [
                         'Segment-based targeting (VIP, new guest, etc.)',
                         'Event-triggered promotions',
@@ -393,7 +394,7 @@
                     gradientFrom: 'from-rose-500',
                     gradientTo: 'to-pink-600',
                     glowColor: 'rose',
-                    phoneImage: '../site/pass3.png',
+                    phoneImages: ['../site/pass4.png', '../site/pass5.png', '../site/decline.PNG'],
                     details: [
                         'Instant purchase confirmations',
                         'Live balance updates after transactions',
@@ -613,11 +614,13 @@
                         const currentIndex = PASS_FEATURES_DATA.findIndex(f => f.id === activePassFeature.id);
                         const prevIndex = (currentIndex - 1 + PASS_FEATURES_DATA.length) % PASS_FEATURES_DATA.length;
                         setPassFeatureContentKey(k => k + 1);
+                        setPassFeatureImageIndex(0);
                         setActivePassFeature(PASS_FEATURES_DATA[prevIndex]);
                     } else if (e.key === 'ArrowRight') {
                         const currentIndex = PASS_FEATURES_DATA.findIndex(f => f.id === activePassFeature.id);
                         const nextIndex = (currentIndex + 1) % PASS_FEATURES_DATA.length;
                         setPassFeatureContentKey(k => k + 1);
+                        setPassFeatureImageIndex(0);
                         setActivePassFeature(PASS_FEATURES_DATA[nextIndex]);
                     }
                 };
@@ -2106,7 +2109,7 @@
                                     {/* Row 2: 2 Feature tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {/* Faster Checkout */}
-                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[0])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        <div onClick={() => { setPassFeatureImageIndex(0); setActivePassFeature(PASS_FEATURES_DATA[0]); }} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2125,7 +2128,7 @@
                                         </div>
 
                                         {/* Right Place, Right Time */}
-                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[1])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        <div onClick={() => { setPassFeatureImageIndex(0); setActivePassFeature(PASS_FEATURES_DATA[1]); }} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2147,7 +2150,7 @@
                                     {/* Row 3: 2 Notification tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {/* Targeted Offers */}
-                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[2])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        <div onClick={() => { setPassFeatureImageIndex(0); setActivePassFeature(PASS_FEATURES_DATA[2]); }} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2166,7 +2169,7 @@
                                         </div>
 
                                         {/* Real-Time Updates */}
-                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[3])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        <div onClick={() => { setPassFeatureImageIndex(0); setActivePassFeature(PASS_FEATURES_DATA[3]); }} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2824,6 +2827,7 @@
                                         setTimeout(() => {
                                             setActivePassFeature(prevFeature);
                                             setPassFeatureContentKey(k => k + 1);
+                                            setPassFeatureImageIndex(0);
                                             setPassFeatureNavAnimation('in');
                                             setIsPassFeatureNavigating(false);
                                             setTimeout(() => setPassFeatureNavAnimation(''), 200);
@@ -2852,15 +2856,76 @@
                                     aria-modal="true"
                                     aria-labelledby="pass-feature-modal-title"
                                 >
-                                    {/* Left: Phone Screenshot */}
-                                    <div key={`phone-${passFeatureContentKey}`} className="w-[45%] p-4 flex items-center justify-center relative">
-                                        <div className="modal-icon-entrance">
-                                            <img
-                                                src={activePassFeature.phoneImage}
-                                                alt={activePassFeature.title}
-                                                className="h-[780px] w-auto object-contain rounded-[2.5rem] shadow-2xl"
-                                            />
+                                    {/* Left: Phone Screenshot Mini-Carousel */}
+                                    <div key={`phone-${passFeatureContentKey}`} className="w-[45%] p-4 flex flex-col items-center justify-center relative">
+                                        <div className="modal-icon-entrance relative h-[720px]" style={{ aspectRatio: '390/844' }}>
+                                            {/* Stacked images with crossfade */}
+                                            {activePassFeature.phoneImages.map((imgSrc, idx) => (
+                                                <img
+                                                    key={idx}
+                                                    src={imgSrc}
+                                                    alt={`${activePassFeature.title} - Image ${idx + 1}`}
+                                                    className={`absolute inset-0 h-full w-auto object-contain rounded-[2.5rem] shadow-2xl cursor-pointer transition-opacity duration-500 ${
+                                                        idx === passFeatureImageIndex ? 'opacity-100' : 'opacity-0'
+                                                    }`}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (activePassFeature.phoneImages.length > 1) {
+                                                            setPassFeatureImageIndex((passFeatureImageIndex + 1) % activePassFeature.phoneImages.length);
+                                                        }
+                                                    }}
+                                                />
+                                            ))}
                                         </div>
+                                        {/* Navigation arrows and dot indicators */}
+                                        {activePassFeature.phoneImages.length > 1 && (
+                                            <div className="flex items-center gap-3 mt-4">
+                                                {/* Previous arrow */}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setPassFeatureImageIndex((passFeatureImageIndex - 1 + activePassFeature.phoneImages.length) % activePassFeature.phoneImages.length);
+                                                    }}
+                                                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all duration-200 hover:scale-110"
+                                                    aria-label="Previous image"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                                    </svg>
+                                                </button>
+                                                {/* Dot indicators */}
+                                                <div className="flex items-center gap-2">
+                                                    {activePassFeature.phoneImages.map((_, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setPassFeatureImageIndex(idx);
+                                                            }}
+                                                            className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                                                                idx === passFeatureImageIndex
+                                                                    ? `bg-gradient-to-r ${activePassFeature.gradientFrom} ${activePassFeature.gradientTo} scale-125`
+                                                                    : 'bg-white/30 hover:bg-white/50'
+                                                            }`}
+                                                            aria-label={`Go to image ${idx + 1}`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                {/* Next arrow */}
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setPassFeatureImageIndex((passFeatureImageIndex + 1) % activePassFeature.phoneImages.length);
+                                                    }}
+                                                    className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all duration-200 hover:scale-110"
+                                                    aria-label="Next image"
+                                                >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Right: Content */}
@@ -2930,6 +2995,7 @@
                                         setTimeout(() => {
                                             setActivePassFeature(nextFeature);
                                             setPassFeatureContentKey(k => k + 1);
+                                            setPassFeatureImageIndex(0);
                                             setPassFeatureNavAnimation('in');
                                             setIsPassFeatureNavigating(false);
                                             setTimeout(() => setPassFeatureNavAnimation(''), 200);
