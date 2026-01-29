@@ -145,9 +145,369 @@
             // Video modal state
             const [showWalletVideo, setShowWalletVideo] = useState(false);
 
-            // Dropdown state for capability cards (independent toggles)
-            const [loadedTicketsOpen, setLoadedTicketsOpen] = useState(false);
-            const [mobileOrderingOpen, setMobileOrderingOpen] = useState(false);
+            // Capability modal state
+            const [activeCapability, setActiveCapability] = useState(null);
+            const [capabilityClosing, setCapabilityClosing] = useState(false);
+
+            // Case Studies modal state
+            const [caseStudiesOpen, setCaseStudiesOpen] = useState(false);
+            const [activeCaseStudy, setActiveCaseStudy] = useState(null);
+
+            // Guest Journeys modal state
+            const [guestJourneysOpen, setGuestJourneysOpen] = useState(false);
+
+            // Capabilities data - categorized as 'main' (top row) or 'feature' (bottom rows)
+            const CAPABILITIES_DATA = [
+                // Main Functionality (3 large tiles)
+                {
+                    id: 'identity-wallet',
+                    category: 'main',
+                    icon: Icons.Wallet,
+                    title: 'Identity + Wallet Pass',
+                    oneLiner: 'Authenticate with ticketing and issue secure wallet passes for identity + benefits.',
+                    gradientFrom: 'from-blue-500',
+                    gradientTo: 'to-cyan-500',
+                    glowColor: 'blue',
+                    details: [
+                        'Ticketing authentication or SMS sign-in',
+                        'Secure, tokenized wallet identity',
+                        'Card-on-file for faster checkout',
+                        'QR wallet scan for POS + kiosks'
+                    ]
+                },
+                {
+                    id: 'payments',
+                    category: 'main',
+                    icon: Icons.Zap,
+                    title: 'Payments + Acceptance',
+                    oneLiner: 'One payment experience across every channel, with benefits applied automatically.',
+                    gradientFrom: 'from-emerald-500',
+                    gradientTo: 'to-teal-500',
+                    glowColor: 'emerald',
+                    details: [
+                        'Discounts + stored value applied automatically',
+                        'POS, kiosk, and mobile ordering support',
+                        'Real-time transaction processing + reporting',
+                        'Supports retail and autonomous experiences'
+                    ]
+                },
+                {
+                    id: 'integrations',
+                    category: 'main',
+                    icon: Icons.Link,
+                    title: 'Integrations + Platforms',
+                    oneLiner: 'Built to work with SkyTab and leading venue platforms.',
+                    gradientFrom: 'from-shift4-sky-blue',
+                    gradientTo: 'to-indigo-500',
+                    glowColor: 'shift4',
+                    details: [
+                        'SkyTab Venue: POS, kiosk, mobile ordering',
+                        'SkyTab Restaurant POS',
+                        'Ticketing login integrations (Ticketmaster, SeatGeek, AXS, Tickets.com)',
+                        'Venue app ecosystem support (SDK/embedded)'
+                    ]
+                },
+                // Features (smaller tiles)
+                {
+                    id: 'stored-value',
+                    category: 'feature',
+                    icon: Icons.CircleDollarSign,
+                    title: 'Stored Value',
+                    oneLiner: 'Flexible stored value that guests can use anywhere in-venue.',
+                    gradientFrom: 'from-amber-500',
+                    gradientTo: 'to-yellow-500',
+                    glowColor: 'orange',
+                    details: [
+                        'Custom branded stored value (e.g. "Shift4 Bucks")',
+                        'Gift card loads and transfers',
+                        'Award via Admin Portal or Loyalty API (bulk and ad hoc)',
+                        'Value from loaded tickets (ticket-based)',
+                        'Send/transfer between guests (optional)',
+                        'Configurable expiration + spend rules'
+                    ]
+                },
+                {
+                    id: 'redemption',
+                    category: 'feature',
+                    icon: Icons.ShoppingCart,
+                    title: 'Redemption',
+                    oneLiner: 'Accept benefits venue-wide with simple, consistent flows.',
+                    gradientFrom: 'from-orange-500',
+                    gradientTo: 'to-amber-500',
+                    glowColor: 'orange',
+                    details: [
+                        'POS + kiosks: QR scan or manual entry',
+                        'Benefits apply automatically: discounts and stored value',
+                        'Retail + Autonomous supported via partners',
+                        'Real-time confirmations and balance updates'
+                    ],
+                    hasAction: true,
+                    actionLabel: 'View redemption methods',
+                    onAction: () => setRedemptionMethodsOpen(true)
+                },
+                {
+                    id: 'promotions',
+                    category: 'feature',
+                    icon: Icons.Gift,
+                    title: 'Promotions',
+                    oneLiner: 'Targeted offers based on guest identity and location.',
+                    gradientFrom: 'from-rose-500',
+                    gradientTo: 'to-pink-500',
+                    glowColor: 'rose',
+                    details: [
+                        'Ticket-based benefits via ticket attributes',
+                        'Tiered pricing and member benefits',
+                        'Item/category targeting + check-level promos',
+                        'Usage limits, stacking priority, and rule controls'
+                    ]
+                },
+                {
+                    id: 'loaded-tickets',
+                    category: 'feature',
+                    icon: Icons.Ticket,
+                    title: 'Loaded Tickets',
+                    oneLiner: 'Pre-load tickets with currency or discounts.',
+                    gradientFrom: 'from-violet-500',
+                    gradientTo: 'to-purple-500',
+                    glowColor: 'violet',
+                    details: [
+                        'Two types: virtual currency or promotional discount',
+                        'Travels with the ticket when transferred',
+                        'Unused value expires at 3:00am the next day',
+                        'Seamless integration with ticketing platforms'
+                    ]
+                },
+                {
+                    id: 'mobile-ordering',
+                    category: 'feature',
+                    icon: Icons.ShoppingBag,
+                    title: 'Mobile Ordering',
+                    oneLiner: 'Order ahead with wallet benefits applied.',
+                    gradientFrom: 'from-lime-500',
+                    gradientTo: 'to-green-500',
+                    glowColor: 'emerald',
+                    details: [
+                        'Browse to pickup with real-time status updates',
+                        'Digital receipts + order history',
+                        'Benefits apply automatically at checkout',
+                        'Location-aware menu and pickup options'
+                    ]
+                },
+                // Special tiles that open modals
+                {
+                    id: 'case-studies',
+                    category: 'feature',
+                    icon: Icons.FileText,
+                    title: 'Case Studies',
+                    oneLiner: 'Proven wallet configurations for venues.',
+                    gradientFrom: 'from-cyan-500',
+                    gradientTo: 'to-blue-500',
+                    glowColor: 'blue',
+                    isModal: true,
+                    modalType: 'case-studies'
+                },
+                {
+                    id: 'guest-journeys',
+                    category: 'feature',
+                    icon: Icons.Activity,
+                    title: 'Guest Journeys',
+                    oneLiner: 'End-to-end guest experience flows.',
+                    gradientFrom: 'from-indigo-500',
+                    gradientTo: 'to-violet-500',
+                    glowColor: 'violet',
+                    isModal: true,
+                    modalType: 'guest-journeys'
+                }
+            ];
+
+            // Case Studies - venue implementations and business outcomes
+            const CASE_STUDIES_DATA = [
+                {
+                    id: 'stadium-membership',
+                    type: 'Sports & Entertainment',
+                    glowColor: 'blue',
+                    icon: Icons.Users,
+                    title: 'Season Ticket Holder Perks',
+                    venue: 'MLB Stadium',
+                    challenge: 'Season ticket holders expected VIP treatment but discounts required manual verification, creating long lines and inconsistent experiences.',
+                    solution: 'Integrated wallet with ticketing platform to auto-authenticate members and apply tier-based pricing instantly.',
+                    results: [
+                        '40% faster transaction times for members',
+                        '28% increase in F&B spend per member',
+                        '92% member satisfaction score',
+                        'Eliminated manual discount verification'
+                    ],
+                    featuresUsed: ['Identity + Wallet Pass', 'Tiered Promotions', 'POS Integration'],
+                    gradientFrom: 'from-blue-500',
+                    gradientTo: 'to-cyan-500'
+                },
+                {
+                    id: 'sponsor-activation',
+                    type: 'Corporate Events',
+                    glowColor: 'orange',
+                    icon: Icons.Ticket,
+                    title: 'Sponsor Suite Experience',
+                    venue: 'NFL Stadium',
+                    challenge: 'Corporate sponsors needed a way to preload F&B credits for suite guests without complex voucher systems.',
+                    solution: 'Loaded ticket value that transfers automatically when tickets are forwarded to guests.',
+                    results: [
+                        '$150 avg loaded value per ticket',
+                        '89% redemption rate',
+                        'Zero voucher fraud incidents',
+                        'Sponsors can reload remotely'
+                    ],
+                    featuresUsed: ['Loaded Tickets', 'Stored Value', 'Mobile Ordering'],
+                    gradientFrom: 'from-orange-500',
+                    gradientTo: 'to-amber-500'
+                },
+                {
+                    id: 'arena-cashless',
+                    type: 'Arena Operations',
+                    glowColor: 'emerald',
+                    icon: Icons.Sparkles,
+                    title: 'Frictionless Grab & Go',
+                    venue: 'Convention Center',
+                    challenge: 'High-volume events created massive concession lines, with attendees missing sessions to wait for food.',
+                    solution: 'Deployed autonomous retail stores where guests tap in with wallet, grab items, and walk out.',
+                    results: [
+                        '3-minute avg transaction time (vs 12 min)',
+                        '35% higher throughput per square foot',
+                        '15% increase in impulse purchases',
+                        'Zero staffing during off-peak hours'
+                    ],
+                    featuresUsed: ['Identity + Wallet Pass', 'Autonomous Checkout', 'Real-time Receipts'],
+                    gradientFrom: 'from-emerald-500',
+                    gradientTo: 'to-teal-500'
+                },
+                {
+                    id: 'fan-currency',
+                    type: 'Loyalty Program',
+                    glowColor: 'violet',
+                    icon: Icons.CircleDollarSign,
+                    title: 'Branded Fan Currency',
+                    venue: 'MLS Stadium',
+                    challenge: 'Wanted to create a loyalty program that felt unique to their brand, not a generic points system.',
+                    solution: 'Launched "Goal Bucks" - a custom-branded stored value currency fans earn and spend venue-wide.',
+                    results: [
+                        '45,000 wallets activated in first season',
+                        '$2.3M in Goal Bucks issued',
+                        '94% redemption rate',
+                        '22% lift in return visit frequency'
+                    ],
+                    featuresUsed: ['Stored Value', 'Custom Branding', 'Promotions Engine'],
+                    gradientFrom: 'from-violet-500',
+                    gradientTo: 'to-purple-500'
+                }
+            ];
+
+            // Guest Journeys - step-by-step user flows
+            const GUEST_JOURNEYS_DATA = [
+                {
+                    id: 'member-discount-flow',
+                    title: 'Member Discount Flow',
+                    description: 'How season ticket holders receive automatic discounts',
+                    icon: Icons.Users,
+                    journey: [
+                        { step: 1, label: 'Authenticate', description: 'Sign in with ticketing credentials' },
+                        { step: 2, label: 'View benefits', description: 'Wallet shows member tier and perks' },
+                        { step: 3, label: 'Order or pay', description: 'Use QR code or mobile order' },
+                        { step: 4, label: 'Auto-applied', description: 'Discounts deducted automatically' }
+                    ],
+                    surfaces: ['POS', 'Kiosk', 'Mobile Order'],
+                    gradientFrom: 'from-blue-500',
+                    gradientTo: 'to-cyan-500'
+                },
+                {
+                    id: 'loaded-ticket-flow',
+                    title: 'Loaded Ticket Value',
+                    description: 'How preloaded value works for sponsors and groups',
+                    icon: Icons.Ticket,
+                    journey: [
+                        { step: 1, label: 'Receive ticket', description: 'Ticket includes preloaded value' },
+                        { step: 2, label: 'Open wallet', description: 'Balance appears automatically' },
+                        { step: 3, label: 'Redeem anywhere', description: 'Use at any F&B location' },
+                        { step: 4, label: 'Get receipt', description: 'Balance updates in real-time' }
+                    ],
+                    surfaces: ['POS', 'Kiosk', 'Mobile Order', 'Retail'],
+                    gradientFrom: 'from-orange-500',
+                    gradientTo: 'to-amber-500'
+                },
+                {
+                    id: 'autonomous-checkout-flow',
+                    title: 'Walk-Out Checkout',
+                    description: 'Frictionless shopping in autonomous retail stores',
+                    icon: Icons.Sparkles,
+                    journey: [
+                        { step: 1, label: 'Tap in', description: 'Scan wallet QR to enter store' },
+                        { step: 2, label: 'Shop freely', description: 'Grab items off the shelf' },
+                        { step: 3, label: 'Walk out', description: 'Exit triggers automatic checkout' },
+                        { step: 4, label: 'Receipt sent', description: 'Confirmation with benefits applied' }
+                    ],
+                    surfaces: ['Autonomous Retail'],
+                    gradientFrom: 'from-emerald-500',
+                    gradientTo: 'to-teal-500'
+                },
+                {
+                    id: 'mobile-order-flow',
+                    title: 'Mobile Order Ahead',
+                    description: 'Skip the line with in-app ordering',
+                    icon: Icons.Smartphone,
+                    journey: [
+                        { step: 1, label: 'Browse menu', description: 'View items and prices in app' },
+                        { step: 2, label: 'Add to cart', description: 'Benefits auto-apply to eligible items' },
+                        { step: 3, label: 'Pay with wallet', description: 'Use stored value or card on file' },
+                        { step: 4, label: 'Pick up', description: 'Show QR code at express window' }
+                    ],
+                    surfaces: ['Mobile Order', 'Express Pickup'],
+                    gradientFrom: 'from-blue-600',
+                    gradientTo: 'to-indigo-600'
+                }
+            ];
+
+            // Helper to get glow classes for capability cards
+            const getGlowClasses = (glowColor) => {
+                const glowMap = {
+                    blue: 'glow-blue border-glow-blue',
+                    emerald: 'glow-emerald border-glow-emerald',
+                    shift4: 'glow-shift4 border-glow-shift4',
+                    orange: 'glow-orange border-glow-orange',
+                    amber: 'glow-amber border-glow-amber',
+                    rose: 'glow-rose border-glow-rose',
+                    violet: 'glow-violet border-glow-violet',
+                    lime: 'glow-lime border-glow-lime'
+                };
+                return glowMap[glowColor] || 'glow-blue border-glow-blue';
+            };
+
+            // Close capability modal with animation
+            const closeCapabilityModal = () => {
+                setCapabilityClosing(true);
+                setTimeout(() => {
+                    setActiveCapability(null);
+                    setCapabilityClosing(false);
+                }, 200);
+            };
+
+            // Handle keyboard navigation for capability modal
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (!activeCapability) return;
+
+                    if (e.key === 'Escape') {
+                        closeCapabilityModal();
+                    } else if (e.key === 'ArrowLeft') {
+                        const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
+                        const prevIndex = (currentIndex - 1 + CAPABILITIES_DATA.length) % CAPABILITIES_DATA.length;
+                        setActiveCapability(CAPABILITIES_DATA[prevIndex]);
+                    } else if (e.key === 'ArrowRight') {
+                        const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
+                        const nextIndex = (currentIndex + 1) % CAPABILITIES_DATA.length;
+                        setActiveCapability(CAPABILITIES_DATA[nextIndex]);
+                    }
+                };
+                document.addEventListener('keydown', handleKeyDown);
+                return () => document.removeEventListener('keydown', handleKeyDown);
+            }, [activeCapability]);
 
             // Amazon JWO drawer state
             const [jwoDrawerOpen, setJwoDrawerOpen] = useState(false);
@@ -648,7 +1008,7 @@
                     <section id="wallet-capabilities" aria-labelledby="wallet-capabilities-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue/95 flex items-start pt-10 isolate">
                         <div className="container mx-auto px-6">
                             {/* Section Header */}
-                            <div className="text-center mb-3">
+                            <div className="text-center mb-6">
                                 <span className="text-shift4-sky-blue font-semibold tracking-[0.2em] uppercase text-xs mb-3 block">Mobile Commerce</span>
                                 <h2 id="wallet-capabilities-heading" className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Wallet Capabilities</h2>
                                 <p className="text-slate-300 max-w-2xl mx-auto text-base leading-relaxed">
@@ -656,175 +1016,479 @@
                                 </p>
                             </div>
 
-                            {/* Main Capability Cards - 3-column grid with 3 equal-width tiles at top */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto mb-4">
-                                {/* Tile 1: Member Identity & Wallet */}
-                                <FeatureCard
-                                    icon={Icons.Wallet}
-                                    title="Identity + Wallet Pass"
-                                    benefit="Authenticate with ticketing (or SMS) and issue a secure wallet pass for identity + benefits."
-                                    gradientFrom="from-blue-500"
-                                    gradientTo="to-cyan-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticketing authentication or SMS sign-in</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Secure, tokenized wallet identity</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Card-on-file for faster checkout</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> QR wallet scan for POS + kiosks</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                {/* Tile 2: Payment Processing & Acceptance */}
-                                <FeatureCard
-                                    icon={Icons.Zap}
-                                    title="Payments + Acceptance"
-                                    benefit="One payment experience across every channel, with benefits applied automatically."
-                                    gradientFrom="from-emerald-500"
-                                    gradientTo="to-teal-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Discounts + stored value applied automatically</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> POS, kiosk, and mobile ordering support</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time transaction processing + reporting</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Supports retail and autonomous experiences</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                {/* Tile 3: System Integrations */}
-                                <FeatureCard
-                                    icon={Icons.Link}
-                                    title="Integrations + Platforms"
-                                    benefit="Built to work with SkyTab and leading venue platforms."
-                                    gradientFrom="from-shift4-sky-blue"
-                                    gradientTo="to-indigo-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> SkyTab Venue: POS, kiosk, mobile ordering</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> SkyTab Restaurant POS</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticketing login integrations (Ticketmaster, SeatGeek, AXS, Tickets.com)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Venue app ecosystem support (SDK/embedded)</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                {/* Card 4: Stored Value & Currency */}
-                                <FeatureCard
-                                    icon={Icons.CircleDollarSign}
-                                    title="Stored Value"
-                                    benefit="Flexible stored value that guests can use anywhere in-venue."
-                                    gradientFrom="from-emerald-500"
-                                    gradientTo="to-teal-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Custom branded stored value (for example "Shift4 Bucks")</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Gift card loads and transfers</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Award via Admin Portal or Loyalty API (bulk and ad hoc)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Value from loaded tickets (ticket-based)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Send/transfer between guests (optional)</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Configurable expiration + spend rules</li>
-                                    </ul>
-                                </FeatureCard>
-
-                                {/* Card 5: Redemption Overview */}
-                                <FeatureCard
-                                    icon={Icons.ShoppingCart}
-                                    title="Redemption Overview"
-                                    benefit="Accept benefits venue-wide with simple, consistent redemption flows."
-                                    gradientFrom="from-orange-500"
-                                    gradientTo="to-amber-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> POS + kiosks: QR scan or manual entry</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Benefits apply automatically: discounts and stored value</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Retail + Autonomous supported via partners</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Real-time confirmations and balance updates</li>
-                                    </ul>
-                                    <button
-                                        onClick={() => setRedemptionMethodsOpen(true)}
-                                        className="mt-4 mx-auto px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-semibold rounded-full shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center gap-2 group"
-                                    >
-                                        View redemption methods
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-x-0.5 transition-transform"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                                    </button>
-                                </FeatureCard>
-
-                                {/* Card 6: Loyalty & Promotions */}
-                                <FeatureCard
-                                    icon={Icons.Gift}
-                                    title="Promotions + Loyalty"
-                                    benefit="Targeted offers and automatic benefits based on who the guest is and where they are."
-                                    gradientFrom="from-rose-500"
-                                    gradientTo="to-pink-500"
-                                    isPrimary={true}
-                                >
-                                    <ul className="text-slate-300 text-xs space-y-2">
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Ticket-based benefits via ticket attributes</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Tiered pricing and member benefits</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Item/category targeting + check-level promos</li>
-                                        <li className="flex items-start"><Icons.CheckCircle className="w-4 h-4 text-cyan-400 mr-2 mt-0.5 flex-shrink-0" /> Usage limits, stacking priority, and rule controls</li>
-                                    </ul>
-                                </FeatureCard>
-                            </div>
-
-                            {/* Secondary cards - collapsible dropdowns */}
-                            <div className="flex flex-col md:flex-row gap-3 max-w-5xl mx-auto justify-center">
-                                {/* Loaded Tickets Dropdown */}
-                                <div className="flex-1">
-                                    <button
-                                        onClick={() => setLoadedTicketsOpen(!loadedTicketsOpen)}
-                                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 transition-all duration-300 group text-left"
-                                    >
-                                        <div className="rounded-lg bg-gradient-to-br from-violet-500 to-purple-500 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.Ticket className="w-4 h-4 text-white" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-bold text-white text-sm">Loaded Tickets</h4>
-                                            <p className="text-slate-400 text-[11px] leading-relaxed">Pre-load tickets with currency or discounts via ticketing attributes.</p>
-                                        </div>
-                                        <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${loadedTicketsOpen ? 'rotate-180' : ''}`} />
-                                    </button>
-                                    {loadedTicketsOpen && (
-                                        <div className="mt-1 p-3 rounded-xl bg-slate-800/40 border border-white/5 animate-fade-in">
-                                            <ul className="text-slate-300 text-[11px] space-y-1.5">
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Two types: virtual currency or promotional discount</li>
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Travels with the ticket when transferred</li>
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Unused value expires at 3:00am the next day</li>
-                                            </ul>
-                                        </div>
-                                    )}
+                            {/* All Capabilities in a unified centered grid */}
+                            <div className="max-w-6xl mx-auto">
+                                {/* Main Capabilities - 3 cards in a row */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+                                    {CAPABILITIES_DATA.filter(cap => cap.category === 'main').map((cap) => {
+                                        const Icon = cap.icon;
+                                        const glowClass = getGlowClasses(cap.glowColor);
+                                        return (
+                                            <button
+                                                key={cap.id}
+                                                onClick={() => setActiveCapability(cap)}
+                                                className={`capability-card capability-card-hero ${glowClass.split(' ')[1]} group relative text-center p-6 rounded-2xl cursor-pointer overflow-hidden min-h-[180px] flex flex-col items-center justify-center`}
+                                            >
+                                                <div className={`capability-glow capability-glow-hero ${glowClass.split(' ')[0]}`} style={{left: '50%', transform: 'translateX(-50%)'}}></div>
+                                                <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                </div>
+                                                <div className={`icon-wrap w-14 h-14 rounded-xl bg-gradient-to-br ${cap.gradientFrom} ${cap.gradientTo} flex items-center justify-center shadow-lg mb-4 relative z-10`}>
+                                                    {Icon && <Icon className="w-7 h-7 text-white" />}
+                                                </div>
+                                                <h3 className="font-bold text-white text-lg leading-tight mb-2 relative z-10">{cap.title}</h3>
+                                                <p className="text-slate-300 text-sm leading-relaxed relative z-10">{cap.oneLiner}</p>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
-                                {/* Mobile Ordering Dropdown */}
-                                <div className="flex-1">
-                                    <button
-                                        onClick={() => setMobileOrderingOpen(!mobileOrderingOpen)}
-                                        className="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 hover:border-slate-500/40 transition-all duration-300 group text-left"
-                                    >
-                                        <div className="rounded-lg bg-gradient-to-br from-lime-500 to-green-500 p-2 shadow-lg flex-shrink-0">
-                                            <Icons.ShoppingBag className="w-4 h-4 text-white" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h4 className="font-bold text-white text-sm">Mobile Ordering</h4>
-                                            <p className="text-slate-400 text-[11px] leading-relaxed">Order ahead with wallet benefits applied automatically.</p>
-                                        </div>
-                                        <Icons.ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${mobileOrderingOpen ? 'rotate-180' : ''}`} />
-                                    </button>
-                                    {mobileOrderingOpen && (
-                                        <div className="mt-1 p-3 rounded-xl bg-slate-800/40 border border-white/5 animate-fade-in">
-                                            <ul className="text-slate-300 text-[11px] space-y-1.5">
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Browse to pickup with real-time status updates</li>
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Digital receipts + order history</li>
-                                                <li className="flex items-start"><Icons.CheckCircle className="w-3 h-3 text-cyan-400 mr-1.5 mt-0.5 flex-shrink-0" /> Benefits apply automatically at checkout (discounts, stored value)</li>
-                                            </ul>
-                                        </div>
-                                    )}
+
+                                {/* Features - 7 cards: 4 on top, 3 centered below */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                                    {CAPABILITIES_DATA.filter(cap => cap.category === 'feature').slice(0, 4).map((cap) => {
+                                        const Icon = cap.icon;
+                                        const glowClass = getGlowClasses(cap.glowColor);
+                                        const handleClick = () => {
+                                            if (cap.isModal) {
+                                                if (cap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                                else if (cap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                            } else {
+                                                setActiveCapability(cap);
+                                            }
+                                        };
+                                        return (
+                                            <button key={cap.id} onClick={handleClick} className={`capability-card capability-card-compact ${glowClass.split(' ')[1]} group relative text-center p-4 rounded-xl cursor-pointer overflow-hidden flex flex-col items-center justify-center min-h-[140px]`}>
+                                                <div className={`capability-glow capability-glow-compact ${glowClass.split(' ')[0]}`} style={{left: '50%', transform: 'translateX(-50%)'}}></div>
+                                                <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                </div>
+                                                <div className={`icon-wrap w-10 h-10 rounded-lg bg-gradient-to-br ${cap.gradientFrom} ${cap.gradientTo} flex items-center justify-center shadow-md mb-3 relative z-10`}>
+                                                    {Icon && <Icon className="w-5 h-5 text-white" />}
+                                                </div>
+                                                <h3 className="font-semibold text-white text-sm leading-tight mb-1 relative z-10">{cap.title}</h3>
+                                                <p className="text-slate-400 text-xs leading-relaxed relative z-10 line-clamp-2">{cap.oneLiner}</p>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Bottom row - 3 centered */}
+                                <div className="flex justify-center gap-4">
+                                    {CAPABILITIES_DATA.filter(cap => cap.category === 'feature').slice(4, 7).map((cap) => {
+                                        const Icon = cap.icon;
+                                        const glowClass = getGlowClasses(cap.glowColor);
+                                        const handleClick = () => {
+                                            if (cap.isModal) {
+                                                if (cap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                                else if (cap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                            } else {
+                                                setActiveCapability(cap);
+                                            }
+                                        };
+                                        return (
+                                            <button key={cap.id} onClick={handleClick} className={`capability-card capability-card-compact ${glowClass.split(' ')[1]} group relative text-center p-4 rounded-xl cursor-pointer overflow-hidden flex flex-col items-center justify-center min-h-[140px] w-full md:w-[calc(25%-0.75rem)]`}>
+                                                <div className={`capability-glow capability-glow-compact ${glowClass.split(' ')[0]}`} style={{left: '50%', transform: 'translateX(-50%)'}}></div>
+                                                <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/60"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                                                </div>
+                                                <div className={`icon-wrap w-10 h-10 rounded-lg bg-gradient-to-br ${cap.gradientFrom} ${cap.gradientTo} flex items-center justify-center shadow-md mb-3 relative z-10`}>
+                                                    {Icon && <Icon className="w-5 h-5 text-white" />}
+                                                </div>
+                                                <h3 className="font-semibold text-white text-sm leading-tight mb-1 relative z-10">{cap.title}</h3>
+                                                <p className="text-slate-400 text-xs leading-relaxed relative z-10 line-clamp-2">{cap.oneLiner}</p>
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
+
+                            {/* Hint text */}
+                            <p className="text-center text-slate-500 text-xs mt-5">Click any tile to explore details</p>
                         </div>
+
+                        {/* Capability Detail Modal */}
+                        {activeCapability && (
+                            <div
+                                className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${capabilityClosing ? 'animate-capability-backdrop-out' : 'animate-capability-backdrop-in'}`}
+                                onClick={closeCapabilityModal}
+                            >
+                                {/* Backdrop */}
+                                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl"></div>
+
+                                {/* Modal Content with Nav Arrows */}
+                                <div className={`relative flex items-center gap-3 ${capabilityClosing ? 'animate-capability-modal-out' : 'animate-capability-modal-in'}`}>
+                                    {/* Previous button */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
+                                            const prevIndex = (currentIndex - 1 + CAPABILITIES_DATA.length) % CAPABILITIES_DATA.length;
+                                            setActiveCapability(CAPABILITIES_DATA[prevIndex]);
+                                        }}
+                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-200 hover:scale-110 flex-shrink-0"
+                                        aria-label="Previous capability"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+
+                                    {/* Modal Panel */}
+                                    <div
+                                        className="relative max-w-xl w-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-white/10 shadow-2xl overflow-hidden"
+                                        onClick={(e) => e.stopPropagation()}
+                                        role="dialog"
+                                        aria-modal="true"
+                                        aria-labelledby="capability-modal-title"
+                                    >
+                                    {/* Ambient glow effect */}
+                                    <div className={`absolute -top-32 -right-32 w-64 h-64 bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} rounded-full blur-3xl opacity-20`}></div>
+                                    <div className={`absolute -bottom-32 -left-32 w-64 h-64 bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} rounded-full blur-3xl opacity-10`}></div>
+
+                                    {/* Close button */}
+                                    <button
+                                        onClick={closeCapabilityModal}
+                                        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
+                                        aria-label="Close modal"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+
+                                    {/* Content */}
+                                    <div className="relative p-8">
+                                        {/* Header: Icon + Title side by side */}
+                                        <div className="flex items-center gap-4 mb-4">
+                                            <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center shadow-xl flex-shrink-0`}>
+                                                <activeCapability.icon className="w-7 h-7 text-white" />
+                                            </div>
+                                            <h3 id="capability-modal-title" className="text-2xl font-bold text-white">{activeCapability.title}</h3>
+                                        </div>
+
+                                        {/* One-liner */}
+                                        <p className="text-slate-300 text-base mb-6 leading-relaxed">{activeCapability.oneLiner}</p>
+
+                                        {/* Divider */}
+                                        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+
+                                        {/* Details list */}
+                                        {activeCapability.details && (
+                                        <ul className="space-y-3">
+                                            {activeCapability.details.map((detail, idx) => (
+                                                <li key={idx} className="capability-detail-item flex items-start gap-3">
+                                                    <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                                        </svg>
+                                                    </div>
+                                                    <span className="text-slate-200 text-sm leading-relaxed">{detail}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        )}
+
+                                        {/* Action button (for Redemption card) */}
+                                        {activeCapability.hasAction && (
+                                            <button
+                                                onClick={() => {
+                                                    closeCapabilityModal();
+                                                    setTimeout(() => activeCapability.onAction(), 250);
+                                                }}
+                                                className={`mt-8 w-full px-6 py-3 bg-gradient-to-r ${activeCapability.gradientFrom} ${activeCapability.gradientTo} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2`}
+                                            >
+                                                {activeCapability.actionLabel}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                                </svg>
+                                            </button>
+                                        )}
+
+                                    </div>
+                                    </div>
+
+                                    {/* Next button */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
+                                            const nextIndex = (currentIndex + 1) % CAPABILITIES_DATA.length;
+                                            setActiveCapability(CAPABILITIES_DATA[nextIndex]);
+                                        }}
+                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-200 hover:scale-110 flex-shrink-0"
+                                        aria-label="Next capability"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Case Studies Modal */}
+                        {caseStudiesOpen && (
+                            <div
+                                className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-capability-backdrop-in"
+                                onClick={() => setCaseStudiesOpen(false)}
+                            >
+                                {/* Backdrop */}
+                                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl"></div>
+
+                                {/* Modal Panel */}
+                                <div
+                                    className="relative max-w-4xl w-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-white/10 shadow-2xl overflow-hidden animate-capability-modal-in"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {/* Close button */}
+                                    <button
+                                        onClick={() => setCaseStudiesOpen(false)}
+                                        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+
+                                    {/* Content */}
+                                    <div className="p-8">
+                                        {/* Header */}
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg">
+                                                <Icons.FileText className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-2xl font-bold text-white">Case Studies</h3>
+                                                <p className="text-slate-400 text-sm">Proven wallet configurations for common venue scenarios</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Case Studies Grid */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {CASE_STUDIES_DATA.map((study) => {
+                                                const Icon = study.icon;
+                                                return (
+                                                    <button
+                                                        key={study.id}
+                                                        onClick={() => setActiveCaseStudy(study)}
+                                                        className="group relative text-left p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                                    >
+                                                        {/* Header */}
+                                                        <div className="flex items-center gap-3 mb-2">
+                                                            <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${study.gradientFrom} ${study.gradientTo} flex items-center justify-center shadow-md flex-shrink-0`}>
+                                                                {Icon && <Icon className="w-5 h-5 text-white" />}
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="font-semibold text-white text-sm">{study.title}</h4>
+                                                                <span className="text-[10px] font-medium text-slate-500">{study.venue}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Type badge */}
+                                                        <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-medium bg-gradient-to-r ${study.gradientFrom} ${study.gradientTo} text-white/90 mb-2`}>
+                                                            {study.type}
+                                                        </span>
+
+                                                        {/* Challenge preview */}
+                                                        <p className="text-slate-400 text-xs leading-relaxed line-clamp-2 mb-3">{study.challenge}</p>
+
+                                                        {/* Results preview */}
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-emerald-400 text-[10px] font-medium">{study.results[0]}</span>
+                                                            <span className="text-slate-500 text-[10px] group-hover:text-white/60 transition-colors">View details →</span>
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Case Study Detail Drawer */}
+                        {activeCaseStudy && (
+                            <div
+                                className="fixed inset-0 z-[60] animate-capability-backdrop-in"
+                                onClick={() => setActiveCaseStudy(null)}
+                            >
+                                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                                <div
+                                    className="absolute top-0 right-0 h-full w-full max-w-lg bg-gradient-to-b from-slate-900 to-slate-950 border-l border-white/10 shadow-2xl overflow-y-auto animate-slide-in-right"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <button
+                                        onClick={() => setActiveCaseStudy(null)}
+                                        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors duration-200 z-10"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+
+                                    <div className="p-8 pt-16">
+                                        {/* Header */}
+                                        <div className="flex items-center gap-4 mb-2">
+                                            <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${activeCaseStudy.gradientFrom} ${activeCaseStudy.gradientTo} flex items-center justify-center shadow-lg`}>
+                                                {activeCaseStudy.icon && React.createElement(activeCaseStudy.icon, { className: "w-7 h-7 text-white" })}
+                                            </div>
+                                            <div>
+                                                <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r ${activeCaseStudy.gradientFrom} ${activeCaseStudy.gradientTo} text-white/90 mb-1`}>
+                                                    {activeCaseStudy.type}
+                                                </span>
+                                                <h3 className="text-2xl font-bold text-white">{activeCaseStudy.title}</h3>
+                                            </div>
+                                        </div>
+                                        <p className="text-slate-500 text-sm mb-6">{activeCaseStudy.venue}</p>
+
+                                        {/* Challenge */}
+                                        <div className="mb-6">
+                                            <h4 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-400"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                                Challenge
+                                            </h4>
+                                            <p className="text-slate-300 text-sm leading-relaxed">{activeCaseStudy.challenge}</p>
+                                        </div>
+
+                                        {/* Solution */}
+                                        <div className="mb-6">
+                                            <h4 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2 flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                                                Solution
+                                            </h4>
+                                            <p className="text-slate-300 text-sm leading-relaxed">{activeCaseStudy.solution}</p>
+                                        </div>
+
+                                        {/* Results */}
+                                        <div className="mb-6">
+                                            <h4 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                                                Results
+                                            </h4>
+                                            <div className="space-y-2">
+                                                {activeCaseStudy.results.map((result, i) => (
+                                                    <div key={i} className="flex items-start gap-3 capability-detail-item">
+                                                        <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400">
+                                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                                            </svg>
+                                                        </div>
+                                                        <p className="text-slate-200 text-sm">{result}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Features Used */}
+                                        <div>
+                                            <h4 className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-3">Features Used</h4>
+                                            <div className="flex flex-wrap gap-2">
+                                                {activeCaseStudy.featuresUsed.map((feature, i) => (
+                                                    <span key={i} className="px-3 py-1.5 rounded-full text-xs font-medium bg-white/10 text-white/80 border border-white/10">
+                                                        {feature}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Guest Journeys Modal */}
+                        {guestJourneysOpen && (
+                            <div
+                                className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-capability-backdrop-in"
+                                onClick={() => setGuestJourneysOpen(false)}
+                            >
+                                {/* Backdrop */}
+                                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl"></div>
+
+                                {/* Modal Panel */}
+                                <div
+                                    className="relative max-w-4xl w-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-white/10 shadow-2xl overflow-hidden animate-capability-modal-in"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    {/* Close button */}
+                                    <button
+                                        onClick={() => setGuestJourneysOpen(false)}
+                                        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+
+                                    {/* Content */}
+                                    <div className="p-8">
+                                        {/* Header */}
+                                        <div className="flex items-center gap-4 mb-6">
+                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg">
+                                                <Icons.Activity className="w-6 h-6 text-white" />
+                                            </div>
+                                            <div>
+                                                <h3 className="text-2xl font-bold text-white">Guest Journeys</h3>
+                                                <p className="text-slate-400 text-sm">End-to-end guest experience flows</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Journey Grid */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {GUEST_JOURNEYS_DATA.map((journey) => {
+                                                const Icon = journey.icon;
+                                                return (
+                                                    <div
+                                                        key={journey.id}
+                                                        className="relative p-5 rounded-xl bg-white/5 border border-white/10"
+                                                    >
+                                                        {/* Header */}
+                                                        <div className="flex items-center gap-3 mb-4">
+                                                            <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${journey.gradientFrom} ${journey.gradientTo} flex items-center justify-center shadow-md flex-shrink-0`}>
+                                                                {Icon && <Icon className="w-5 h-5 text-white" />}
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="font-semibold text-white text-base">{journey.title}</h4>
+                                                                <p className="text-slate-500 text-xs">{journey.description}</p>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Journey steps - centered with descriptions */}
+                                                        <div className="space-y-3 mb-4">
+                                                            {journey.journey.map((step, i) => (
+                                                                <div key={i} className="flex items-start gap-3">
+                                                                    <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${journey.gradientFrom} ${journey.gradientTo} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5`}>
+                                                                        {step.step}
+                                                                    </div>
+                                                                    <div className="flex-1">
+                                                                        <span className="text-white text-sm font-medium">{step.label}</span>
+                                                                        <p className="text-slate-500 text-xs">{step.description}</p>
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+
+                                                        {/* Surfaces */}
+                                                        <div className="flex items-center gap-1.5 pt-3 border-t border-white/5">
+                                                            <span className="text-slate-600 text-[10px] mr-1">Works at:</span>
+                                                            {journey.surfaces.map((surface, i) => (
+                                                                <span key={i} className="px-2 py-0.5 text-[10px] font-medium text-slate-400 bg-white/5 rounded">{surface}</span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                     </section>
+
 
                     {/* SECTION 4: Passes Highlights */}
                     <section id="passes-highlights" aria-labelledby="passes-highlights-heading" className="snap-start snap-always h-screen overflow-hidden bg-shift4-midnight-blue flex items-center relative isolate">
@@ -1317,6 +1981,7 @@
                         </div>
 
                     </section>
+
 
                     {/* Expanded Browser Modal */}
                     {expandedTab && (

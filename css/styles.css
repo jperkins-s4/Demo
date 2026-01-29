@@ -158,3 +158,210 @@ section[id] {
     background: #136EF6;
     border-radius: 1px;
 }
+
+/* Capability Modal Animations */
+@keyframes capabilityBackdropIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes capabilityModalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes capabilityBackdropOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes capabilityModalOut {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.92) translateY(16px);
+    }
+}
+
+.animate-capability-backdrop-in {
+    animation: capabilityBackdropIn 0.25s ease-out forwards;
+}
+
+.animate-capability-modal-in {
+    animation: capabilityModalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-capability-backdrop-out {
+    animation: capabilityBackdropOut 0.2s ease-in forwards;
+}
+
+.animate-capability-modal-out {
+    animation: capabilityModalOut 0.2s ease-in forwards;
+}
+
+/* Staggered content animation for capability modal */
+.capability-detail-item {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeIn 0.35s ease-out forwards;
+}
+
+.capability-detail-item:nth-child(1) { animation-delay: 0.08s; }
+.capability-detail-item:nth-child(2) { animation-delay: 0.12s; }
+.capability-detail-item:nth-child(3) { animation-delay: 0.16s; }
+.capability-detail-item:nth-child(4) { animation-delay: 0.20s; }
+.capability-detail-item:nth-child(5) { animation-delay: 0.24s; }
+.capability-detail-item:nth-child(6) { animation-delay: 0.28s; }
+.capability-detail-item:nth-child(7) { animation-delay: 0.32s; }
+.capability-detail-item:nth-child(8) { animation-delay: 0.36s; }
+
+/* Line clamp utility for truncating text */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ================================================
+   CAPABILITY CARDS - Glassmorphism & Color Glow
+   ================================================ */
+
+/* Base card with glassmorphism */
+.capability-card {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.capability-card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+        0 30px 60px -20px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Color glow element - positioned behind content */
+.capability-glow {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.15;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.capability-card:hover .capability-glow {
+    opacity: 0.4;
+}
+
+/* Glow color variants */
+.glow-blue { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+.glow-emerald { background: linear-gradient(135deg, #10b981, #14b8a6); }
+.glow-shift4 { background: linear-gradient(135deg, #136EF6, #6366f1); }
+.glow-orange { background: linear-gradient(135deg, #f97316, #f59e0b); }
+.glow-amber { background: linear-gradient(135deg, #f59e0b, #eab308); }
+.glow-rose { background: linear-gradient(135deg, #f43f5e, #ec4899); }
+.glow-violet { background: linear-gradient(135deg, #8b5cf6, #a855f7); }
+.glow-lime { background: linear-gradient(135deg, #84cc16, #22c55e); }
+
+/* Border color on hover - variants */
+.capability-card.border-glow-blue:hover { border-color: rgba(59, 130, 246, 0.4); }
+.capability-card.border-glow-emerald:hover { border-color: rgba(16, 185, 129, 0.4); }
+.capability-card.border-glow-shift4:hover { border-color: rgba(19, 110, 246, 0.4); }
+.capability-card.border-glow-orange:hover { border-color: rgba(249, 115, 22, 0.4); }
+.capability-card.border-glow-amber:hover { border-color: rgba(245, 158, 11, 0.4); }
+.capability-card.border-glow-rose:hover { border-color: rgba(244, 63, 94, 0.4); }
+.capability-card.border-glow-violet:hover { border-color: rgba(139, 92, 246, 0.4); }
+.capability-card.border-glow-lime:hover { border-color: rgba(132, 204, 22, 0.4); }
+
+/* Icon container enhancement */
+.capability-card .icon-wrap {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.capability-card:hover .icon-wrap {
+    transform: scale(1.1);
+}
+
+/* Subtle inner highlight on hover */
+.capability-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.capability-card:hover::before {
+    opacity: 1;
+}
+
+/* Hero card variant - larger */
+.capability-card-hero {
+    min-height: 180px;
+}
+
+.capability-card-hero:hover {
+    transform: translateY(-10px);
+    box-shadow:
+        0 35px 70px -20px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.capability-glow-hero {
+    width: 140px;
+    height: 140px;
+    top: -30px;
+    left: -30px;
+    opacity: 0.2;
+}
+
+.capability-card-hero:hover .capability-glow-hero {
+    opacity: 0.45;
+}
+
+/* Compact card variant - smaller */
+.capability-card-compact {
+    min-height: auto;
+}
+
+.capability-card-compact:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 20px 40px -15px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.capability-glow-compact {
+    width: 90px;
+    height: 90px;
+    top: -15px;
+    left: -15px;
+    filter: blur(50px);
+    opacity: 0.12;
+}
+
+.capability-card-compact:hover .capability-glow-compact {
+    opacity: 0.3;
+}
