@@ -394,6 +394,7 @@
             const [activeStep, setActiveStep] = useState(0);
             const [isPaused, setIsPaused] = useState(false);
             const [posFlow, setPosFlow] = useState('full'); // 'full' | 'quick' | 'tabs'
+            const [activeDevice, setActiveDevice] = useState('iphone'); // Track which device is currently playing for emphasis
             const videoRef = useRef(null);
             const ipadVideoRef = useRef(null);
 
@@ -518,6 +519,7 @@
                         ipadVideo.currentTime = 0;
                         ipadVideo.play();
                         setActiveStep(5); // Jump to first Fulfillment step
+                        setActiveDevice('ipad'); // Emphasize iPad
                     }
 
                     // Pause iPhone at 1:10 while iPad plays
@@ -533,6 +535,7 @@
                         ipadHasStartedRef.current = false;
                         iphoneIsPausedRef.current = false;
                         setActiveStep(0);
+                        setActiveDevice('iphone'); // Emphasize iPhone
                     }
                 };
 
@@ -563,6 +566,7 @@
                     ipadHasStartedRef.current = false;
                     iphoneIsPausedRef.current = false;
                     setActiveStep(0);
+                    setActiveDevice('iphone'); // Emphasize iPhone
                 };
 
                 iphoneVideo.addEventListener('timeupdate', handleIphoneTimeUpdate);
@@ -574,6 +578,7 @@
                 ipadVideo.pause();
                 ipadHasStartedRef.current = false;
                 iphoneIsPausedRef.current = false;
+                setActiveDevice('iphone'); // Start with iPhone emphasized
 
                 return () => {
                     iphoneVideo.removeEventListener('timeupdate', handleIphoneTimeUpdate);
@@ -699,6 +704,7 @@
                     // Navigating to Ordering step - reset refs to initial state
                     ipadHasStartedRef.current = false;
                     iphoneIsPausedRef.current = false;
+                    setActiveDevice('iphone'); // Emphasize iPhone
 
                     if (iphoneVideo) {
                         iphoneVideo.currentTime = step.time;
@@ -712,6 +718,7 @@
                     // Navigating to Fulfillment step - set iPad as started
                     ipadHasStartedRef.current = true;
                     iphoneIsPausedRef.current = true;
+                    setActiveDevice('ipad'); // Emphasize iPad
 
                     if (ipadVideo) {
                         ipadVideo.currentTime = step.time;
@@ -1095,8 +1102,8 @@
                                                     <div key={device.type} className="flex flex-col items-center">
                                                         {device.type === 'iphone' ? (
                                                             /* iPhone Frame */
-                                                            <div className="relative">
-                                                                <div className="absolute -inset-4 bg-[#136EF6] rounded-[3rem] blur-2xl opacity-25"></div>
+                                                            <div className={`relative transition-all duration-500 ${activeDevice === 'iphone' ? 'scale-100 opacity-100' : 'scale-95 opacity-50 grayscale'}`}>
+                                                                <div className={`absolute -inset-4 bg-[#136EF6] rounded-[3rem] blur-2xl transition-opacity duration-500 ${activeDevice === 'iphone' ? 'opacity-60' : 'opacity-0'}`}></div>
                                                                 <div className="relative bg-black rounded-[2.5rem] border-[6px] border-slate-800 shadow-2xl overflow-hidden p-0.5 w-56 h-[484px] lg:w-64 lg:h-[554px]">
                                                                     <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-full z-10"></div>
                                                                     <div className="w-full h-full rounded-[2rem] overflow-hidden bg-black">
@@ -1116,8 +1123,8 @@
                                                             </div>
                                                         ) : (
                                                             /* iPad Frame - Landscape */
-                                                            <div className="relative">
-                                                                <div className="absolute -inset-4 bg-[#136EF6] rounded-[2rem] blur-2xl opacity-25"></div>
+                                                            <div className={`relative transition-all duration-500 ${activeDevice === 'ipad' ? 'scale-100 opacity-100' : 'scale-95 opacity-50 grayscale'}`}>
+                                                                <div className={`absolute -inset-4 bg-[#136EF6] rounded-[2rem] blur-2xl transition-opacity duration-500 ${activeDevice === 'ipad' ? 'opacity-60' : 'opacity-0'}`}></div>
                                                                 <div className="relative bg-black rounded-[1.5rem] border-[6px] border-slate-800 shadow-2xl overflow-hidden p-0.5 w-[532px] h-[374px] lg:w-[638px] lg:h-[440px]">
                                                                     <div className="w-full h-full rounded-[1rem] overflow-hidden bg-black">
                                                                         <video
