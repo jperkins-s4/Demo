@@ -85,7 +85,7 @@
     <script type="text/babel" src="../js/shared-components.js"></script>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useMemo } = React;
 
         // --- DEMO CATEGORIES AND TABS CONFIGURATION ---
         const DEMO_CATEGORIES = [
@@ -125,33 +125,67 @@
                     layout: 'device',
                     videoWidth: 1464,
                     videoHeight: 1046,
-                    video: '../site/Fixed POS Demo.mov',
                     videoType: 'video/mp4',
                     description: 'Fixed POS',
-                    steps: [
-                        // Quick Service Flow
-                        { time: 0, label: 'Sign in with PIN or badge scan', category: 'Log In' },
-                        { time: 12, label: 'Browse menu categories', category: 'Build Order' },
-                        { time: 24, label: 'Add items to the cart', category: 'Build Order' },
-                        { time: 50, label: 'Add Order Notes and Apply Discounts', category: 'Build Order' },
-                        { time: 79, label: 'Select payment type', category: 'Take Payment' },
-                        { time: 86, label: 'Guest selects tip and Round Up (optional)', category: 'Take Payment' },
-                        { time: 98, label: 'Guest completes payment', category: 'Take Payment' },
-                        { time: 104, label: 'Guest reviews order and selects receipt method', category: 'Order Review' },
-                        // Premium In-Seat Service (Tabs) Flow
-                        { time: 120, label: 'Switch revenue center', category: 'POS Configuration' },
-                        { time: 145, label: 'Sign in to In-Seat Service', category: 'Tab Service' },
-                        { time: 154, label: 'Add items to the cart', category: 'Tab Service' },
-                        { time: 178, label: 'Select guest location (if applicable)', category: 'Tab Service' },
-                        { time: 195, label: 'Start a tab', category: 'Tab Service' },
-                        { time: 207, label: 'View and manage open tabs', category: 'Manage Tabs' },
-                        { time: 224, label: 'Add items to an existing tab', category: 'Manage Tabs' },
-                        { time: 245, label: 'Close tab and select payment type', category: 'Close Out' },
-                        { time: 255, label: 'Guest selects tip and Round Up (optional)', category: 'Close Out' },
-                        { time: 262, label: 'Guest completes payment', category: 'Close Out' },
-                        { time: 266, label: 'Guest reviews order and selects receipt method', category: 'Close Out' },
-                        { time: 278, label: 'Review closed orders and Sales Report', category: 'Close Out' }
-                    ]
+                    flows: {
+                        full: {
+                            video: '../site/Fixed POS Demo.mov',
+                            steps: [
+                                // Quick Service Flow
+                                { time: 0, label: 'Sign in with PIN or badge scan', category: 'Log In' },
+                                { time: 12, label: 'Browse menu categories', category: 'Build Order' },
+                                { time: 24, label: 'Add items to the cart', category: 'Build Order' },
+                                { time: 50, label: 'Add Order Notes and Apply Discounts', category: 'Build Order' },
+                                { time: 79, label: 'Select payment type', category: 'Take Payment' },
+                                { time: 86, label: 'Guest selects tip and Round Up (optional)', category: 'Take Payment' },
+                                { time: 98, label: 'Guest completes payment', category: 'Take Payment' },
+                                { time: 104, label: 'Guest reviews order and selects receipt method', category: 'Order Review' },
+                                // Premium In-Seat Service (Tabs) Flow
+                                { time: 120, label: 'Switch revenue center', category: 'POS Configuration' },
+                                { time: 145, label: 'Sign in to In-Seat Service', category: 'Tab Service' },
+                                { time: 154, label: 'Add items to the cart', category: 'Tab Service' },
+                                { time: 178, label: 'Select guest location (if applicable)', category: 'Tab Service' },
+                                { time: 195, label: 'Start a tab', category: 'Tab Service' },
+                                { time: 207, label: 'View and manage open tabs', category: 'Manage Tabs' },
+                                { time: 224, label: 'Add items to an existing tab', category: 'Manage Tabs' },
+                                { time: 245, label: 'Close tab and select payment type', category: 'Close Out' },
+                                { time: 255, label: 'Guest selects tip and Round Up (optional)', category: 'Close Out' },
+                                { time: 262, label: 'Guest completes payment', category: 'Close Out' },
+                                { time: 266, label: 'Guest reviews order and selects receipt method', category: 'Close Out' },
+                                { time: 278, label: 'Review closed orders and Sales Report', category: 'Close Out' }
+                            ]
+                        },
+                        quick: {
+                            video: '../site/Quick Service Demo.mov',
+                            steps: [
+                                { time: 0, label: 'Sign in with PIN or badge scan', category: 'Log In' },
+                                { time: 12, label: 'Browse menu categories', category: 'Build Order' },
+                                { time: 24, label: 'Add items to the cart', category: 'Build Order' },
+                                { time: 50, label: 'Add Order Notes and Apply Discounts', category: 'Build Order' },
+                                { time: 79, label: 'Select payment type', category: 'Take Payment' },
+                                { time: 86, label: 'Guest selects tip and Round Up (optional)', category: 'Take Payment' },
+                                { time: 98, label: 'Guest completes payment', category: 'Take Payment' },
+                                { time: 104, label: 'Guest reviews order and selects receipt method', category: 'Order Review' }
+                            ]
+                        },
+                        tabs: {
+                            video: '../site/Tabs Demo.mov',
+                            steps: [
+                                { time: 0, label: 'Switch revenue center', category: 'POS Configuration' },
+                                { time: 25, label: 'Sign in to In-Seat Service', category: 'Tab Service' },
+                                { time: 34, label: 'Add items to the cart', category: 'Tab Service' },
+                                { time: 58, label: 'Select guest location (if applicable)', category: 'Tab Service' },
+                                { time: 75, label: 'Start a tab', category: 'Tab Service' },
+                                { time: 87, label: 'View and manage open tabs', category: 'Manage Tabs' },
+                                { time: 104, label: 'Add items to an existing tab', category: 'Manage Tabs' },
+                                { time: 125, label: 'Close tab and select payment type', category: 'Close Out' },
+                                { time: 135, label: 'Guest selects tip and Round Up (optional)', category: 'Close Out' },
+                                { time: 142, label: 'Guest completes payment', category: 'Close Out' },
+                                { time: 146, label: 'Guest reviews order and selects receipt method', category: 'Close Out' },
+                                { time: 158, label: 'Review closed orders and Sales Report', category: 'Close Out' }
+                            ]
+                        }
+                    }
                 },
                 {
                     id: 'mobile-pos',
@@ -359,6 +393,7 @@
             const [activeTab, setActiveTab] = useState('fixed-pos');
             const [activeStep, setActiveStep] = useState(0);
             const [isPaused, setIsPaused] = useState(false);
+            const [posFlow, setPosFlow] = useState('full'); // 'full' | 'quick' | 'tabs'
             const videoRef = useRef(null);
             const ipadVideoRef = useRef(null);
 
@@ -373,6 +408,21 @@
             // Get current tab config
             const currentTab = currentCategoryTabs.find(t => t.id === activeTab);
 
+            // Get current video and steps based on flow selection (for fixed-pos) - memoized to prevent re-renders
+            const currentFlowData = useMemo(() => {
+                if (activeTab === 'fixed-pos' && currentTab?.flows) {
+                    const flow = currentTab.flows[posFlow] || currentTab.flows.full;
+                    return {
+                        video: flow.video,
+                        steps: flow.steps
+                    };
+                }
+                return {
+                    video: currentTab?.video,
+                    steps: currentTab?.steps || []
+                };
+            }, [activeTab, posFlow, currentTab]);
+
             // When category changes, select first tab in that category
             useEffect(() => {
                 const tabs = DEMO_TABS[activeCategory];
@@ -384,11 +434,12 @@
             // Sync steps with video timeline (for non-dual layouts)
             useEffect(() => {
                 const video = videoRef.current;
-                if (!video || !currentTab?.video || currentTab?.layout === 'dual') return;
+                const hasVideo = currentFlowData.video || currentTab?.video;
+                if (!video || !hasVideo || currentTab?.layout === 'dual') return;
 
                 const handleTimeUpdate = () => {
                     const time = video.currentTime;
-                    const steps = currentTab.steps;
+                    const steps = currentFlowData.steps;
 
                     // Find the current step based on time
                     let currentStepIndex = 0;
@@ -403,11 +454,12 @@
 
                 video.addEventListener('timeupdate', handleTimeUpdate);
                 return () => video.removeEventListener('timeupdate', handleTimeUpdate);
-            }, [activeTab]);
+            }, [activeTab, posFlow]);
 
             // Reset step and video when tab changes
             useEffect(() => {
                 setActiveStep(0);
+                setPosFlow('full'); // Reset to full demo when switching tabs
                 if (videoRef.current) {
                     videoRef.current.currentTime = 0;
                 }
@@ -605,11 +657,12 @@
 
             // Navigate to previous/next step
             const goToStep = (stepIndex) => {
-                if (!currentTab?.steps || stepIndex < 0 || stepIndex >= currentTab.steps.length) return;
+                const steps = currentFlowData.steps;
+                if (!steps || stepIndex < 0 || stepIndex >= steps.length) return;
 
                 const iphoneVideo = videoRef.current;
                 const ipadVideo = ipadVideoRef.current;
-                const step = currentTab.steps[stepIndex];
+                const step = steps[stepIndex];
 
                 // Handle browser layout (single video, no device property)
                 if (currentTab.layout === 'browser') {
@@ -633,7 +686,7 @@
 
                 // Handle device layout (single video, no device property)
                 if (currentTab.layout === 'device') {
-                    if (iphoneVideo && currentTab.video) {
+                    if (iphoneVideo && currentFlowData.video) {
                         iphoneVideo.currentTime = step.time;
                         if (!isPaused) iphoneVideo.play();
                     }
@@ -675,7 +728,12 @@
             };
 
             const goToPrevStep = () => goToStep(activeStep - 1);
-            const goToNextStep = () => goToStep(activeStep + 1);
+            const goToNextStep = () => {
+                const steps = currentFlowData.steps;
+                if (activeStep < steps.length - 1) {
+                    goToStep(activeStep + 1);
+                }
+            };
 
             return (
                 <div className="min-h-screen flex flex-col bg-gradient-to-br from-shift4-midnight-blue via-slate-900 to-shift4-night-black">
@@ -768,7 +826,40 @@
                     </header>
 
                     {/* Main Content */}
-                    <main id="demos-content" className="flex-1 flex flex-col">
+                    <main id="demos-content" className="flex-1 flex flex-col relative">
+                        {/* Flow Toggle for Fixed POS - top left corner */}
+                        {activeTab === 'fixed-pos' && (
+                            <div className="absolute top-4 left-4 z-20">
+                                <div className="flex items-center bg-slate-800/90 backdrop-blur-sm rounded-lg p-1 border border-slate-700/50">
+                                    {[
+                                        { id: 'full', label: 'Full Demo' },
+                                        { id: 'quick', label: 'Quick Service' },
+                                        { id: 'tabs', label: 'Tabs' }
+                                    ].map((flow) => (
+                                        <button
+                                            key={flow.id}
+                                            onClick={() => {
+                                                setPosFlow(flow.id);
+                                                setActiveStep(0);
+                                                if (videoRef.current) {
+                                                    videoRef.current.currentTime = 0;
+                                                }
+                                            }}
+                                            className={`
+                                                px-3 py-1.5 rounded-md text-xs font-medium
+                                                transition-all duration-150
+                                                ${posFlow === flow.id
+                                                    ? 'bg-[#136EF6] text-white shadow-lg'
+                                                    : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                                                }
+                                            `}
+                                        >
+                                            {flow.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* Steps Timeline - Carousel for dual layout, standard for others */}
                         <div className="flex-shrink-0">
@@ -779,7 +870,7 @@
                                         {/* Category Label */}
                                         <div className="mb-3 h-5 relative">
                                             <span className="text-xs font-semibold uppercase tracking-widest text-sky-400">
-                                                {currentTab.steps[activeStep]?.category}
+                                                {currentFlowData.steps[activeStep]?.category}
                                             </span>
                                         </div>
 
@@ -794,7 +885,7 @@
                                                     transform: `translateY(-50%) translateX(calc(-${activeStep * 340}px - 170px))`
                                                 }}
                                             >
-                                                {currentTab.steps.map((step, index) => {
+                                                {currentFlowData.steps.map((step, index) => {
                                                     const isActive = index === activeStep;
                                                     const isAdjacent = Math.abs(index - activeStep) === 1;
 
@@ -833,7 +924,7 @@
 
                                         {/* Progress Dots */}
                                         <div className="flex items-center gap-1.5 mt-3">
-                                            {currentTab.steps.map((step, index) => (
+                                            {currentFlowData.steps.map((step, index) => (
                                                 <div
                                                     key={index}
                                                     onClick={() => goToStep(index)}
@@ -933,8 +1024,8 @@
                                     {/* Next Step */}
                                     <button
                                         onClick={goToNextStep}
-                                        disabled={activeStep === (currentTab?.steps?.length || 1) - 1}
-                                        className={`w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 flex items-center justify-center transition-all duration-200 ${activeStep === (currentTab?.steps?.length || 1) - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:scale-110'}`}
+                                        disabled={activeStep === (currentFlowData.steps?.length || 1) - 1}
+                                        className={`w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700/80 border border-slate-600/50 flex items-center justify-center transition-all duration-200 ${activeStep === (currentFlowData.steps?.length || 1) - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:scale-110'}`}
                                         title="Next Step"
                                     >
                                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -995,7 +1086,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                ) : (currentTab?.video || currentTab?.devices) ? (
+                                ) : (currentTab?.video || currentTab?.devices || currentTab?.flows) ? (
                                     <div className="flex flex-col items-center">
                                         {currentTab.layout === 'dual' ? (
                                             /* Dual: iPhone + iPad side by side */
@@ -1059,14 +1150,14 @@
                                                 >
                                                     <video
                                                         ref={videoRef}
-                                                        key={currentTab.id}
+                                                        key={`${currentTab.id}-${posFlow}`}
                                                         autoPlay
                                                         muted
                                                         loop
                                                         playsInline
                                                         className="w-full h-full object-cover"
                                                     >
-                                                        <source src={currentTab.video} type={currentTab.videoType} />
+                                                        <source src={currentFlowData.video} type={currentTab.videoType} />
                                                     </video>
                                                 </div>
                                                 <p className="text-center text-slate-500 text-sm mt-4">{currentTab.description}</p>
