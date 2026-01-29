@@ -148,6 +148,11 @@
             // Capability modal state
             const [activeCapability, setActiveCapability] = useState(null);
             const [capabilityClosing, setCapabilityClosing] = useState(false);
+            const [isNavigating, setIsNavigating] = useState(false);
+            const [navAnimation, setNavAnimation] = useState(''); // 'out', 'in', or ''
+            const [contentKey, setContentKey] = useState(0); // Increments to replay content animations
+            const [caseStudiesKey, setCaseStudiesKey] = useState(0); // Increments to replay Case Studies animations
+            const [guestJourneysKey, setGuestJourneysKey] = useState(0); // Increments to replay Guest Journeys animations
 
             // Case Studies modal state
             const [caseStudiesOpen, setCaseStudiesOpen] = useState(false);
@@ -1252,8 +1257,13 @@
                                         const glowClass = getGlowClasses(cap.glowColor);
                                         const handleClick = () => {
                                             if (cap.isModal) {
-                                                if (cap.modalType === 'case-studies') setCaseStudiesOpen(true);
-                                                else if (cap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                                if (cap.modalType === 'case-studies') {
+                                                    setCaseStudiesKey(k => k + 1);
+                                                    setCaseStudiesOpen(true);
+                                                } else if (cap.modalType === 'guest-journeys') {
+                                                    setGuestJourneysKey(k => k + 1);
+                                                    setGuestJourneysOpen(true);
+                                                }
                                             } else {
                                                 setActiveCapability(cap);
                                             }
@@ -1281,8 +1291,13 @@
                                         const glowClass = getGlowClasses(cap.glowColor);
                                         const handleClick = () => {
                                             if (cap.isModal) {
-                                                if (cap.modalType === 'case-studies') setCaseStudiesOpen(true);
-                                                else if (cap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                                if (cap.modalType === 'case-studies') {
+                                                    setCaseStudiesKey(k => k + 1);
+                                                    setCaseStudiesOpen(true);
+                                                } else if (cap.modalType === 'guest-journeys') {
+                                                    setGuestJourneysKey(k => k + 1);
+                                                    setGuestJourneysOpen(true);
+                                                }
                                             } else {
                                                 setActiveCapability(cap);
                                             }
@@ -1323,16 +1338,34 @@
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            if (isNavigating) return;
                                             const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
                                             const prevIndex = (currentIndex - 1 + CAPABILITIES_DATA.length) % CAPABILITIES_DATA.length;
                                             const prevCap = CAPABILITIES_DATA[prevIndex];
-                                            if (prevCap.isModal) {
-                                                setActiveCapability(null);
-                                                if (prevCap.modalType === 'case-studies') setCaseStudiesOpen(true);
-                                                else if (prevCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
-                                            } else {
-                                                setActiveCapability(prevCap);
-                                            }
+
+                                            // Trigger exit animation, then swap content
+                                            setIsNavigating(true);
+                                            setNavAnimation('out');
+                                            setTimeout(() => {
+                                                if (prevCap.isModal) {
+                                                    setActiveCapability(null);
+                                                    setIsNavigating(false);
+                                                    setNavAnimation('');
+                                                    if (prevCap.modalType === 'case-studies') {
+                                                        setCaseStudiesKey(k => k + 1);
+                                                        setCaseStudiesOpen(true);
+                                                    } else if (prevCap.modalType === 'guest-journeys') {
+                                                        setGuestJourneysKey(k => k + 1);
+                                                        setGuestJourneysOpen(true);
+                                                    }
+                                                } else {
+                                                    setActiveCapability(prevCap);
+                                                    setContentKey(k => k + 1);
+                                                    setNavAnimation('in');
+                                                    setIsNavigating(false);
+                                                    setTimeout(() => setNavAnimation(''), 200);
+                                                }
+                                            }, 150);
                                         }}
                                         className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
                                         aria-label="Previous capability"
@@ -1344,7 +1377,9 @@
 
                                     {/* Modal Panel */}
                                     <div
-                                        className="relative max-w-xl w-full rounded-3xl overflow-hidden border border-white/15"
+                                        className={`relative max-w-xl w-full rounded-3xl overflow-hidden border border-white/15 ${
+                                            navAnimation === 'out' ? 'animate-nav-out' : navAnimation === 'in' ? 'animate-nav-in' : ''
+                                        }`}
                                         style={{
                                             background: 'linear-gradient(165deg, rgba(51, 65, 85, 0.97) 0%, rgba(30, 41, 59, 0.98) 100%)',
                                             boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
@@ -1375,7 +1410,7 @@
                                     </button>
 
                                     {/* Content */}
-                                    <div className="relative p-8 pt-10">
+                                    <div key={contentKey} className="relative p-8 pt-10">
                                         {/* Header: Icon + Title side by side */}
                                         <div className="flex items-center gap-5 mb-5">
                                             <div className={`modal-icon-entrance modal-icon-float relative w-16 h-16 rounded-2xl bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center shadow-xl flex-shrink-0`}>
@@ -1430,16 +1465,34 @@
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
+                                            if (isNavigating) return;
                                             const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
                                             const nextIndex = (currentIndex + 1) % CAPABILITIES_DATA.length;
                                             const nextCap = CAPABILITIES_DATA[nextIndex];
-                                            if (nextCap.isModal) {
-                                                setActiveCapability(null);
-                                                if (nextCap.modalType === 'case-studies') setCaseStudiesOpen(true);
-                                                else if (nextCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
-                                            } else {
-                                                setActiveCapability(nextCap);
-                                            }
+
+                                            // Trigger exit animation, then swap content
+                                            setIsNavigating(true);
+                                            setNavAnimation('out');
+                                            setTimeout(() => {
+                                                if (nextCap.isModal) {
+                                                    setActiveCapability(null);
+                                                    setIsNavigating(false);
+                                                    setNavAnimation('');
+                                                    if (nextCap.modalType === 'case-studies') {
+                                                        setCaseStudiesKey(k => k + 1);
+                                                        setCaseStudiesOpen(true);
+                                                    } else if (nextCap.modalType === 'guest-journeys') {
+                                                        setGuestJourneysKey(k => k + 1);
+                                                        setGuestJourneysOpen(true);
+                                                    }
+                                                } else {
+                                                    setActiveCapability(nextCap);
+                                                    setContentKey(k => k + 1);
+                                                    setNavAnimation('in');
+                                                    setIsNavigating(false);
+                                                    setTimeout(() => setNavAnimation(''), 200);
+                                                }
+                                            }, 150);
                                         }}
                                         className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
                                         aria-label="Next capability"
@@ -1472,9 +1525,13 @@
                                             const prevCap = CAPABILITIES_DATA[prevIndex];
                                             setCaseStudiesOpen(false);
                                             if (prevCap.isModal) {
-                                                if (prevCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                                if (prevCap.modalType === 'guest-journeys') {
+                                                    setGuestJourneysKey(k => k + 1);
+                                                    setGuestJourneysOpen(true);
+                                                }
                                             } else {
                                                 setActiveCapability(prevCap);
+                                                setContentKey(k => k + 1);
                                             }
                                         }}
                                         className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
@@ -1509,15 +1566,15 @@
                                         </button>
 
                                     {/* Content */}
-                                    <div className="p-8">
+                                    <div key={caseStudiesKey} className="p-8">
                                         {/* Header */}
                                         <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg">
+                                            <div className="modal-icon-entrance modal-icon-float w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg">
                                                 <Icons.FileText className="w-6 h-6 text-white" />
                                             </div>
                                             <div>
-                                                <h3 className="text-2xl font-bold text-white">Case Studies</h3>
-                                                <p className="text-slate-400 text-sm">Proven wallet configurations for common venue scenarios</p>
+                                                <h3 className="modal-title-entrance text-2xl font-bold text-white">Case Studies</h3>
+                                                <p className="modal-description-entrance text-slate-400 text-sm">Proven wallet configurations for common venue scenarios</p>
                                             </div>
                                         </div>
 
@@ -1529,7 +1586,7 @@
                                                     <button
                                                         key={study.id}
                                                         onClick={() => setActiveCaseStudy(study)}
-                                                        className="group relative text-left p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                                        className="case-study-card group relative text-left p-5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                                                     >
                                                         {/* Header */}
                                                         <div className="flex items-center gap-3 mb-2">
@@ -1571,9 +1628,13 @@
                                             const nextCap = CAPABILITIES_DATA[nextIndex];
                                             setCaseStudiesOpen(false);
                                             if (nextCap.isModal) {
-                                                if (nextCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                                if (nextCap.modalType === 'guest-journeys') {
+                                                    setGuestJourneysKey(k => k + 1);
+                                                    setGuestJourneysOpen(true);
+                                                }
                                             } else {
                                                 setActiveCapability(nextCap);
+                                                setContentKey(k => k + 1);
                                             }
                                         }}
                                         className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
@@ -1697,9 +1758,13 @@
                                             const prevCap = CAPABILITIES_DATA[prevIndex];
                                             setGuestJourneysOpen(false);
                                             if (prevCap.isModal) {
-                                                if (prevCap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                                if (prevCap.modalType === 'case-studies') {
+                                                    setCaseStudiesKey(k => k + 1);
+                                                    setCaseStudiesOpen(true);
+                                                }
                                             } else {
                                                 setActiveCapability(prevCap);
+                                                setContentKey(k => k + 1);
                                             }
                                         }}
                                         className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
@@ -1734,15 +1799,15 @@
                                         </button>
 
                                     {/* Content */}
-                                    <div className="p-8">
+                                    <div key={guestJourneysKey} className="p-8">
                                         {/* Header */}
                                         <div className="flex items-center gap-4 mb-6">
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg">
+                                            <div className="modal-icon-entrance modal-icon-float w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg">
                                                 <Icons.Activity className="w-6 h-6 text-white" />
                                             </div>
                                             <div>
-                                                <h3 className="text-2xl font-bold text-white">Guest Journeys</h3>
-                                                <p className="text-slate-400 text-sm">End-to-end guest experience flows</p>
+                                                <h3 className="modal-title-entrance text-2xl font-bold text-white">Guest Journeys</h3>
+                                                <p className="modal-description-entrance text-slate-400 text-sm">End-to-end guest experience flows</p>
                                             </div>
                                         </div>
 
@@ -1753,7 +1818,7 @@
                                                 return (
                                                     <div
                                                         key={journey.id}
-                                                        className="relative p-5 rounded-xl bg-white/5 border border-white/10"
+                                                        className="journey-card relative p-5 rounded-xl bg-white/5 border border-white/10"
                                                     >
                                                         {/* Header */}
                                                         <div className="flex items-center gap-3 mb-4">
@@ -1804,9 +1869,13 @@
                                             const nextCap = CAPABILITIES_DATA[nextIndex];
                                             setGuestJourneysOpen(false);
                                             if (nextCap.isModal) {
-                                                if (nextCap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                                if (nextCap.modalType === 'case-studies') {
+                                                    setCaseStudiesKey(k => k + 1);
+                                                    setCaseStudiesOpen(true);
+                                                }
                                             } else {
                                                 setActiveCapability(nextCap);
+                                                setContentKey(k => k + 1);
                                             }
                                         }}
                                         className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
