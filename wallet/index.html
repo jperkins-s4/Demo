@@ -161,6 +161,13 @@
             // Guest Journeys modal state
             const [guestJourneysOpen, setGuestJourneysOpen] = useState(false);
 
+            // Pass feature modal state
+            const [activePassFeature, setActivePassFeature] = useState(null);
+            const [passFeatureClosing, setPassFeatureClosing] = useState(false);
+            const [passFeatureNavAnimation, setPassFeatureNavAnimation] = useState('');
+            const [passFeatureContentKey, setPassFeatureContentKey] = useState(0);
+            const [isPassFeatureNavigating, setIsPassFeatureNavigating] = useState(false);
+
             // Capabilities data - categorized as 'main' (top row) or 'feature' (bottom rows)
             const CAPABILITIES_DATA = [
                 // Main Functionality (3 large tiles)
@@ -322,6 +329,78 @@
                     glowColor: 'violet',
                     isModal: true,
                     modalType: 'guest-journeys'
+                }
+            ];
+
+            // Pass Features data - for bottom four tiles that open modals
+            const PASS_FEATURES_DATA = [
+                {
+                    id: 'faster-checkout',
+                    icon: Icons.Zap,
+                    title: 'Faster Checkout',
+                    oneLiner: 'Apply discounts, stored value, and card-on-file automatically at checkout.',
+                    gradientFrom: 'from-emerald-500',
+                    gradientTo: 'to-teal-500',
+                    glowColor: 'emerald',
+                    phoneImage: '../site/pass1.png',
+                    details: [
+                        'Automatic loyalty discount application',
+                        'Stored value balance displayed and applied',
+                        'Card-on-file for one-tap payments',
+                        'Fewer taps = faster lines',
+                        'Works at POS and kiosks'
+                    ]
+                },
+                {
+                    id: 'right-place-right-time',
+                    icon: Icons.Smartphone,
+                    title: 'Right Place, Right Time',
+                    oneLiner: 'The pass appears automatically at arrival and in-venue moments.',
+                    gradientFrom: 'from-emerald-500',
+                    gradientTo: 'to-teal-600',
+                    glowColor: 'emerald',
+                    phoneImage: '../site/pass2.png',
+                    details: [
+                        'Geofence triggers pass on lock screen',
+                        'Location-aware notifications',
+                        'Real-time balance and benefits visible',
+                        'Automatic surfacing at key moments',
+                        'No app required - native wallet integration'
+                    ]
+                },
+                {
+                    id: 'targeted-offers',
+                    icon: Icons.Gift,
+                    title: 'Targeted Offers',
+                    oneLiner: 'Trigger promotions by segment, event, and location.',
+                    gradientFrom: 'from-rose-500',
+                    gradientTo: 'to-pink-600',
+                    glowColor: 'rose',
+                    phoneImage: '../site/pass5.png',
+                    details: [
+                        'Segment-based targeting (VIP, new guest, etc.)',
+                        'Event-triggered promotions',
+                        'Location-based offers via geofence',
+                        'Drive merch and concession sales',
+                        'Timely rewards, upgrades, and reminders'
+                    ]
+                },
+                {
+                    id: 'realtime-updates',
+                    icon: Icons.FileText,
+                    title: 'Real-Time Updates',
+                    oneLiner: 'Keep guests informed with instant confirmations and balance changes.',
+                    gradientFrom: 'from-rose-500',
+                    gradientTo: 'to-pink-600',
+                    glowColor: 'rose',
+                    phoneImage: '../site/pass3.png',
+                    details: [
+                        'Instant purchase confirmations',
+                        'Live balance updates after transactions',
+                        'Credit and expiration notifications',
+                        'Redemption receipts delivered automatically',
+                        'Push notifications enabled by default'
+                    ]
                 }
             ];
 
@@ -514,6 +593,38 @@
                 return () => document.removeEventListener('keydown', handleKeyDown);
             }, [activeCapability]);
 
+            // Close pass feature modal with animation
+            const closePassFeatureModal = () => {
+                setPassFeatureClosing(true);
+                setTimeout(() => {
+                    setActivePassFeature(null);
+                    setPassFeatureClosing(false);
+                }, 200);
+            };
+
+            // Handle keyboard navigation for pass feature modal
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (!activePassFeature) return;
+
+                    if (e.key === 'Escape') {
+                        closePassFeatureModal();
+                    } else if (e.key === 'ArrowLeft') {
+                        const currentIndex = PASS_FEATURES_DATA.findIndex(f => f.id === activePassFeature.id);
+                        const prevIndex = (currentIndex - 1 + PASS_FEATURES_DATA.length) % PASS_FEATURES_DATA.length;
+                        setPassFeatureContentKey(k => k + 1);
+                        setActivePassFeature(PASS_FEATURES_DATA[prevIndex]);
+                    } else if (e.key === 'ArrowRight') {
+                        const currentIndex = PASS_FEATURES_DATA.findIndex(f => f.id === activePassFeature.id);
+                        const nextIndex = (currentIndex + 1) % PASS_FEATURES_DATA.length;
+                        setPassFeatureContentKey(k => k + 1);
+                        setActivePassFeature(PASS_FEATURES_DATA[nextIndex]);
+                    }
+                };
+                document.addEventListener('keydown', handleKeyDown);
+                return () => document.removeEventListener('keydown', handleKeyDown);
+            }, [activePassFeature]);
+
             // Amazon JWO drawer state
             const [jwoDrawerOpen, setJwoDrawerOpen] = useState(false);
 
@@ -643,6 +754,16 @@
                 } else {
                     setActiveBrowserTab(prev => ({ ...prev, [section]: tabIndex }));
                 }
+            };
+
+            // Handler to open Pass Design modal from Passes section tile
+            const openPassDesignModal = () => {
+                setActiveLoyaltyCategory('passes');
+                setActiveBrowserTab(prev => ({
+                    ...prev,
+                    'loyalty-app': { ...prev['loyalty-app'], passes: 1 }
+                }));
+                setExpandedTab('loyalty-app');
             };
 
             // Helper to get current tab data for any section (handles hierarchical structure)
@@ -1958,7 +2079,12 @@
                                         </div>
 
                                         {/* Pass Builder */}
-                                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group transition-all duration-300 hover:border-white/20">
+                                        <div
+                                            onClick={openPassDesignModal}
+                                            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && openPassDesignModal()}
+                                            role="button"
+                                            tabIndex={0}
+                                            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-300 hover:border-violet-500/40 hover:shadow-[0_0_40px_rgba(139,92,246,0.15)] focus:outline-none focus:ring-2 focus:ring-violet-500/50">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0 group-hover:scale-110 transition-all duration-300">
@@ -1970,13 +2096,17 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Measure adoption and redemptions to optimize campaigns and benefits.</p>
                                                 </div>
                                             </div>
+                                            {/* Expand indicator */}
+                                            <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-violet-500/20 flex items-center justify-center group-hover:bg-violet-500/30 transition-colors duration-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-violet-400"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                                            </div>
                                         </div>
                                     </div>
 
                                     {/* Row 2: 2 Feature tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        {/* Frictionless Payments */}
-                                        <div onClick={() => setPassSlide(1)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        {/* Faster Checkout */}
+                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[0])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -1988,11 +2118,14 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Fewer taps at the stand means faster lines and higher throughput.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            {/* Expand indicator */}
+                                            <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/30 transition-colors duration-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                                            </div>
                                         </div>
 
-                                        {/* Optimized Usability */}
-                                        <div onClick={() => setPassSlide(0)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
+                                        {/* Right Place, Right Time */}
+                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[1])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-emerald-500/40 hover:shadow-[0_0_40px_rgba(16,185,129,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2004,14 +2137,17 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Location-aware access with real-time balance and benefits.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-emerald-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            {/* Expand indicator */}
+                                            <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center group-hover:bg-emerald-500/30 transition-colors duration-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-400"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                                            </div>
                                         </div>
                                     </div>
 
                                     {/* Row 3: 2 Notification tiles */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        {/* Campaign Notifications */}
-                                        <div onClick={() => setPassSlide(5)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        {/* Targeted Offers */}
+                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[2])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2023,11 +2159,14 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Drive merch and concessions with timely rewards, upgrades, and reminders.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            {/* Expand indicator */}
+                                            <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center group-hover:bg-rose-500/30 transition-colors duration-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-rose-400"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                                            </div>
                                         </div>
 
-                                        {/* Transactional Notifications */}
-                                        <div onClick={() => setPassSlide(2)} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
+                                        {/* Real-Time Updates */}
+                                        <div onClick={() => setActivePassFeature(PASS_FEATURES_DATA[3])} className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-white/10 px-6 py-6 group cursor-pointer transition-all duration-500 hover:border-rose-500/40 hover:shadow-[0_0_40px_rgba(244,63,94,0.15)]">
                                             <div className="absolute -top-20 -right-20 w-40 h-40 bg-rose-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                                             <div className="flex items-start gap-4">
                                                 <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-500/25 flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -2039,7 +2178,10 @@
                                                     <p className="text-slate-400 text-sm leading-relaxed">Receipts, redemptions, credits, and expirations delivered automatically.</p>
                                                 </div>
                                             </div>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute bottom-4 left-5 text-slate-500 opacity-40 group-hover:opacity-100 group-hover:text-rose-400 group-hover:-translate-x-1 transition-all duration-300"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                                            {/* Expand indicator */}
+                                            <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center group-hover:bg-rose-500/30 transition-colors duration-300">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-rose-400"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -2653,6 +2795,153 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Pass Feature Modal */}
+                    {activePassFeature && (
+                        <div
+                            className={`fixed inset-0 z-[100] flex items-center justify-center p-4 ${passFeatureClosing ? 'animate-capability-backdrop-out' : 'animate-capability-backdrop-in'}`}
+                            onClick={closePassFeatureModal}
+                        >
+                            {/* Backdrop - translucent to show content behind */}
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+
+                            {/* Modal Content with Nav Arrows */}
+                            <div className={`relative flex items-center gap-6 max-w-6xl w-full ${passFeatureClosing ? 'animate-capability-modal-out' : 'animate-capability-modal-in'}`}>
+                                {/* Previous button */}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (isPassFeatureNavigating) return;
+                                        const currentIndex = PASS_FEATURES_DATA.findIndex(f => f.id === activePassFeature.id);
+                                        const prevIndex = (currentIndex - 1 + PASS_FEATURES_DATA.length) % PASS_FEATURES_DATA.length;
+                                        const prevFeature = PASS_FEATURES_DATA[prevIndex];
+
+                                        setIsPassFeatureNavigating(true);
+                                        setPassFeatureNavAnimation('out');
+                                        setTimeout(() => {
+                                            setActivePassFeature(prevFeature);
+                                            setPassFeatureContentKey(k => k + 1);
+                                            setPassFeatureNavAnimation('in');
+                                            setIsPassFeatureNavigating(false);
+                                            setTimeout(() => setPassFeatureNavAnimation(''), 200);
+                                        }, 150);
+                                    }}
+                                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
+                                    aria-label="Previous feature"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 -translate-x-0.5">
+                                        <polyline points="15 18 9 12 15 6"></polyline>
+                                    </svg>
+                                </button>
+
+                                {/* Modal Panel */}
+                                <div
+                                    className={`flex-1 flex rounded-3xl overflow-hidden border border-white/15 ${
+                                        passFeatureNavAnimation === 'out' ? 'animate-nav-out' : passFeatureNavAnimation === 'in' ? 'animate-nav-in' : ''
+                                    }`}
+                                    style={{
+                                        background: 'linear-gradient(165deg, rgba(51, 65, 85, 0.97) 0%, rgba(30, 41, 59, 0.98) 100%)',
+                                        boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                                        minHeight: '820px'
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    role="dialog"
+                                    aria-modal="true"
+                                    aria-labelledby="pass-feature-modal-title"
+                                >
+                                    {/* Left: Phone Screenshot */}
+                                    <div key={`phone-${passFeatureContentKey}`} className="w-[45%] p-4 flex items-center justify-center relative">
+                                        <div className="modal-icon-entrance">
+                                            <img
+                                                src={activePassFeature.phoneImage}
+                                                alt={activePassFeature.title}
+                                                className="h-[780px] w-auto object-contain rounded-[2.5rem] shadow-2xl"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Right: Content */}
+                                    <div key={`content-${passFeatureContentKey}`} className="w-[55%] p-10 relative">
+                                        {/* Accent bar at top of content area */}
+                                        <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${activePassFeature.gradientFrom} ${activePassFeature.gradientTo}`}></div>
+
+                                        {/* Ambient glow effect */}
+                                        <div className={`modal-ambient-glow absolute -top-32 -right-32 w-72 h-72 bg-gradient-to-br ${activePassFeature.gradientFrom} ${activePassFeature.gradientTo} rounded-full blur-3xl opacity-20`}></div>
+
+                                        {/* Close button */}
+                                        <button
+                                            onClick={closePassFeatureModal}
+                                            className="absolute top-5 right-5 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/20 flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:scale-110 active:scale-95"
+                                            aria-label="Close modal"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+
+                                        {/* Header: Icon + Title side by side */}
+                                        <div className="flex items-center gap-5 mb-6 pt-6">
+                                            <div className={`modal-icon-entrance modal-icon-float relative w-16 h-16 rounded-2xl bg-gradient-to-br ${activePassFeature.gradientFrom} ${activePassFeature.gradientTo} flex items-center justify-center shadow-xl flex-shrink-0`}>
+                                                <div className={`modal-icon-glow rounded-2xl bg-gradient-to-br ${activePassFeature.gradientFrom} ${activePassFeature.gradientTo}`}></div>
+                                                <activePassFeature.icon className="w-8 h-8 text-white relative z-10" />
+                                            </div>
+                                            <h3 id="pass-feature-modal-title" className="modal-title-entrance text-3xl font-bold text-white">{activePassFeature.title}</h3>
+                                        </div>
+
+                                        {/* One-liner */}
+                                        <p className="modal-description-entrance text-slate-300 text-lg mb-8 leading-relaxed">{activePassFeature.oneLiner}</p>
+
+                                        {/* Divider */}
+                                        <div className={`modal-divider h-px bg-gradient-to-r ${activePassFeature.gradientFrom} via-white/20 ${activePassFeature.gradientTo} mb-8`}></div>
+
+                                        {/* Details list */}
+                                        {activePassFeature.details && (
+                                            <ul className="space-y-4">
+                                                {activePassFeature.details.map((detail, idx) => (
+                                                    <li key={idx} className="capability-detail-item flex items-start gap-4" style={{animationDelay: `${idx * 80}ms`}}>
+                                                        <div className={`detail-checkmark w-6 h-6 rounded-full bg-gradient-to-br ${activePassFeature.gradientFrom} ${activePassFeature.gradientTo} flex items-center justify-center flex-shrink-0 mt-0.5 shadow-lg`}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                                            </svg>
+                                                        </div>
+                                                        <span className="text-slate-200 text-base leading-relaxed">{detail}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Next button */}
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (isPassFeatureNavigating) return;
+                                        const currentIndex = PASS_FEATURES_DATA.findIndex(f => f.id === activePassFeature.id);
+                                        const nextIndex = (currentIndex + 1) % PASS_FEATURES_DATA.length;
+                                        const nextFeature = PASS_FEATURES_DATA[nextIndex];
+
+                                        setIsPassFeatureNavigating(true);
+                                        setPassFeatureNavAnimation('out');
+                                        setTimeout(() => {
+                                            setActivePassFeature(nextFeature);
+                                            setPassFeatureContentKey(k => k + 1);
+                                            setPassFeatureNavAnimation('in');
+                                            setIsPassFeatureNavigating(false);
+                                            setTimeout(() => setPassFeatureNavAnimation(''), 200);
+                                        }, 150);
+                                    }}
+                                    className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
+                                    aria-label="Next feature"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 translate-x-0.5">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     )}
