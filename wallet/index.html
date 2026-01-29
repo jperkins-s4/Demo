@@ -966,7 +966,209 @@
                         </div>
 
                         {/* Snap scroll override - sections snap flush to top */}
-                        <style>{`section[id] { scroll-margin-top: 0; }`}</style>
+                        <style>{`
+                            section[id] { scroll-margin-top: 0; }
+
+                            /* ========== BASE CARD STYLING ========== */
+                            .capability-card {
+                                background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+                                border: 1px solid rgba(148, 163, 184, 0.12);
+                                backdrop-filter: blur(12px);
+                                -webkit-backdrop-filter: blur(12px);
+                                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                                position: relative;
+                                box-shadow:
+                                    0 4px 24px -4px rgba(0, 0, 0, 0.3),
+                                    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+                            }
+
+                            .capability-card::before {
+                                content: '';
+                                position: absolute;
+                                inset: 0;
+                                border-radius: inherit;
+                                padding: 1px;
+                                background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, transparent 100%);
+                                -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                                mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                                -webkit-mask-composite: xor;
+                                mask-composite: exclude;
+                                opacity: 0.5;
+                                transition: opacity 0.4s ease;
+                            }
+
+                            .capability-card:hover {
+                                border-color: rgba(148, 163, 184, 0.25);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(0, 0, 0, 0.4),
+                                    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+                            }
+
+                            .capability-card:hover::before {
+                                opacity: 1;
+                            }
+
+                            /* ========== HERO CARDS (3 main) ========== */
+                            .capability-card-hero {
+                                min-height: 200px;
+                            }
+
+                            .capability-card-hero:hover {
+                                transform: translateY(-6px) scale(1.02);
+                            }
+
+                            .capability-card-hero:hover .icon-wrap {
+                                transform: scale(1.12);
+                                box-shadow: 0 8px 32px -4px currentColor;
+                            }
+
+                            .capability-card-hero .icon-wrap {
+                                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                            }
+
+                            /* ========== COMPACT CARDS (7 features) ========== */
+                            .capability-card-compact {
+                                min-height: 150px;
+                            }
+
+                            .capability-card-compact:hover {
+                                transform: translateY(-4px);
+                            }
+
+                            .capability-card-compact:hover .icon-wrap {
+                                transform: scale(1.1);
+                            }
+
+                            .capability-card-compact .icon-wrap {
+                                transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                            }
+
+                            /* ========== GLOW ELEMENT STYLING ========== */
+                            .capability-glow {
+                                position: absolute;
+                                border-radius: 50%;
+                                pointer-events: none;
+                                opacity: 0.35;
+                                transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                                filter: blur(60px);
+                                z-index: 0;
+                            }
+
+                            .capability-glow-hero {
+                                width: 200px;
+                                height: 200px;
+                                top: -60px;
+                                filter: blur(80px);
+                            }
+
+                            .capability-glow-compact {
+                                width: 120px;
+                                height: 120px;
+                                top: -40px;
+                                filter: blur(50px);
+                            }
+
+                            .capability-card:hover .capability-glow {
+                                opacity: 0.6;
+                                transform: translateX(-50%) scale(1.3);
+                            }
+
+                            /* ========== COLOR-SPECIFIC GLOWS ========== */
+                            .glow-blue {
+                                background: radial-gradient(circle, rgba(59, 130, 246, 0.8) 0%, rgba(6, 182, 212, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-blue:hover {
+                                border-color: rgba(59, 130, 246, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(59, 130, 246, 0.25),
+                                    inset 0 1px 0 rgba(59, 130, 246, 0.1);
+                            }
+
+                            .glow-emerald {
+                                background: radial-gradient(circle, rgba(16, 185, 129, 0.8) 0%, rgba(20, 184, 166, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-emerald:hover {
+                                border-color: rgba(16, 185, 129, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(16, 185, 129, 0.25),
+                                    inset 0 1px 0 rgba(16, 185, 129, 0.1);
+                            }
+
+                            .glow-shift4 {
+                                background: radial-gradient(circle, rgba(56, 189, 248, 0.8) 0%, rgba(99, 102, 241, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-shift4:hover {
+                                border-color: rgba(56, 189, 248, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(56, 189, 248, 0.25),
+                                    inset 0 1px 0 rgba(56, 189, 248, 0.1);
+                            }
+
+                            .glow-orange {
+                                background: radial-gradient(circle, rgba(249, 115, 22, 0.8) 0%, rgba(245, 158, 11, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-orange:hover {
+                                border-color: rgba(249, 115, 22, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(249, 115, 22, 0.25),
+                                    inset 0 1px 0 rgba(249, 115, 22, 0.1);
+                            }
+
+                            .glow-amber {
+                                background: radial-gradient(circle, rgba(245, 158, 11, 0.8) 0%, rgba(234, 179, 8, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-amber:hover {
+                                border-color: rgba(245, 158, 11, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(245, 158, 11, 0.25),
+                                    inset 0 1px 0 rgba(245, 158, 11, 0.1);
+                            }
+
+                            .glow-rose {
+                                background: radial-gradient(circle, rgba(244, 63, 94, 0.8) 0%, rgba(236, 72, 153, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-rose:hover {
+                                border-color: rgba(244, 63, 94, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(244, 63, 94, 0.25),
+                                    inset 0 1px 0 rgba(244, 63, 94, 0.1);
+                            }
+
+                            .glow-violet {
+                                background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, rgba(168, 85, 247, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-violet:hover {
+                                border-color: rgba(139, 92, 246, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(139, 92, 246, 0.25),
+                                    inset 0 1px 0 rgba(139, 92, 246, 0.1);
+                            }
+
+                            .glow-lime {
+                                background: radial-gradient(circle, rgba(132, 204, 22, 0.8) 0%, rgba(163, 230, 53, 0.4) 50%, transparent 70%);
+                            }
+                            .border-glow-lime:hover {
+                                border-color: rgba(132, 204, 22, 0.3);
+                                box-shadow:
+                                    0 12px 40px -8px rgba(132, 204, 22, 0.25),
+                                    inset 0 1px 0 rgba(132, 204, 22, 0.1);
+                            }
+
+                            /* ========== ICON GLOW ON HOVER ========== */
+                            .capability-card:hover .icon-wrap {
+                                box-shadow: 0 0 30px -5px currentColor;
+                            }
+
+                            /* ========== BREATHING ANIMATION FOR GLOWS ========== */
+                            @keyframes glow-breathe {
+                                0%, 100% { opacity: 0.35; transform: translateX(-50%) scale(1); }
+                                50% { opacity: 0.45; transform: translateX(-50%) scale(1.1); }
+                            }
+
+                            .capability-card:not(:hover) .capability-glow {
+                                animation: glow-breathe 4s ease-in-out infinite;
+                            }
+                        `}</style>
                     </section>
 
                     {/* SECTION 2: Wallet Interface - iPhone Showcase */}
@@ -1112,8 +1314,8 @@
                                 className={`fixed inset-0 z-50 flex items-center justify-center p-4 ${capabilityClosing ? 'animate-capability-backdrop-out' : 'animate-capability-backdrop-in'}`}
                                 onClick={closeCapabilityModal}
                             >
-                                {/* Backdrop */}
-                                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl"></div>
+                                {/* Backdrop - translucent to show content behind */}
+                                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
                                 {/* Modal Content with Nav Arrows */}
                                 <div className={`relative flex items-center gap-3 ${capabilityClosing ? 'animate-capability-modal-out' : 'animate-capability-modal-in'}`}>
@@ -1123,63 +1325,79 @@
                                             e.stopPropagation();
                                             const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
                                             const prevIndex = (currentIndex - 1 + CAPABILITIES_DATA.length) % CAPABILITIES_DATA.length;
-                                            setActiveCapability(CAPABILITIES_DATA[prevIndex]);
+                                            const prevCap = CAPABILITIES_DATA[prevIndex];
+                                            if (prevCap.isModal) {
+                                                setActiveCapability(null);
+                                                if (prevCap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                                else if (prevCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                            } else {
+                                                setActiveCapability(prevCap);
+                                            }
                                         }}
-                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-200 hover:scale-110 flex-shrink-0"
+                                        className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
                                         aria-label="Previous capability"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 -translate-x-0.5">
                                             <polyline points="15 18 9 12 15 6"></polyline>
                                         </svg>
                                     </button>
 
                                     {/* Modal Panel */}
                                     <div
-                                        className="relative max-w-xl w-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-white/10 shadow-2xl overflow-hidden"
+                                        className="relative max-w-xl w-full rounded-3xl overflow-hidden border border-white/15"
+                                        style={{
+                                            background: 'linear-gradient(165deg, rgba(51, 65, 85, 0.97) 0%, rgba(30, 41, 59, 0.98) 100%)',
+                                            boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                                            minHeight: '420px'
+                                        }}
                                         onClick={(e) => e.stopPropagation()}
                                         role="dialog"
                                         aria-modal="true"
                                         aria-labelledby="capability-modal-title"
                                     >
+                                    {/* Accent bar at top */}
+                                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${activeCapability.gradientFrom} ${activeCapability.gradientTo}`}></div>
+
                                     {/* Ambient glow effect */}
-                                    <div className={`absolute -top-32 -right-32 w-64 h-64 bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} rounded-full blur-3xl opacity-20`}></div>
-                                    <div className={`absolute -bottom-32 -left-32 w-64 h-64 bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} rounded-full blur-3xl opacity-10`}></div>
+                                    <div className={`modal-ambient-glow absolute -top-32 -right-32 w-72 h-72 bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} rounded-full blur-3xl opacity-20`}></div>
+                                    <div className={`modal-ambient-glow absolute -bottom-32 -left-32 w-72 h-72 bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} rounded-full blur-3xl opacity-10`} style={{animationDelay: '2s'}}></div>
 
                                     {/* Close button */}
                                     <button
                                         onClick={closeCapabilityModal}
-                                        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
+                                        className="absolute top-5 right-5 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/20 flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:scale-110 active:scale-95"
                                         aria-label="Close modal"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
                                             <line x1="18" y1="6" x2="6" y2="18"></line>
                                             <line x1="6" y1="6" x2="18" y2="18"></line>
                                         </svg>
                                     </button>
 
                                     {/* Content */}
-                                    <div className="relative p-8">
+                                    <div className="relative p-8 pt-10">
                                         {/* Header: Icon + Title side by side */}
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center shadow-xl flex-shrink-0`}>
-                                                <activeCapability.icon className="w-7 h-7 text-white" />
+                                        <div className="flex items-center gap-5 mb-5">
+                                            <div className={`modal-icon-entrance modal-icon-float relative w-16 h-16 rounded-2xl bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center shadow-xl flex-shrink-0`}>
+                                                <div className={`modal-icon-glow rounded-2xl bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo}`}></div>
+                                                <activeCapability.icon className="w-8 h-8 text-white relative z-10" />
                                             </div>
-                                            <h3 id="capability-modal-title" className="text-2xl font-bold text-white">{activeCapability.title}</h3>
+                                            <h3 id="capability-modal-title" className="modal-title-entrance text-2xl font-bold text-white">{activeCapability.title}</h3>
                                         </div>
 
                                         {/* One-liner */}
-                                        <p className="text-slate-300 text-base mb-6 leading-relaxed">{activeCapability.oneLiner}</p>
+                                        <p className="modal-description-entrance text-slate-300 text-base mb-6 leading-relaxed">{activeCapability.oneLiner}</p>
 
                                         {/* Divider */}
-                                        <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-6"></div>
+                                        <div className={`modal-divider h-px bg-gradient-to-r ${activeCapability.gradientFrom} via-white/20 ${activeCapability.gradientTo} mb-6`}></div>
 
                                         {/* Details list */}
                                         {activeCapability.details && (
-                                        <ul className="space-y-3">
+                                        <ul className="space-y-1">
                                             {activeCapability.details.map((detail, idx) => (
                                                 <li key={idx} className="capability-detail-item flex items-start gap-3">
-                                                    <div className={`w-5 h-5 rounded-full bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                                                    <div className={`detail-checkmark w-5 h-5 rounded-full bg-gradient-to-br ${activeCapability.gradientFrom} ${activeCapability.gradientTo} flex items-center justify-center flex-shrink-0 mt-0.5 shadow-lg`}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-white">
                                                             <polyline points="20 6 9 17 4 12"></polyline>
                                                         </svg>
                                                     </div>
@@ -1214,12 +1432,19 @@
                                             e.stopPropagation();
                                             const currentIndex = CAPABILITIES_DATA.findIndex(c => c.id === activeCapability.id);
                                             const nextIndex = (currentIndex + 1) % CAPABILITIES_DATA.length;
-                                            setActiveCapability(CAPABILITIES_DATA[nextIndex]);
+                                            const nextCap = CAPABILITIES_DATA[nextIndex];
+                                            if (nextCap.isModal) {
+                                                setActiveCapability(null);
+                                                if (nextCap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                                else if (nextCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                            } else {
+                                                setActiveCapability(nextCap);
+                                            }
                                         }}
-                                        className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all duration-200 hover:scale-110 flex-shrink-0"
+                                        className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
                                         aria-label="Next capability"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 translate-x-0.5">
                                             <polyline points="9 18 15 12 9 6"></polyline>
                                         </svg>
                                     </button>
@@ -1233,24 +1458,55 @@
                                 className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-capability-backdrop-in"
                                 onClick={() => setCaseStudiesOpen(false)}
                             >
-                                {/* Backdrop */}
-                                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl"></div>
+                                {/* Backdrop - translucent */}
+                                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-                                {/* Modal Panel */}
-                                <div
-                                    className="relative max-w-4xl w-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-white/10 shadow-2xl overflow-hidden animate-capability-modal-in"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    {/* Close button */}
+                                {/* Modal Content with Nav Arrows */}
+                                <div className="relative flex items-center gap-3 animate-capability-modal-in">
+                                    {/* Previous button */}
                                     <button
-                                        onClick={() => setCaseStudiesOpen(false)}
-                                        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const caseStudiesIndex = CAPABILITIES_DATA.findIndex(c => c.modalType === 'case-studies');
+                                            const prevIndex = (caseStudiesIndex - 1 + CAPABILITIES_DATA.length) % CAPABILITIES_DATA.length;
+                                            const prevCap = CAPABILITIES_DATA[prevIndex];
+                                            setCaseStudiesOpen(false);
+                                            if (prevCap.isModal) {
+                                                if (prevCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                            } else {
+                                                setActiveCapability(prevCap);
+                                            }
+                                        }}
+                                        className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
+                                        aria-label="Previous capability"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
-                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 -translate-x-0.5">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
                                         </svg>
                                     </button>
+
+                                    {/* Modal Panel */}
+                                    <div
+                                        className="relative max-w-4xl w-full rounded-3xl overflow-hidden border border-white/15"
+                                        style={{
+                                            background: 'linear-gradient(165deg, rgba(51, 65, 85, 0.97) 0%, rgba(30, 41, 59, 0.98) 100%)',
+                                            boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        {/* Accent bar at top */}
+                                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
+
+                                        {/* Close button */}
+                                        <button
+                                            onClick={() => setCaseStudiesOpen(false)}
+                                            className="absolute top-5 right-5 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/20 flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:scale-110 active:scale-95"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
 
                                     {/* Content */}
                                     <div className="p-8">
@@ -1304,6 +1560,29 @@
                                             })}
                                         </div>
                                     </div>
+                                    </div>
+
+                                    {/* Next button */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const caseStudiesIndex = CAPABILITIES_DATA.findIndex(c => c.modalType === 'case-studies');
+                                            const nextIndex = (caseStudiesIndex + 1) % CAPABILITIES_DATA.length;
+                                            const nextCap = CAPABILITIES_DATA[nextIndex];
+                                            setCaseStudiesOpen(false);
+                                            if (nextCap.isModal) {
+                                                if (nextCap.modalType === 'guest-journeys') setGuestJourneysOpen(true);
+                                            } else {
+                                                setActiveCapability(nextCap);
+                                            }
+                                        }}
+                                        className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
+                                        aria-label="Next capability"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 translate-x-0.5">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         )}
@@ -1404,24 +1683,55 @@
                                 className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-capability-backdrop-in"
                                 onClick={() => setGuestJourneysOpen(false)}
                             >
-                                {/* Backdrop */}
-                                <div className="absolute inset-0 bg-black/85 backdrop-blur-xl"></div>
+                                {/* Backdrop - translucent */}
+                                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
 
-                                {/* Modal Panel */}
-                                <div
-                                    className="relative max-w-4xl w-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 border border-white/10 shadow-2xl overflow-hidden animate-capability-modal-in"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    {/* Close button */}
+                                {/* Modal Content with Nav Arrows */}
+                                <div className="relative flex items-center gap-3 animate-capability-modal-in">
+                                    {/* Previous button */}
                                     <button
-                                        onClick={() => setGuestJourneysOpen(false)}
-                                        className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors duration-200 z-10"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const guestJourneysIndex = CAPABILITIES_DATA.findIndex(c => c.modalType === 'guest-journeys');
+                                            const prevIndex = (guestJourneysIndex - 1 + CAPABILITIES_DATA.length) % CAPABILITIES_DATA.length;
+                                            const prevCap = CAPABILITIES_DATA[prevIndex];
+                                            setGuestJourneysOpen(false);
+                                            if (prevCap.isModal) {
+                                                if (prevCap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                            } else {
+                                                setActiveCapability(prevCap);
+                                            }
+                                        }}
+                                        className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
+                                        aria-label="Previous capability"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
-                                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 -translate-x-0.5">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
                                         </svg>
                                     </button>
+
+                                    {/* Modal Panel */}
+                                    <div
+                                        className="relative max-w-4xl w-full rounded-3xl overflow-hidden border border-white/15"
+                                        style={{
+                                            background: 'linear-gradient(165deg, rgba(51, 65, 85, 0.97) 0%, rgba(30, 41, 59, 0.98) 100%)',
+                                            boxShadow: '0 50px 100px -20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                                        }}
+                                        onClick={(e) => e.stopPropagation()}
+                                    >
+                                        {/* Accent bar at top */}
+                                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-violet-500"></div>
+
+                                        {/* Close button */}
+                                        <button
+                                            onClick={() => setGuestJourneysOpen(false)}
+                                            className="absolute top-5 right-5 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/20 flex items-center justify-center transition-all duration-300 hover:rotate-90 hover:scale-110 active:scale-95"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white/80">
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
 
                                     {/* Content */}
                                     <div className="p-8">
@@ -1456,8 +1766,8 @@
                                                             </div>
                                                         </div>
 
-                                                        {/* Journey steps - centered with descriptions */}
-                                                        <div className="space-y-3 mb-4">
+                                                        {/* Journey steps - centered with header icon */}
+                                                        <div className="space-y-3 mb-4 ml-1.5">
                                                             {journey.journey.map((step, i) => (
                                                                 <div key={i} className="flex items-start gap-3">
                                                                     <div className={`w-7 h-7 rounded-full bg-gradient-to-br ${journey.gradientFrom} ${journey.gradientTo} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5`}>
@@ -1472,7 +1782,7 @@
                                                         </div>
 
                                                         {/* Surfaces */}
-                                                        <div className="flex items-center gap-1.5 pt-3 border-t border-white/5">
+                                                        <div className="flex items-center gap-1.5 pt-3 border-t border-white/5 ml-1.5">
                                                             <span className="text-slate-600 text-[10px] mr-1">Works at:</span>
                                                             {journey.surfaces.map((surface, i) => (
                                                                 <span key={i} className="px-2 py-0.5 text-[10px] font-medium text-slate-400 bg-white/5 rounded">{surface}</span>
@@ -1483,6 +1793,29 @@
                                             })}
                                         </div>
                                     </div>
+                                    </div>
+
+                                    {/* Next button */}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            const guestJourneysIndex = CAPABILITIES_DATA.findIndex(c => c.modalType === 'guest-journeys');
+                                            const nextIndex = (guestJourneysIndex + 1) % CAPABILITIES_DATA.length;
+                                            const nextCap = CAPABILITIES_DATA[nextIndex];
+                                            setGuestJourneysOpen(false);
+                                            if (nextCap.isModal) {
+                                                if (nextCap.modalType === 'case-studies') setCaseStudiesOpen(true);
+                                            } else {
+                                                setActiveCapability(nextCap);
+                                            }
+                                        }}
+                                        className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/25 flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 flex-shrink-0 backdrop-blur-sm"
+                                        aria-label="Next capability"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/90 translate-x-0.5">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         )}

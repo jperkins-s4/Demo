@@ -365,3 +365,213 @@ section[id] {
 .capability-card-compact:hover .capability-glow-compact {
     opacity: 0.3;
 }
+
+/* ================================================
+   CAPABILITY MODAL - Premium Showcase
+   ================================================ */
+
+/* Modal panel enhanced styling */
+.capability-modal-panel {
+    position: relative;
+    background: linear-gradient(165deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 50px 100px -20px rgba(0, 0, 0, 0.6),
+        0 30px 60px -30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Gradient accent bar at top */
+.capability-modal-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--modal-accent-gradient);
+    border-radius: 24px 24px 0 0;
+}
+
+/* Animated ambient glow */
+@keyframes modalGlowPulse {
+    0%, 100% { opacity: 0.15; transform: scale(1); }
+    50% { opacity: 0.25; transform: scale(1.1); }
+}
+
+.modal-ambient-glow {
+    animation: modalGlowPulse 4s ease-in-out infinite;
+}
+
+/* Icon float animation */
+@keyframes iconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.modal-icon-float {
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+/* Icon entrance animation */
+@keyframes iconEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-icon-entrance {
+    animation: iconEntrance 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Title slide in */
+@keyframes titleSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.modal-title-entrance {
+    opacity: 0;
+    animation: titleSlideIn 0.4s ease-out forwards;
+    animation-delay: 0.1s;
+}
+
+/* Description fade in */
+.modal-description-entrance {
+    opacity: 0;
+    animation: fadeIn 0.4s ease-out forwards;
+    animation-delay: 0.15s;
+}
+
+/* Divider expand animation */
+@keyframes dividerExpand {
+    from {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+    to {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+.modal-divider {
+    transform-origin: left center;
+    animation: dividerExpand 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: 0.2s;
+    opacity: 0;
+}
+
+/* Enhanced detail item styling */
+.capability-detail-item {
+    opacity: 0;
+    transform: translateY(8px);
+    animation: fadeIn 0.35s ease-out forwards;
+    padding: 10px 12px;
+    margin: -10px -12px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    cursor: default;
+}
+
+/* Updated stagger delays for modal context */
+.capability-detail-item:nth-child(1) { animation-delay: 0.25s; }
+.capability-detail-item:nth-child(2) { animation-delay: 0.30s; }
+.capability-detail-item:nth-child(3) { animation-delay: 0.35s; }
+.capability-detail-item:nth-child(4) { animation-delay: 0.40s; }
+.capability-detail-item:nth-child(5) { animation-delay: 0.45s; }
+.capability-detail-item:nth-child(6) { animation-delay: 0.50s; }
+.capability-detail-item:nth-child(7) { animation-delay: 0.55s; }
+.capability-detail-item:nth-child(8) { animation-delay: 0.60s; }
+
+/* Detail item hover state */
+.capability-detail-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateX(4px);
+}
+
+.capability-detail-item:hover .detail-checkmark {
+    transform: scale(1.15);
+}
+
+.detail-checkmark {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Navigation arrows enhanced */
+.modal-nav-arrow {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.modal-nav-arrow:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.modal-nav-arrow:active {
+    transform: scale(0.95);
+}
+
+.modal-nav-arrow svg {
+    transition: transform 0.3s ease;
+}
+
+.modal-nav-arrow:hover svg {
+    transform: translateX(-2px);
+}
+
+.modal-nav-arrow.next:hover svg {
+    transform: translateX(2px);
+}
+
+/* Close button enhanced */
+.modal-close-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: rotate(90deg);
+}
+
+/* Icon glow effect */
+.modal-icon-glow {
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    background: inherit;
+    filter: blur(16px);
+    opacity: 0.5;
+    z-index: -1;
+}
