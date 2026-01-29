@@ -551,12 +551,14 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
     // Size variants for different contexts
     const wrapperClasses = size === 'large'
         ? 'w-full lg:w-[45%] flex flex-col items-center'
-        : 'w-full lg:w-1/3 flex flex-col items-center';
+        : 'w-full flex flex-col items-center';
 
     const frameClasses = 'relative bg-slate-100 border-solid border-slate-900 shadow-2xl overflow-hidden transform hover:scale-105 hover:-translate-y-4 transition-all duration-500';
 
     const frameStyle = size === 'large'
         ? { width: '346px', height: '720px', borderRadius: '3.5rem', borderWidth: '10px' }
+        : size === 'medium'
+        ? { width: '295px', height: '615px', borderRadius: '3rem', borderWidth: '8px' }
         : { width: '259px', height: '540px', borderRadius: '2.7rem', borderWidth: '7px' };
 
     return (
@@ -578,14 +580,14 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
             </div>
 
             {/* Navigation Controls - Below phone frame */}
-            <div className="mt-3 flex items-center gap-2 bg-black/50 backdrop-blur-xl rounded-full px-3 py-1.5 border border-white/10">
+            <div className="mt-1.5 flex items-center gap-1.5 bg-black/50 backdrop-blur-xl rounded-full px-2.5 py-1 border border-white/10">
                 {/* Previous Arrow */}
                 <button
                     onClick={prevSlide}
-                    className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
                     aria-label="Previous image"
                 >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
@@ -598,8 +600,8 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
                             onClick={() => goToSlide(index)}
                             className={`rounded-full transition-all duration-300 ${
                                 index === currentSlide
-                                    ? 'bg-shift4-sky-blue h-1.5 w-5'
-                                    : 'bg-white/30 h-1.5 w-1.5 hover:bg-white/50'
+                                    ? 'bg-shift4-sky-blue h-1 w-4'
+                                    : 'bg-white/30 h-1 w-1 hover:bg-white/50'
                             }`}
                             aria-label={`Go to slide ${index + 1}`}
                         />
@@ -609,10 +611,10 @@ const PhoneCarousel = ({ images, className = '', size = 'default', currentSlide:
                 {/* Next Arrow */}
                 <button
                     onClick={nextSlide}
-                    className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    className="w-5 h-5 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
                     aria-label="Next image"
                 >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
