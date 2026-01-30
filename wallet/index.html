@@ -730,6 +730,7 @@
                     ]
                 },
                 'datanow': [
+                    { id: 'loyalty', label: 'Loyalty Performance', image: '../site/datanow-loyalty-ui.png' },
                     { id: 'vc-kpis', label: 'Virtual Currency KPIs', image: '../site/datanow-vc-kpis-ui.png' },
                     { id: 'transfers', label: 'Transfers', image: '../site/datanow-transfers-ui.png' },
                     { id: 'audit', label: 'Audit', image: '../site/datanow-audit-ui.png' },
@@ -2476,10 +2477,11 @@
                                         {activeTab === 'datanow' && (
                                             <div className="space-y-3 animate-fade-in">
                                                 {[
-                                                    { icon: Icons.CircleDollarSign, title: 'Virtual Currency KPIs', desc: 'Monitor outstanding VC, utilization, origination, and pending expirations.', tabIndex: 0 },
-                                                    { icon: Icons.RefreshCw, title: 'Transfers and Account Health', desc: 'Track transfers end to end and flag duplicate accounts and emails.', tabIndex: 1 },
-                                                    { icon: Icons.ShieldCheck, title: 'Admin and Bulk Audit', desc: 'Audit awards and deductions by user, domain, campaign, and comment.', tabIndex: 2 },
-                                                    { icon: Icons.Wallet, title: 'Wallet Account Insights', desc: 'Analyze wallet-engaged accounts, balances, issued awards, and active rules.', tabIndex: 3 }
+                                                    { icon: Icons.Heart, title: 'Loyalty Performance', desc: 'Analyze sales by member, affiliation, and integrator, plus discounts by user.', tabIndex: 0 },
+                                                    { icon: Icons.CircleDollarSign, title: 'Virtual Currency KPIs', desc: 'Monitor outstanding VC, utilization, origination, and pending expirations.', tabIndex: 1 },
+                                                    { icon: Icons.RefreshCw, title: 'Transfers and Account Health', desc: 'Track transfers end to end and flag duplicate accounts and emails.', tabIndex: 2 },
+                                                    { icon: Icons.ShieldCheck, title: 'Admin and Bulk Audit', desc: 'Audit awards and deductions by user, domain, campaign, and comment.', tabIndex: 3 },
+                                                    { icon: Icons.Wallet, title: 'Wallet Account Insights', desc: 'Analyze wallet-engaged accounts, balances, issued awards, and active rules.', tabIndex: 4 }
                                                 ].map((item, i) => {
                                                     const isActive = activeBrowserTab['datanow'] === item.tabIndex;
                                                     return (
