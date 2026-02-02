@@ -245,9 +245,9 @@
                     icon: Icons.ShoppingCart,
                     title: 'Redemption',
                     oneLiner: 'Accept benefits venue-wide with simple, consistent flows.',
-                    gradientFrom: 'from-orange-500',
-                    gradientTo: 'to-amber-500',
-                    glowColor: 'orange',
+                    gradientFrom: 'from-[#136EF6]',
+                    gradientTo: 'to-sky-500',
+                    glowColor: 'shift4',
                     details: [
                         'POS + kiosks: QR scan or manual entry',
                         'Benefits apply automatically: discounts and stored value',
@@ -641,21 +641,102 @@
             const mobileVideoRef = React.useRef(null);
             const walletVideoRef = React.useRef(null);
 
-            // Sync POS steps with video timeline
+            // POS Redemption animation states
+            const [showPosSuccessFlash, setShowPosSuccessFlash] = useState(false);
+            const [posPhoneAnimPhase, setPosPhoneAnimPhase] = useState('idle'); // 'idle' | 'up' | 'hold' | 'down'
+            const [posPhoneHasAppeared, setPosPhoneHasAppeared] = useState(false); // Track if phone already slid in
+            const prevPosStepRef = React.useRef(1);
+
+            // POS step timestamps for seeking
+            const posStepTimes = [0, 7, 17, 23];
+            const seekToPosStep = (stepNum) => {
+                const video = posVideoRef.current;
+                if (video && stepNum >= 1 && stepNum <= 4) {
+                    // Reset phone appeared state if seeking before step 3
+                    if (stepNum < 3) {
+                        setPosPhoneHasAppeared(false);
+                    }
+                    video.currentTime = posStepTimes[stepNum - 1];
+                    video.play();
+                }
+            };
+
+            // Mobile step timestamps for seeking
+            const mobileStepTimes = [0, 6, 10, 22, 55];
+            const seekToMobileStep = (stepNum) => {
+                const video = mobileVideoRef.current;
+                if (video && stepNum >= 1 && stepNum <= 5) {
+                    video.currentTime = mobileStepTimes[stepNum - 1];
+                    video.play();
+                }
+            };
+
+            // Sync POS steps with video timeline and trigger animations
             React.useEffect(() => {
                 const video = posVideoRef.current;
                 if (!video || !redemptionMethodsOpen || redemptionTab !== 'pos') return;
 
+                let scaleUpTimeout, holdTimeout, scaleDownTimeout;
+
                 const handleTimeUpdate = () => {
                     const time = video.currentTime;
-                    if (time >= 23) setActivePosStep(4);
-                    else if (time >= 17) setActivePosStep(3);
-                    else if (time >= 7) setActivePosStep(2);
-                    else setActivePosStep(1);
+                    let newStep;
+                    if (time >= 23) newStep = 4;
+                    else if (time >= 17) newStep = 3;
+                    else if (time >= 7) newStep = 2;
+                    else newStep = 1;
+
+                    if (newStep !== prevPosStepRef.current) {
+                        // Track when phone first appears (step 2→3)
+                        if (prevPosStepRef.current < 3 && newStep >= 3) {
+                            setPosPhoneHasAppeared(true);
+                        }
+                        // Reset phone state when going back to before step 3
+                        if (newStep < 3) {
+                            setPosPhoneHasAppeared(false);
+                        }
+                        // Trigger animations when transitioning 3→4
+                        if (prevPosStepRef.current === 3 && newStep === 4) {
+                            setShowPosSuccessFlash(true);
+                            setTimeout(() => setShowPosSuccessFlash(false), 300);
+
+                            setPosPhoneAnimPhase('up');
+                            scaleUpTimeout = setTimeout(() => {
+                                setPosPhoneAnimPhase('hold');
+                                holdTimeout = setTimeout(() => {
+                                    setPosPhoneAnimPhase('down');
+                                    scaleDownTimeout = setTimeout(() => setPosPhoneAnimPhase('idle'), 500);
+                                }, 8000);
+                            }, 500);
+                        }
+                        prevPosStepRef.current = newStep;
+                    }
+                    setActivePosStep(newStep);
+                };
+
+                const handleSeeked = () => {
+                    if (video.currentTime < 1) {
+                        // Video looped - reset all animations
+                        clearTimeout(scaleUpTimeout);
+                        clearTimeout(holdTimeout);
+                        clearTimeout(scaleDownTimeout);
+                        setPosPhoneAnimPhase('idle');
+                        setShowPosSuccessFlash(false);
+                        setPosPhoneHasAppeared(false);
+                        prevPosStepRef.current = 1;
+                        setActivePosStep(1);
+                    }
                 };
 
                 video.addEventListener('timeupdate', handleTimeUpdate);
-                return () => video.removeEventListener('timeupdate', handleTimeUpdate);
+                video.addEventListener('seeked', handleSeeked);
+                return () => {
+                    video.removeEventListener('timeupdate', handleTimeUpdate);
+                    video.removeEventListener('seeked', handleSeeked);
+                    clearTimeout(scaleUpTimeout);
+                    clearTimeout(holdTimeout);
+                    clearTimeout(scaleDownTimeout);
+                };
             }, [redemptionMethodsOpen, redemptionTab]);
 
             // Sync Mobile steps with video timeline
@@ -3022,18 +3103,18 @@
 
                             {/* Modal Container */}
                             <div
-                                className="relative w-full max-w-7xl animate-modal-in"
+                                className="relative w-full max-w-[95vw] animate-modal-in"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {/* Glow effect */}
-                                <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 via-amber-500/10 to-orange-500/20 rounded-2xl blur-sm"></div>
+                                <div className="absolute -inset-1 bg-gradient-to-r from-[#136EF6]/20 via-sky-500/10 to-[#136EF6]/20 rounded-2xl blur-sm"></div>
 
                                 <div className="relative bg-gradient-to-br from-slate-900 to-slate-950 rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
                                     {/* Modal Header */}
                                     <div className="relative flex items-center justify-center px-6 py-4 border-b border-white/10">
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 p-2 shadow-lg">
+                                                <div className="rounded-lg bg-gradient-to-br from-[#136EF6] to-sky-500 p-2 shadow-lg">
                                                     <Icons.ShoppingCart className="w-4 h-4 text-white" />
                                                 </div>
                                                 <h2 className="text-lg font-bold text-white">Redemption Methods</h2>
@@ -3045,7 +3126,7 @@
                                                     onClick={() => setRedemptionTab('pos')}
                                                     className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${
                                                         redemptionTab === 'pos'
-                                                            ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg'
+                                                            ? 'bg-gradient-to-r from-[#136EF6] to-sky-500 text-white shadow-lg'
                                                             : 'text-slate-400 hover:text-white hover:bg-white/5'
                                                     }`}
                                                 >
@@ -3055,7 +3136,7 @@
                                                     onClick={() => setRedemptionTab('mobile')}
                                                     className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 ${
                                                         redemptionTab === 'mobile'
-                                                            ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg'
+                                                            ? 'bg-gradient-to-r from-[#136EF6] to-sky-500 text-white shadow-lg'
                                                             : 'text-slate-400 hover:text-white hover:bg-white/5'
                                                     }`}
                                                 >
@@ -3077,40 +3158,54 @@
                                         {/* POS Redemption Tab */}
                                         {redemptionTab === 'pos' && (
                                             <div className="flex flex-col h-full">
-                                                {/* Steps Bar */}
-                                                <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
-                                                    <div className="flex items-center justify-center gap-3 md:gap-6 flex-wrap">
+                                                {/* Video and iPhone Animation Container - with steps inside */}
+                                                <div className="flex-1 p-6 flex flex-col bg-gradient-to-br from-slate-900/50 to-slate-950/50 relative overflow-visible min-h-[650px]">
+                                                    {/* Clickable Steps Bar - Inside the pane */}
+                                                    <div className="flex items-center justify-center gap-3 md:gap-6 flex-wrap mb-6">
                                                         {/* Step 1 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 1 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 1 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>1</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 1 ? 'text-orange-400' : 'text-white'}`}>Ring Up Order</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 2 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToPosStep(1)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activePosStep === 1 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 1 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>1</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 1 ? 'text-sky-400' : 'text-white'}`}>Ring Up Order</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 2 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 2 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 2 ? 'scale-110' : activePosStep > 2 ? 'opacity-50' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 2 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>2</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 2 ? 'text-orange-400' : 'text-white'}`}>Tap QR Pay</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 3 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToPosStep(2)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activePosStep === 2 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 2 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>2</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 2 ? 'text-sky-400' : 'text-white'}`}>Tap QR Pay</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 3 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 3 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 3 ? 'scale-110' : activePosStep > 3 ? 'opacity-50' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 3 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>3</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 3 ? 'text-orange-400' : 'text-white'}`}>Scan Pass</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 4 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToPosStep(3)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activePosStep === 3 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 3 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>3</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 3 ? 'text-sky-400' : 'text-white'}`}>Scan Pass</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activePosStep >= 4 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 4 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activePosStep === 4 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 4 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>4</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 4 ? 'text-orange-400' : 'text-white'}`}>Complete</span>
-                                                        </div>
+                                                        <button
+                                                            onClick={() => seekToPosStep(4)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activePosStep === 4 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activePosStep === 4 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>4</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activePosStep === 4 ? 'text-sky-400' : 'text-white'}`}>Complete</span>
+                                                        </button>
                                                     </div>
-                                                </div>
 
-                                                {/* Video and Carousel Row */}
-                                                <div className="flex flex-col md:flex-row flex-1">
-                                                    {/* Left Pane - Video (larger) */}
-                                                    <div className="flex-[4] p-4 flex items-center justify-center bg-gradient-to-br from-slate-900/50 to-slate-950/50">
-                                                    <div className="w-full max-w-5xl">
+                                                    {/* Video and iPhone Row */}
+                                                    <div className="flex-1 flex items-center justify-center gap-8">
+                                                    {/* Video Container */}
+                                                    <div
+                                                        className="relative transition-all duration-500 ease-out flex-shrink-0"
+                                                        style={{ maxWidth: activePosStep >= 3 ? '750px' : '900px' }}
+                                                    >
                                                         <div className="rounded-xl overflow-hidden border border-white/10 shadow-2xl bg-black">
                                                             <video
                                                                 ref={posVideoRef}
@@ -3118,8 +3213,8 @@
                                                                 muted
                                                                 loop
                                                                 playsInline
-                                                                controls
                                                                 className="w-full h-auto"
+                                                                style={{ pointerEvents: 'none' }}
                                                             >
                                                                 <source src="../site/POS-Wallet.mp4" type="video/mp4" />
                                                                 Your browser does not support the video tag.
@@ -3127,17 +3222,77 @@
                                                         </div>
                                                         <p className="text-center text-slate-500 text-xs mt-3">POS terminal scanning wallet QR code</p>
                                                     </div>
-                                                </div>
 
-                                                    {/* Right Pane - iPhone Carousel (smaller) */}
-                                                    <div className="flex-[1] bg-gradient-to-br from-slate-800/30 to-slate-900/30 border-t md:border-t-0 md:border-l border-white/10 p-4 flex items-center justify-center">
-                                                        <PhoneCarousel
-                                                            images={[
-                                                                { src: '../site/Pass.PNG', alt: 'Wallet Pass showing QR code' },
-                                                                { src: '../site/Noti-Wallet.PNG', alt: 'Wallet notification after redemption' }
-                                                            ]}
-                                                            size="default"
-                                                        />
+                                                    {/* iPhone Frame - slides in from right at step 3 */}
+                                                    {activePosStep >= 3 && (
+                                                        <div
+                                                            className={`flex-shrink-0 ${!posPhoneHasAppeared ? 'animate-pos-phone-slide-in' : ''} ${
+                                                                activePosStep === 4
+                                                                    ? (posPhoneAnimPhase === 'up' ? 'animate-pos-phone-scale-up'
+                                                                       : posPhoneAnimPhase === 'hold' ? 'animate-pos-phone-scale-hold'
+                                                                       : posPhoneAnimPhase === 'down' ? 'animate-pos-phone-scale-down' : '')
+                                                                    : ''
+                                                            }`}
+                                                            style={{ transformOrigin: 'center center' }}
+                                                            onAnimationEnd={() => setPosPhoneHasAppeared(true)}
+                                                        >
+                                                            {/* iPhone Frame */}
+                                                            <div
+                                                                className="relative overflow-hidden"
+                                                                style={{
+                                                                    width: '240px',
+                                                                    height: '520px',
+                                                                    background: '#1a1a1a',
+                                                                    borderRadius: '36px',
+                                                                    border: '5px solid #2a2a2a',
+                                                                    boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.7), inset 0 0 0 2px #3a3a3a'
+                                                                }}
+                                                            >
+                                                                {/* Dynamic Island */}
+                                                                <div
+                                                                    className="absolute top-[8px] left-1/2 bg-black z-10"
+                                                                    style={{
+                                                                        transform: 'translateX(-50%)',
+                                                                        width: '70px',
+                                                                        height: '22px',
+                                                                        borderRadius: '14px'
+                                                                    }}
+                                                                />
+
+                                                                {/* Screen Content */}
+                                                                <div className="w-full h-full overflow-hidden relative" style={{ borderRadius: '31px' }}>
+                                                                    {/* Pass.PNG - Base image */}
+                                                                    <img
+                                                                        src="../site/Pass.PNG"
+                                                                        alt="Wallet Pass with QR code"
+                                                                        className={`pos-phone-image ${activePosStep === 3 ? 'pos-phone-image-visible' : 'pos-phone-image-hidden'}`}
+                                                                    />
+
+                                                                    {/* Noti-Wallet.PNG - Crossfades in at step 4 */}
+                                                                    <img
+                                                                        src="../site/Noti-Wallet.PNG"
+                                                                        alt="Wallet notification"
+                                                                        className={`pos-phone-image ${activePosStep >= 4 ? 'pos-phone-image-visible' : 'pos-phone-image-hidden'}`}
+                                                                    />
+
+                                                                    {/* Scan Line - Only during step 3 */}
+                                                                    {activePosStep === 3 && (
+                                                                        <>
+                                                                            <div className="pos-scan-area">
+                                                                                <div className="pos-scan-line" />
+                                                                            </div>
+                                                                            <div className="pos-scan-tint" />
+                                                                        </>
+                                                                    )}
+
+                                                                    {/* Green Success Flash - At step 4 transition */}
+                                                                    {showPosSuccessFlash && (
+                                                                        <div className="pos-success-flash" />
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -3146,64 +3301,80 @@
                                         {/* Mobile Redemption Tab */}
                                         {redemptionTab === 'mobile' && (
                                             <div className="flex flex-col h-full">
-                                                {/* Steps Bar */}
-                                                <div className="px-6 py-4 border-b border-white/10 bg-gradient-to-r from-slate-900/80 to-slate-800/80">
-                                                    <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap">
+                                                {/* Video and Steps Container - Steps inside the pane */}
+                                                <div className="flex-1 p-6 flex flex-col bg-gradient-to-br from-slate-900/50 to-slate-950/50 min-h-[650px]">
+                                                    {/* Clickable Steps Bar - Inside the pane */}
+                                                    <div className="flex items-center justify-center gap-2 md:gap-4 flex-wrap mb-6">
                                                         {/* Step 1 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 1 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 1 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>1</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 1 ? 'text-orange-400' : 'text-white'}`}>Log In</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 2 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToMobileStep(1)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activeMobileStep === 1 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 1 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>1</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 1 ? 'text-sky-400' : 'text-white'}`}>Log In</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 2 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 2 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 2 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 2 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>2</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 2 ? 'text-orange-400' : 'text-white'}`}>Open My Wallet</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 3 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToMobileStep(2)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activeMobileStep === 2 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 2 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>2</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 2 ? 'text-sky-400' : 'text-white'}`}>Open My Wallet</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 3 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 3 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 3 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 3 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>3</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 3 ? 'text-orange-400' : 'text-white'}`}>View Benefits</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 4 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToMobileStep(3)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activeMobileStep === 3 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 3 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>3</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 3 ? 'text-sky-400' : 'text-white'}`}>View Benefits</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 4 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 4 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 4 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 4 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>4</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 4 ? 'text-orange-400' : 'text-white'}`}>Shop</span>
-                                                        </div>
-                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 5 ? 'text-orange-500' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                                                        <button
+                                                            onClick={() => seekToMobileStep(4)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activeMobileStep === 4 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 4 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>4</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 4 ? 'text-sky-400' : 'text-white'}`}>Shop</span>
+                                                        </button>
+                                                        <svg className={`w-4 h-4 transition-colors duration-300 ${activeMobileStep >= 5 ? 'text-[#136EF6]' : 'text-slate-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                                                         {/* Step 5 */}
-                                                        <div className={`flex items-center gap-2 transition-all duration-300 ${activeMobileStep === 5 ? 'scale-110' : 'opacity-50'}`}>
-                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 5 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50' : 'bg-orange-500/20 text-orange-400'}`}>5</div>
-                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 5 ? 'text-orange-400' : 'text-white'}`}>Checkout</span>
-                                                        </div>
+                                                        <button
+                                                            onClick={() => seekToMobileStep(5)}
+                                                            className={`flex items-center gap-2 transition-all duration-300 cursor-pointer hover:scale-105 ${activeMobileStep === 5 ? 'scale-110' : 'opacity-50 hover:opacity-80'}`}
+                                                        >
+                                                            <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${activeMobileStep === 5 ? 'bg-[#136EF6] text-white shadow-lg shadow-[#136EF6]/50' : 'bg-[#136EF6]/20 text-sky-400'}`}>5</div>
+                                                            <span className={`text-xs font-semibold transition-all duration-300 ${activeMobileStep === 5 ? 'text-sky-400' : 'text-white'}`}>Checkout</span>
+                                                        </button>
                                                     </div>
-                                                </div>
 
-                                                {/* Video Content */}
-                                                <div className="flex-1 flex items-center justify-center py-6 bg-gradient-to-br from-slate-900/50 to-slate-950/50">
-                                                    <div className="flex flex-col items-center">
-                                                        {/* iPhone Frame with Video */}
-                                                        <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '300px', height: '650px' }}>
-                                                            {/* Dynamic Island */}
-                                                            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
-                                                            {/* Video with inner rounded container */}
-                                                            <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
-                                                                <video
-                                                                    ref={mobileVideoRef}
-                                                                    autoPlay
-                                                                    muted
-                                                                    loop
-                                                                    playsInline
-                                                                    controls
-                                                                    className="w-full h-full object-cover"
-                                                                >
-                                                                    <source src="../site/mobile-redemption-flow.mov" type="video/mp4" />
-                                                                </video>
+                                                    {/* Video Content */}
+                                                    <div className="flex-1 flex items-center justify-center">
+                                                        <div className="flex flex-col items-center">
+                                                            {/* iPhone Frame with Video */}
+                                                            <div className="relative bg-black rounded-[3rem] border-[8px] border-slate-800 shadow-2xl overflow-hidden p-1" style={{ width: '300px', height: '650px' }}>
+                                                                {/* Dynamic Island */}
+                                                                <div className="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full z-10"></div>
+                                                                {/* Video with inner rounded container */}
+                                                                <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                                                                    <video
+                                                                        ref={mobileVideoRef}
+                                                                        autoPlay
+                                                                        muted
+                                                                        loop
+                                                                        playsInline
+                                                                        className="w-full h-full object-cover"
+                                                                        style={{ pointerEvents: 'none' }}
+                                                                    >
+                                                                        <source src="../site/mobile-redemption-flow.mov" type="video/mp4" />
+                                                                    </video>
+                                                                </div>
                                                             </div>
+                                                            <p className="text-center text-slate-500 text-xs mt-4">Mobile ordering with wallet benefits</p>
                                                         </div>
-                                                        <p className="text-center text-slate-500 text-xs mt-4">Mobile ordering with wallet benefits</p>
                                                     </div>
                                                 </div>
                                             </div>
