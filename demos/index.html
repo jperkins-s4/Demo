@@ -72,6 +72,30 @@
         .tabs-scroll::-webkit-scrollbar-thumb:hover {
             background: rgba(255,255,255,0.3);
         }
+
+        /* Rotating device carousel */
+        .rotating-carousel {
+            perspective: 1500px;
+            perspective-origin: center center;
+        }
+        .rotating-device {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+        .rotating-device.front {
+            transform: translateZ(0) rotateY(0deg) scale(1);
+            opacity: 1;
+            z-index: 10;
+        }
+        .rotating-device.back {
+            transform: translateZ(-200px) rotateY(25deg) scale(0.7);
+            opacity: 0.3;
+            z-index: 1;
+            filter: grayscale(0.5);
+        }
+        .rotating-device.back-left {
+            transform: translateZ(-200px) rotateY(-25deg) scale(0.7);
+        }
     </style>
 </head>
 <body class="bg-shift4-midnight-blue text-white">
@@ -169,20 +193,50 @@
                             ]
                         },
                         tabs: {
-                            video: '../site/Tabs Demo.mov',
+                            layout: 'rotating',
+                            devices: [
+                                {
+                                    id: 'mobile',
+                                    label: 'Handheld',
+                                    video: '../site/Tabs Demo.mov',
+                                    videoType: 'video/mp4',
+                                    videoWidth: 496,
+                                    videoHeight: 916,
+                                    frame: 'device'
+                                },
+                                {
+                                    id: 'fixed',
+                                    label: 'Fixed POS',
+                                    video: '../site/Fixed Tab Demo.mov',
+                                    videoType: 'video/mp4',
+                                    videoWidth: 1494,
+                                    videoHeight: 1034,
+                                    frame: 'pos'
+                                }
+                            ],
                             steps: [
-                                { time: 0, label: 'Switch revenue center', category: 'POS Configuration' },
-                                { time: 25, label: 'Sign in to In-Seat Service', category: 'Tab Service' },
-                                { time: 34, label: 'Add items to the cart', category: 'Tab Service' },
-                                { time: 58, label: 'Select guest location (if applicable)', category: 'Tab Service' },
-                                { time: 75, label: 'Start a tab', category: 'Tab Service' },
-                                { time: 87, label: 'View and manage open tabs', category: 'Manage Tabs' },
-                                { time: 104, label: 'Add items to an existing tab', category: 'Manage Tabs' },
-                                { time: 125, label: 'Close tab and select payment type', category: 'Close Out' },
-                                { time: 135, label: 'Guest selects tip and Round Up (optional)', category: 'Close Out' },
-                                { time: 142, label: 'Guest completes payment', category: 'Close Out' },
-                                { time: 146, label: 'Guest reviews order and selects receipt method', category: 'Close Out' },
-                                { time: 158, label: 'Review closed orders and Sales Report', category: 'Close Out' }
+                                // Video 1 - Mobile Handheld
+                                { time: 0, label: 'Sign in with PIN or badge scan', category: 'Login', device: 'mobile' },
+                                { time: 10, label: 'Build order', category: 'Ordering', device: 'mobile' },
+                                { time: 20, label: 'Add location (Optional)', category: 'Tab Setup', device: 'mobile' },
+                                { time: 36, label: 'Add order notes (Optional)', category: 'Tab Setup', device: 'mobile' },
+                                { time: 53, label: 'Start a tab', category: 'Tab Creation', device: 'mobile' },
+                                { time: 64, label: 'Name the tab', category: 'Tab Creation', device: 'mobile' },
+                                { time: 80, label: 'Locate the tab', category: 'Tab Lookup', device: 'mobile' },
+                                { time: 90, label: 'Add items to the tab', category: 'Ordering', device: 'mobile' },
+
+                                // Video 2 - Fixed POS
+                                { time: 0, label: 'Move to Fixed POS', category: 'Device Handoff', device: 'fixed' },
+                                { time: 7, label: 'Locate open tab', category: 'Tab Lookup', device: 'fixed' },
+                                { time: 15, label: 'Add a round to the tab', category: 'Ordering', device: 'fixed' },
+                                { time: 40, label: 'Split the tab', category: 'Split Payments', device: 'fixed' },
+                                { time: 90, label: 'Transfer the tab', category: 'Tab Management', device: 'fixed' },
+                                { time: 122, label: 'Close the tab', category: 'Checkout', device: 'fixed' },
+                                { time: 170, label: 'View tab in My Closed Orders', category: 'Order History', device: 'fixed' },
+                                { time: 178, label: 'Reopen tab (As needed)', category: 'Manager Actions', device: 'fixed' },
+                                { time: 191, label: 'Void items (As needed)', category: 'Manager Actions', device: 'fixed' },
+                                { time: 207, label: 'Provide receipt or refund receipt (As needed)', category: 'Receipts', device: 'fixed' },
+                                { time: 214, label: 'View sales report', category: 'Reporting', device: 'fixed' }
                             ]
                         }
                     }
@@ -395,6 +449,7 @@
             const [isPaused, setIsPaused] = useState(false);
             const [posFlow, setPosFlow] = useState('full'); // 'full' | 'quick' | 'tabs'
             const [activeDevice, setActiveDevice] = useState('iphone'); // Track which device is currently playing for emphasis
+            const activeDeviceRef = useRef('iphone'); // Ref to track current device for closures
             const videoRef = useRef(null);
             const ipadVideoRef = useRef(null);
 
@@ -415,12 +470,16 @@
                     const flow = currentTab.flows[posFlow] || currentTab.flows.full;
                     return {
                         video: flow.video,
-                        steps: flow.steps
+                        steps: flow.steps,
+                        layout: flow.layout,
+                        devices: flow.devices
                     };
                 }
                 return {
                     video: currentTab?.video,
-                    steps: currentTab?.steps || []
+                    steps: currentTab?.steps || [],
+                    layout: currentTab?.layout,
+                    devices: currentTab?.devices
                 };
             }, [activeTab, posFlow, currentTab]);
 
@@ -432,11 +491,11 @@
                 }
             }, [activeCategory]);
 
-            // Sync steps with video timeline (for non-dual layouts)
+            // Sync steps with video timeline (for non-dual/non-rotating layouts)
             useEffect(() => {
                 const video = videoRef.current;
                 const hasVideo = currentFlowData.video || currentTab?.video;
-                if (!video || !hasVideo || currentTab?.layout === 'dual') return;
+                if (!video || !hasVideo || currentTab?.layout === 'dual' || currentFlowData.layout === 'rotating') return;
 
                 const handleTimeUpdate = () => {
                     const time = video.currentTime;
@@ -470,6 +529,97 @@
                     ipadVideoRef.current.pause();
                 }
             }, [activeTab]);
+
+            /*
+             * VIDEO SYNC LOGIC FOR ROTATING LAYOUT (Tabs flow)
+             * --------------------------------------------------------
+             * Sequential playback between Mobile Handheld and Fixed POS:
+             *
+             * Timeline:
+             *   Mobile video plays (steps 0-1)
+             *   Mobile ends → rotation animation triggers
+             *   Fixed video plays (steps 2-12)
+             *   Fixed ends → rotate back, loop from beginning
+             */
+            // Keep ref in sync with activeDevice state
+            useEffect(() => {
+                activeDeviceRef.current = activeDevice;
+            }, [activeDevice]);
+
+            useEffect(() => {
+                const mobileVideo = videoRef.current;
+                const fixedVideo = ipadVideoRef.current;
+
+                // Check if we're in rotating layout
+                if (currentFlowData.layout !== 'rotating' || !mobileVideo || !fixedVideo) return;
+
+                const mobileSteps = currentFlowData.steps.filter(s => s.device === 'mobile');
+                const fixedSteps = currentFlowData.steps.filter(s => s.device === 'fixed');
+
+                const handleMobileTimeUpdate = () => {
+                    if (activeDeviceRef.current !== 'mobile') return;
+                    const time = mobileVideo.currentTime;
+
+                    // Update step for mobile phase
+                    for (let i = mobileSteps.length - 1; i >= 0; i--) {
+                        if (time >= mobileSteps[i].time) {
+                            setActiveStep(i);
+                            break;
+                        }
+                    }
+                };
+
+                const handleMobileEnded = () => {
+                    // Mobile video finished, switch to fixed
+                    setActiveDevice('fixed');
+                    activeDeviceRef.current = 'fixed';
+                    setActiveStep(mobileSteps.length); // First fixed step
+                    fixedVideo.currentTime = 0;
+                    fixedVideo.play();
+                };
+
+                const handleFixedTimeUpdate = () => {
+                    if (activeDeviceRef.current !== 'fixed') return;
+                    const time = fixedVideo.currentTime;
+
+                    // Update step for fixed phase (offset by mobile steps count)
+                    for (let i = fixedSteps.length - 1; i >= 0; i--) {
+                        if (time >= fixedSteps[i].time) {
+                            setActiveStep(mobileSteps.length + i);
+                            break;
+                        }
+                    }
+                };
+
+                const handleFixedEnded = () => {
+                    // Fixed video finished, loop back to mobile
+                    setActiveDevice('mobile');
+                    activeDeviceRef.current = 'mobile';
+                    setActiveStep(0);
+                    fixedVideo.currentTime = 0;
+                    fixedVideo.pause();
+                    mobileVideo.currentTime = 0;
+                    mobileVideo.play();
+                };
+
+                mobileVideo.addEventListener('timeupdate', handleMobileTimeUpdate);
+                mobileVideo.addEventListener('ended', handleMobileEnded);
+                fixedVideo.addEventListener('timeupdate', handleFixedTimeUpdate);
+                fixedVideo.addEventListener('ended', handleFixedEnded);
+
+                // Initialize: mobile plays first, fixed paused
+                setActiveDevice('mobile');
+                activeDeviceRef.current = 'mobile';
+                fixedVideo.currentTime = 0;
+                fixedVideo.pause();
+
+                return () => {
+                    mobileVideo.removeEventListener('timeupdate', handleMobileTimeUpdate);
+                    mobileVideo.removeEventListener('ended', handleMobileEnded);
+                    fixedVideo.removeEventListener('timeupdate', handleFixedTimeUpdate);
+                    fixedVideo.removeEventListener('ended', handleFixedEnded);
+                };
+            }, [activeTab, posFlow]);
 
             /*
              * VIDEO SYNC LOGIC FOR DUAL LAYOUT (Mobile Ordering tab)
@@ -626,6 +776,24 @@
                     return;
                 }
 
+                // Handle rotating layout (mobile + fixed sequential) - check BEFORE device layout
+                if (currentFlowData.layout === 'rotating') {
+                    if (isPaused) {
+                        // Resume the active device's video
+                        if (activeDevice === 'mobile') {
+                            if (iphoneVideo) iphoneVideo.play();
+                        } else {
+                            if (ipadVideo) ipadVideo.play();
+                        }
+                    } else {
+                        // Pause both videos
+                        if (iphoneVideo) iphoneVideo.pause();
+                        if (ipadVideo) ipadVideo.pause();
+                    }
+                    setIsPaused(!isPaused);
+                    return;
+                }
+
                 // Handle device layout (single video)
                 if (currentTab?.layout === 'device') {
                     if (iphoneVideo) {
@@ -689,13 +857,42 @@
                     return;
                 }
 
+                // Handle rotating layout (mobile + fixed sequential) - check BEFORE device layout
+                if (currentFlowData.layout === 'rotating') {
+                    if (step.device === 'mobile') {
+                        setActiveDevice('mobile');
+                        activeDeviceRef.current = 'mobile';
+                        if (iphoneVideo) {
+                            iphoneVideo.currentTime = step.time;
+                            iphoneVideo.play();
+                        }
+                        if (ipadVideo) {
+                            ipadVideo.pause();
+                        }
+                    } else if (step.device === 'fixed') {
+                        setActiveDevice('fixed');
+                        activeDeviceRef.current = 'fixed';
+                        if (ipadVideo) {
+                            ipadVideo.currentTime = step.time;
+                            ipadVideo.play();
+                        }
+                        if (iphoneVideo) {
+                            iphoneVideo.pause();
+                        }
+                    }
+                    setActiveStep(stepIndex);
+                    setIsPaused(false);
+                    return;
+                }
+
                 // Handle device layout (single video, no device property)
                 if (currentTab.layout === 'device') {
                     if (iphoneVideo && currentFlowData.video) {
                         iphoneVideo.currentTime = step.time;
-                        if (!isPaused) iphoneVideo.play();
+                        iphoneVideo.play();
                     }
                     setActiveStep(stepIndex);
+                    setIsPaused(false);
                     return;
                 }
 
@@ -871,8 +1068,8 @@
                         {/* Steps Timeline - Carousel for dual layout, standard for others */}
                         <div className="flex-shrink-0">
                             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
-                                {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser' || currentTab?.layout === 'portrait' || currentTab?.layout === 'device') ? (
-                                    /* Rotating Carousel for Dual/Browser Layout */
+                                {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser' || currentTab?.layout === 'portrait' || currentTab?.layout === 'device' || currentFlowData.layout === 'rotating') ? (
+                                    /* Rotating Carousel for Dual/Browser/Rotating Layout */
                                     <div className="flex flex-col items-center">
                                         {/* Category Label */}
                                         <div className="mb-3 h-5 relative">
@@ -997,7 +1194,7 @@
                         {/* Video Area */}
                         <div className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative">
                             {/* Playback Controls */}
-                            {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser' || currentTab?.layout === 'portrait' || currentTab?.layout === 'device') && (
+                            {(currentTab?.layout === 'dual' || currentTab?.layout === 'browser' || currentTab?.layout === 'portrait' || currentTab?.layout === 'device' || currentFlowData.layout === 'rotating') && (
                                 <div className="absolute bottom-4 left-4 z-20 flex items-center gap-2">
                                     {/* Previous Step */}
                                     <button
@@ -1143,6 +1340,51 @@
                                                         <p className="text-slate-400 text-sm mt-3 font-medium">{device.label}</p>
                                                     </div>
                                                 ))}
+                                            </div>
+                                        ) : currentFlowData.layout === 'rotating' ? (
+                                            /* Rotating: Mobile Handheld + Fixed POS with 3D rotation */
+                                            <div className="rotating-carousel relative w-full flex items-center justify-center" style={{ minHeight: '70vh' }}>
+                                                {currentFlowData.devices.map((device) => {
+                                                    const isActive = activeDevice === device.id;
+                                                    const isMobile = device.id === 'mobile';
+
+                                                    return (
+                                                        <div
+                                                            key={device.id}
+                                                            className={`rotating-device absolute ${isActive ? 'front' : isMobile ? 'back-left' : 'back'}`}
+                                                        >
+                                                            <div className="flex flex-col items-center">
+                                                                {/* Glow effect */}
+                                                                <div className={`absolute -inset-4 bg-[#136EF6] rounded-[2rem] blur-2xl transition-opacity duration-500 ${isActive ? 'opacity-20' : 'opacity-0'}`}></div>
+
+                                                                {/* Device Frame - same sizing as regular device layout */}
+                                                                <div
+                                                                    className="relative bg-slate-900 rounded-[1.5rem] border-[6px] border-slate-700 shadow-2xl overflow-hidden"
+                                                                    style={{
+                                                                        maxHeight: '70vh',
+                                                                        aspectRatio: `${device.videoWidth} / ${device.videoHeight}`
+                                                                    }}
+                                                                >
+                                                                    <video
+                                                                        ref={isMobile ? videoRef : ipadVideoRef}
+                                                                        key={`${device.id}-video`}
+                                                                        autoPlay={isMobile}
+                                                                        muted
+                                                                        playsInline
+                                                                        className="w-full h-full object-cover"
+                                                                    >
+                                                                        <source src={device.video} type={device.videoType} />
+                                                                    </video>
+                                                                </div>
+
+                                                                {/* Label */}
+                                                                <p className={`text-sm mt-3 font-medium transition-opacity duration-500 ${isActive ? 'text-slate-300' : 'text-slate-600'}`}>
+                                                                    {device.label}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
                                         ) : currentTab.layout === 'device' ? (
                                             /* Device: Generic device frame preserving video aspect ratio */
